@@ -47,6 +47,7 @@ public class GetValues extends GetSchema {
 	/**
 	 * Build the request
 	 */
+	@Override
 	public void setRequest() {
 		String request = "{\"th\": "+getTh()+",\"path\":\""+getPath()+"\", \"leafs\": "+getLeafs()+"}";
 		super.setRequest(request); 

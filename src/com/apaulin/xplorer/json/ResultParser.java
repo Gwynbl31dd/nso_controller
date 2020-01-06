@@ -1,8 +1,8 @@
 package com.apaulin.xplorer.json;
 
-import com.apaulin.http.HttpRequest;
+import com.apaulin.http.RpcRequest;
 import com.apaulin.http.rpc.RPCException;
-import com.apaulin.http.rpc.RPCRequest;
+import com.apaulin.http.rpc.RpcData;
 import com.apaulin.xplorer.exception.NSOException;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.PathNotFoundException;
@@ -24,9 +24,9 @@ public class ResultParser {
 	 * @throws RPCException
 	 * @throws NSOException 
 	 */
-	public static String processRawData(RPCRequest request,HttpRequest req) throws RPCException, NSOException {
+	public static String processRawData(RpcData request,RpcRequest req) throws RPCException, NSOException {
 		String raw = null;
-		raw = req.postRequest(request);
+		raw = req.send(request);
 		// Get the raw data
 		JSONObject error = parseError(raw);
 		// If no error

@@ -18,6 +18,6 @@ public class Main {
 	 * @category test
 	 */
 	public static void main(String[] args) {
-
+		System.out.println("Lol");
 	}
 }

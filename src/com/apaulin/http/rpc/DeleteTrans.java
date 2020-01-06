@@ -24,6 +24,7 @@ public class DeleteTrans extends ValidateTrans{
 	/**
 	 * Build the request
 	 */
+	@Override
 	public void setRequest() {
 		String request = "{}";
 		super.setRequest(request); 

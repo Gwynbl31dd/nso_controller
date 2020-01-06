@@ -24,7 +24,7 @@ public class JSONDisplay {
 	 * @param jsonString
 	 * @throws JsonException
 	 */
-	public JSONDisplay(String jsonString) throws JsonException{
+	public JSONDisplay(String jsonString) throws JsonException {
 		String tmp = spaceCalculator(splitComma(splitBracketRight(splitBracketleft(splitEscaped(jsonString)))));
 		if(tmp.endsWith("{\n")) {
 			tmp = tmp.substring(0,tmp.length()-2);
@@ -135,6 +135,7 @@ public class JSONDisplay {
 	/**
 	 * Return the JSON file modified
 	 */
+	@Override
 	public String toString() {
 		return this.jsonString;
 	}

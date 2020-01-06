@@ -30,6 +30,7 @@ public class GetCase extends GetSchema {
 	/**
 	 * Build the request
 	 */
+	@Override
 	public void setRequest() {
 		String request = "{\"th\": "+getTh()+",\"path\":\""+getPath()+"\",\"choice\": \""+getChoice()+"\"}";
 		super.setRequest(request); 

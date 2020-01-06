@@ -37,6 +37,7 @@ public class GetValue extends GetSchema {
 	/**
 	 * Build the request
 	 */
+	@Override
 	public void setRequest() {
 		String request = "{\"th\": "+getTh()+",\"path\":\""+getPath()+"\",\"check_default\": "+isCheck_default()+"}";
 		super.setRequest(request); 

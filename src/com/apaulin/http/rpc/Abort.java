@@ -10,7 +10,7 @@ package com.apaulin.http.rpc;
  * @version 0.1
  *
  */
-public class Abort extends RPCRequest {
+public class Abort extends RpcData {
 	private int id;
 
 	public Abort(int id) {

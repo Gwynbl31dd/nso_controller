@@ -26,6 +26,7 @@ public class GetSystemSetting extends GetSchema {
 	/**
 	 * Build the request
 	 */
+	@Override
 	public void setRequest() {
 		String request = "{\"operation\": \""+getOperation()+"\"  }";
 		super.setRequest(request);

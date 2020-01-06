@@ -15,7 +15,8 @@ import java.util.ArrayList;
 public class StringArray extends ArrayList<String> {
 	private static final long serialVersionUID = 4079847527595200210L;
 
-    public String toString() {
+    @Override
+	public String toString() {
     	String arrayBuilt = new String("[");
     	for(int i=0;i<this.size();i++) {
     		if(i < this.size()-1) {

@@ -9,7 +9,7 @@ package com.apaulin.http.rpc;
  * @since 19/06/2019
  * @version 0.1
  */
-public class SetTransactionComment extends RPCRequest {
+public class SetTransactionComment extends RpcData {
 	private int th;
 	private String comment;
 	

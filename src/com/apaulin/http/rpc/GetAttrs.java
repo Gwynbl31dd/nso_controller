@@ -39,6 +39,7 @@ public class GetAttrs extends GetSchema{
 		this.names = names;
 	}
 	
+	@Override
 	public void setRequest() {
 		String request = "{\"th\": "+getTh()+",\"path\":\""+getPath()+"\",\"names\": "+getNames()+"}";
 		super.setRequest(request); 

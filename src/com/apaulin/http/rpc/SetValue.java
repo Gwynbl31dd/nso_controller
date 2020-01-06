@@ -78,6 +78,7 @@ public class SetValue extends GetSchema {
 	/**
 	 * Build the request
 	 */
+	@Override
 	public void setRequest() {
 		String request = new String();
 		if(isString == true) {

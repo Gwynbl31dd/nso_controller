@@ -13,7 +13,7 @@ import org.apache.http.entity.StringEntity;
  * @version 0.1
  *
  */
-abstract public class RPCRequest {
+abstract public class RpcData implements RPC {
 	private String method;//Method of the request
 	private int id = 0;//ID by default is zero
 	private String request = "{}";//Request by default empty
@@ -24,7 +24,7 @@ abstract public class RPCRequest {
 	 * @param id
 	 * @param method
 	 */
-	public RPCRequest(String method) {
+	public RpcData(String method) {
 		this.setMethod(method);
 	}
 	
@@ -76,6 +76,7 @@ abstract public class RPCRequest {
 		this.request = request;
 	}
 	
+	@Override
 	public StringEntity getRequestEntity() throws UnsupportedEncodingException {
 		return new StringEntity("{\"jsonrpc\":\""+RPC_VERSION+"\",\"id\":"+id+",\"method\":\""+method+"\",\"params\":"+request+"}");
 	}

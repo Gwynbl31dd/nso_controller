@@ -8,7 +8,7 @@ package com.apaulin.http.rpc;
  * The HTTP cookie identifies the user session so no input parameters are needed.
  */
 
-public class Logout extends RPCRequest{
+public class Logout extends RpcData{
 	
 	/**
 	 * Generate logout request

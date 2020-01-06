@@ -29,7 +29,7 @@ import org.apache.http.ssl.TrustStrategy;
 import org.apache.http.util.EntityUtils;
 
 import com.apaulin.http.rpc.GetTrans;
-import com.apaulin.http.rpc.RPCRequest;
+import com.apaulin.http.rpc.RpcData;
 import com.apaulin.xplorer.exception.NSOException;
 import com.jayway.jsonpath.JsonPath;
 
@@ -44,7 +44,7 @@ import net.minidev.json.parser.ParseException;
  * @version 0.3
  *
  */
-public class HttpRequest {
+public class RpcRequest {
 
 	private static final String RPC_VERSION = "2.0";// NSO RPC Version
 	private HttpClientContext context;// Connection context
@@ -64,7 +64,7 @@ public class HttpRequest {
 	 *            <String> connection ID
 	 * @throws NSOException  
 	 */
-	public HttpRequest(String addr, String user, String password, int id) throws NSOException {
+	public RpcRequest(String addr, String user, String password, int id) throws NSOException {
 		this.id = id;
 		this.context = new HttpClientContext();
 		this.httpPost = new HttpPost(addr);
@@ -80,7 +80,7 @@ public class HttpRequest {
 	 * @return <String> decoded header
 	 * @throws NSOException 
 	 */
-	public String postRequest(RPCRequest request) throws NSOException {
+	public String send(RpcData request) throws NSOException {
 		String responseGenerated = null;
 		try {
 			request.setId(this.id);
@@ -89,7 +89,6 @@ public class HttpRequest {
 			CloseableHttpClient client = buildCustomHttpClient();
 			CloseableHttpResponse response = client.execute(httpPost, context);
 			responseGenerated = decodeHeader(response);
-			//System.out.println(responseGenerated);
 		}
 		catch(IOException e ) {
 			throw new NSOException(e);
@@ -103,7 +102,7 @@ public class HttpRequest {
 	 * @throws NSOException 
 	 */
 	public List<Integer> getTransaction() throws NSOException {
-		List<Integer> th = JsonPath.read(this.postRequest(new GetTrans()), "$.result.trans[*].th");
+		List<Integer> th = JsonPath.read(this.send(new GetTrans()), "$.result.trans[*].th");
 		return th;
 	}
 
@@ -216,6 +215,7 @@ public class HttpRequest {
 	}
 
 	// ********************************************************************************************************
+	@Override
 	public String toString() {
 		return "HTTPRequest JSONRPC version " + getRpcVersion() + "\n" + "Connection to :"
 				+ getContext().getCookieOrigin() + "\n" + "Session ID :" + getId();

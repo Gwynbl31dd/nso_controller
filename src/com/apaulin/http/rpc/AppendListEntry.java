@@ -24,6 +24,7 @@ public class AppendListEntry extends GetSchema {
 	/**
 	 * Build the request
 	 */
+	@Override
 	public void setRequest() {
 		super.setRequest("{\"th\": "+getTh()+",\"path\":\""+getPath()+"\",\"value\": \""+value+"\"}"); 
 	}

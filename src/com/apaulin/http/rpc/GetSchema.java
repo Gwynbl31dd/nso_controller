@@ -3,13 +3,16 @@
  */
 package com.apaulin.http.rpc;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 /**
  * Schema Request
  * @author Anthony Paulin
  * @since 13/07/2018
  * @version 0.2
  */
-public class GetSchema extends RPCRequest {
+public class GetSchema extends RpcData {
 	private int th;
 	private String path;
 	
@@ -73,6 +76,13 @@ public class GetSchema extends RPCRequest {
 	 */
 	public void setTh(int th) {
 		this.th = th;
+	}
+	
+	protected static void valueListExist(String value,String[] list) throws RCPparameterException {
+		ArrayList<String> test = new ArrayList<String>(Arrays.asList(list));
+		if(!test.contains(value)) {
+			throw new RCPparameterException(value);
+		}
 	}
 
 }

@@ -10,7 +10,7 @@ package com.apaulin.http.rpc;
  * @version 0.1
  *
  */
-public class ValidateTrans extends RPCRequest {
+public class ValidateTrans extends RpcData {
 	private int th;
 	/**
 	 * Validate a transaction

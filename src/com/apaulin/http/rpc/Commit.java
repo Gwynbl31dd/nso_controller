@@ -81,6 +81,7 @@ public class Commit extends ValidateTrans{
 	/**
 	 * Build the request
 	 */
+	@Override
 	public void setRequest() {
 		String request = "{\"th\": "+getTh()+",\"timeout\": "+getTimeout()+",\"release_locks\" : "+isReleaseLock()+",\"flags\": "+getFlags()+"}";
 		super.setRequest(request); 

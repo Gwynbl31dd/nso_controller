@@ -1,9 +1,0 @@
-com.apaulin.http
-com.apaulin.http.rest
-com.apaulin.http.rpc
-com.apaulin.http.rpc.options
-com.apaulin.test
-com.apaulin.xplorer
-com.apaulin.xplorer.exception
-com.apaulin.xplorer.json
-com.apaulin.xplorer.nso_utility

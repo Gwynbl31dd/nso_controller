@@ -3,6 +3,7 @@
  */
 package com.apaulin.http.rpc;
 
+
 /**
  * New JSON-RCP transaction
  * 
@@ -11,7 +12,7 @@ package com.apaulin.http.rpc;
  * @version 0.1
  *
  */
-public class NewTrans extends RPCRequest {
+public class NewTrans extends RpcData {
 	
 	private final static String[] DB_VALUES = { "startup", "running", "candidate" };
 	private final static String[] MODE_VALUES = { "read", "read_write" };

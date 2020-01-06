@@ -135,6 +135,7 @@ public class Load extends GetSchema {
 	/**
 	 * Build the request
 	 */
+	@Override
 	public void setRequest() {
 		String request = null;
 		try {

@@ -10,7 +10,7 @@ package com.apaulin.http.rpc;
  * @version 0.1
  *
  */
-public class GetCmds extends RPCRequest{
+public class GetCmds extends RpcData{
 
 	public GetCmds() {
 		super("get_cmds");

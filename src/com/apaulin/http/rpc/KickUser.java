@@ -30,6 +30,7 @@ public class KickUser extends GetSchema {
 	 *  Build the request
 	 * @param noResultAs2 ASR9Ks (9912/9010s) with 2 Tengig Ports in each box
 	 */
+	@Override
 	public void setRequest() {
 		String request = new String();
 		if(user instanceof Integer) {

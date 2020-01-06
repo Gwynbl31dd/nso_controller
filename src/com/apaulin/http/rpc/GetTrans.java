@@ -9,7 +9,7 @@ package com.apaulin.http.rpc;
  * @since  13/07/2018
  * @version 0.1
  */
-public class GetTrans extends RPCRequest {	
+public class GetTrans extends RpcData {	
 	/**
 	 * Craft a transaction number request
 	 * @param id Transaction id

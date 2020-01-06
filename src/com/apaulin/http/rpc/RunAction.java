@@ -36,6 +36,7 @@ public class RunAction extends GetSchema {
 	/**
 	 * Build the request
 	 */
+	@Override
 	public void setRequest() {
 		String request = "{\"th\": "+getTh()+",\"path\":\""+getPath()+"\",\"params\": {\"args\": \""+param+"\"}}";
 		super.setRequest(request); 
