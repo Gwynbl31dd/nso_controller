@@ -4,6 +4,7 @@
 package com.apaulin.xplorer;
 
 import com.apaulin.examples.ShowRunExample;
+import com.apaulin.examples.ShowRunMultiSessionExample;
 
 /**
  * @author Anthony Paulin
@@ -13,14 +14,11 @@ import com.apaulin.examples.ShowRunExample;
  * jython -m robot.libdoc eclipse-workspace/Xplorer/src/com/apaulin/xplorer/NSOController.java nso_controller.html
  */
 public class Main {
-	
-
-	
 	/**
 	 * @param args
 	 * @category test
 	 */
 	public static void main(String[] args) {
-		new ShowRunExample();
+		new ShowRunMultiSessionExample();
 	}
 }

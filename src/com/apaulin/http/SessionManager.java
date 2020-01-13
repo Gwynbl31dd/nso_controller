@@ -20,13 +20,13 @@ public class SessionManager {
 	private ArrayList<RpcSession> sessionList = new ArrayList<RpcSession>();
 	private int currentIndex = 0;
 	
-	
 	public void add(RpcSession session) {
 		sessionList.add(session);
+		currentIndex++;
 	}
 	
 	public RpcSession getCurrentSession() {
-		return this.sessionList.get(currentIndex);
+		return this.sessionList.get(getCurrentIndex());
 	}
 	
 	/**
@@ -103,14 +103,20 @@ public class SessionManager {
 	 * @return the currentIndex
 	 */
 	public int getCurrentIndex() {
-		return currentIndex;
+		return currentIndex-1;
 	}
+	
 	/**
-	 * @param currentIndex the currentIndex to set
+	 * Set the index number
+	 * @param index
 	 */
-	public void setCurrentIndex(int currentIndex) {
-		this.currentIndex = currentIndex;
+	public void setIndex(int index) {
+		if(index < 0 || index > sessionList.size()) {
+			throw new IndexOutOfBoundsException();
+		}
+		this.currentIndex = index;
 	}
+
 	/**
 	 * @return the sessionList
 	 */

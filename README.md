@@ -1,4 +1,4 @@
-# XPlorer
+# NSOController
 
 NSO Control library for JAVA
 
@@ -10,9 +10,9 @@ This library can be used as a java API, Katalon library, or as a Keyword library
 
 All the documentation can be found in the java doc or to CiscoRR documentation folder 
 
-[JAVADOC](https://wwwin-github.cisco.com/Telstra/Xplorer/tree/master/doc)
+[JAVADOC](https://github.com/Gwynbl31dd/nso_controller/tree/master/doc/java_doc)
 
-[ROBOTDOC](https://wwwin-github.cisco.com/Telstra/CiscoRR/tree/master/doc/keywords/java)
+[ROBOTDOC](https://github.com/Gwynbl31dd/nso_controller/tree/dev/doc/robot_doc)
 
 ## Java Usage
 
@@ -20,7 +20,7 @@ Xplorer can be use as a Java API to communicate with NSO.
 
 First, you need to add nso_controller.jar to your build path.
 
-[RELEASE](https://wwwin-github.cisco.com/Telstra/Xplorer/releases)
+[RELEASE](https://github.com/Gwynbl31dd/nso_controller/releases)
 
 ## Reading data
 
@@ -169,7 +169,7 @@ public class Main {
 		try {
 			nso = new NSOController(ADDRESS,USER,PASSWORD);
 			nso.startTransaction();
-			nso.Load("/network/infrastructure/edge", "/var/CiscoRR/resources/NCP_F5/TC00.json", "replace", "json"));
+			nso.Load("/network/infrastructure/edge", "/var/lol/resources/NCP_F5/TC00.json", "replace", "json"));
 			nso.commit();
 		}
 		catch(Exception e) {
@@ -345,11 +345,11 @@ NSOController provides a lot of functions to validate, create, delete, test NSO 
 
 For example, lifeStatus can allow you to directly talk to the device through NSO.
 
-Check the JAVA DOC. [JAVADOC](https://wwwin-github.cisco.com/Telstra/Xplorer/tree/master/doc)
+Check the JAVA DOC. [JAVADOC](https://github.com/Gwynbl31dd/nso_controller/tree/master/doc/java_doc)
 
 if the class NSOController does not provide a functionality, take a look at 
 the advanced function provided in com.apaulin.http.rpc
 
 If you still do not find a function, extends the object in com.apaulin.http.rpc
 
-and if you still need help, contact me : apaulin@cisco.com
+and if you still need help, contact me : paulin.anthony@gmail.com

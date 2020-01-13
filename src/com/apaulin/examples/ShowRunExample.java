@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.apaulin.examples;
 
 import com.apaulin.http.rpc.RPCException;
@@ -21,11 +18,14 @@ public class ShowRunExample {
 	private static String password = "admin";
 	
 	public ShowRunExample() {
+		
 		try {
 			NSOController nso = new NSOController(url,username,password);
 			System.out.println(nso.showConfig("/devices"));
+			nso.logout();
 		} catch (NSOException | RPCException e) {
 			e.printStackTrace();
 		}
+
 	}
 }

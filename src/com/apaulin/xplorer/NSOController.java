@@ -142,7 +142,17 @@ public class NSOController {
 		RpcRequest request = new RpcRequest(address + "/jsonrpc", user, password, id);
 		RpcSession session = new RpcSession(id,request);
 		sessionManager.add(session);//Add the new session to the list of sessions
-
+	}
+	
+	/**
+	 * Add a new session
+	 * @throws NSOException 
+	 */
+	public void addSession() throws NSOException {
+		int id = sessionManager.setId();
+		RpcRequest request = new RpcRequest(address + "/jsonrpc", login, password, id);
+		RpcSession session = new RpcSession(id,request);
+		sessionManager.add(session);//Add the new session to the list of sessions
 	}
 
 	/**
@@ -1376,20 +1386,32 @@ public class NSOController {
 	}
 
 	/**
-	 * Log out from the NPC session
+	 * Log out from the NPC sessions
 	 * This should always be called after your operations.
 	 * If not, NSO will keep the session open.
 	 * 
 	 * @return
 	 */
 	public String logout()  {
+		String back = new String();
 		try {
-			return ResultParser.processRawData(new com.apaulin.http.rpc.Logout(), sessionManager.getCurrentReq());
+			for(int i=0;i<sessionManager.getSessionList().size();i++) {
+				back+= ResultParser.processRawData(new com.apaulin.http.rpc.Logout(), sessionManager.getSessionList().get(i).getReq()); 
+			}
+			return back;
 		}
 		catch(Exception e) {
 			e.printStackTrace();
 			return null;
 		}
+	}
+	
+	/**
+	 * Select a session from the session's list
+	 * @param index
+	 */
+	public void useSession(int index) throws IndexOutOfBoundsException {
+		sessionManager.setIndex(index);
 	}
 
 	/**
@@ -1491,11 +1513,27 @@ public class NSOController {
 	}
 
 	/**
-	 * Get Xplorer library version
+	 * Get NSOController library library version
 	 * @return the version
 	 */
 	public static String getVersion() {
 		return VERSION;
+	}
+	
+	/**
+	 * Return the index of the current session
+	 * @return
+	 */
+	public int getSessionIndex() {
+		return sessionManager.getCurrentIndex();
+	}
+	
+	/**
+	 * Return the total sessions available
+	 * @return
+	 */
+	public int getTotalSessions() {
+		return sessionManager.getSessionList().size();
 	}
 
 	/**
