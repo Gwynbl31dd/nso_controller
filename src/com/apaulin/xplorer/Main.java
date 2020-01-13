@@ -8,7 +8,7 @@ import com.apaulin.examples.ShowRunExample;
 /**
  * @author Anthony Paulin
  * @since  10/07/2018
- * @version 0.1
+ * @version 1.0
  * Generate robot doc 
  * jython -m robot.libdoc eclipse-workspace/Xplorer/src/com/apaulin/xplorer/NSOController.java nso_controller.html
  */

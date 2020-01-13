@@ -4,11 +4,10 @@ import java.io.IOException;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.Random;
 
 import com.apaulin.http.RpcRequest;
 import com.apaulin.http.RpcSession;
+import com.apaulin.http.SessionManager;
 import com.apaulin.http.rest.HTTPException;
 import com.apaulin.http.rest.RestRequest;
 import com.apaulin.http.rpc.Abort;
@@ -54,8 +53,7 @@ import net.minidev.json.JSONObject;
 
 public class NSOController {
 
-	private ArrayList<RpcSession> sessionList = new ArrayList<RpcSession>();
-	private int currentIndex = 0;
+	private SessionManager sessionManager = new SessionManager();
 	private String address; // Address of the NSO instance. (http://IP:PORT)
 	private String login; // Login used by the NSO instance (PAM or aaa database)
 	private String password; // password used for the NSO instance (PAM or aaa database)
@@ -124,7 +122,7 @@ public class NSOController {
 	 * @throws NSOException 
 	 */
 	public void init(String address, String user, String password) throws NSOException {
-		createSession(address,user,password,this.setId());
+		createSession(address,user,password,sessionManager.setId());
 	}
 	
 	/**
@@ -143,7 +141,7 @@ public class NSOController {
 		this.password = password;
 		RpcRequest request = new RpcRequest(address + "/jsonrpc", user, password, id);
 		RpcSession session = new RpcSession(id,request);
-		sessionList.add(session);//Add the new session to the list of sessions
+		sessionManager.add(session);//Add the new session to the list of sessions
 
 	}
 
@@ -235,8 +233,8 @@ public class NSOController {
 	 */
 	public String validateCommit() throws RPCException, NSOException {
 		testTransaction();
-		String parsedResult = ResultParser.processRawData(new ValidateCommit(getTransactionId()), getReq());
-		setCommitValidated(true);//Set the commit validation to true
+		String parsedResult = ResultParser.processRawData(new ValidateCommit(sessionManager.getTransactionId()), sessionManager.getCurrentReq());
+		sessionManager.setCommitValidated(true);//Set the commit validation to true
 		return parsedResult;
 	}
 
@@ -256,12 +254,12 @@ public class NSOController {
 	 */
 	public String commit(int timeout) throws RPCException, NSOException  {
 		testTransaction();
-		if(isCommitValidated() == false) {
+		if(sessionManager.isCommitValidated() == false) {
 			validateCommit();
 		}
-		setCommitValidated(false);
-		String commitResult = ResultParser.processRawData(new Commit(getTransactionId(),timeout), getReq());
-		getCurrentSession().setTransactionInProgress(false);//If the commit is a success, the transaction is killed
+		sessionManager.setCommitValidated(false);
+		String commitResult = ResultParser.processRawData(new Commit(sessionManager.getTransactionId(),timeout), sessionManager.getCurrentReq());
+		sessionManager.getCurrentSession().setTransactionInProgress(false);//If the commit is a success, the transaction is killed
 		return commitResult;
 	}
 	
@@ -275,12 +273,12 @@ public class NSOController {
 		CommitOptions options = new CommitOptions();
 		options.addUseLSA();
 		testTransaction();
-		if(isCommitValidated() == false) {
+		if(sessionManager.isCommitValidated() == false) {
 			validateCommit();
 		}
-		setCommitValidated(false);
-		String commitResult = ResultParser.processRawData(new Commit(getTransactionId(),options,0), getReq());
-		getCurrentSession().setTransactionInProgress(false);//If the commit is a success, the transaction is killed
+		sessionManager.setCommitValidated(false);
+		String commitResult = ResultParser.processRawData(new Commit(sessionManager.getTransactionId(),options,0), sessionManager.getCurrentReq());
+		sessionManager.getCurrentSession().setTransactionInProgress(false);//If the commit is a success, the transaction is killed
 		return commitResult;
 	}
 	/**
@@ -322,7 +320,7 @@ public class NSOController {
 	 * @throws NSOException
 	 */
 	public String setComment(String comment) throws RPCException, NSOException {
-		String result = ResultParser.processRawData(new SetTransactionComment(getTransactionId(),comment), getReq());
+		String result = ResultParser.processRawData(new SetTransactionComment(sessionManager.getTransactionId(),comment), sessionManager.getCurrentReq());
 		return result;
 	}
 
@@ -340,7 +338,7 @@ public class NSOController {
 	 */
 	public String delete(String path) throws RPCException, NSOException{
 		testTransaction();
-		return ResultParser.processRawData(new Delete(getTransactionId(), path), getReq());
+		return ResultParser.processRawData(new Delete(sessionManager.getTransactionId(), path), sessionManager.getCurrentReq());
 	}
 	
 	
@@ -360,11 +358,11 @@ public class NSOController {
 		testTransaction();
 		CommitOptions options = new CommitOptions();
 		options.addDryRun("native");
-		if(isCommitValidated() == false) {
+		if(sessionManager.isCommitValidated() == false) {
 			validateCommit();
 		}
-		setCommitValidated(false);
-		return ResultParser.processRawData(new Commit(getTransactionId(), options, timeout), getReq());
+		sessionManager.setCommitValidated(false);
+		return ResultParser.processRawData(new Commit(sessionManager.getTransactionId(), options, timeout), sessionManager.getCurrentReq());
 	}
 	
 	/**
@@ -418,11 +416,11 @@ public class NSOController {
 		testTransaction();
 		CommitOptions options = new CommitOptions();
 		options.addDryRun("cli");//Add CLI flag
-		if(isCommitValidated() == false) {
+		if(sessionManager.isCommitValidated() == false) {
 			validateCommit();
 		}
-		setCommitValidated(false);
-		String rawData = ResultParser.processRawData(new Commit(getTransactionId(), options, timeout), getReq());
+		sessionManager.setCommitValidated(false);
+		String rawData = ResultParser.processRawData(new Commit(sessionManager.getTransactionId(), options, timeout), sessionManager.getCurrentReq());
 		String parsedResult = new String();
 		try {
 			//This is most probably a LSA output.
@@ -468,12 +466,12 @@ public class NSOController {
 		testTransaction();
 		CommitOptions options = new CommitOptions();
 		options.addNoNetworking();
-		if(isCommitValidated() == false) {
+		if(sessionManager.isCommitValidated() == false) {
 			validateCommit();
 		}
-		setCommitValidated(false);
-		String commitResult = ResultParser.processRawData(new Commit(getTransactionId(), options,timeout), getReq());
-		getCurrentSession().setTransactionInProgress(false);//If the commit is a success, the transaction is killed
+		sessionManager.setCommitValidated(false);
+		String commitResult = ResultParser.processRawData(new Commit(sessionManager.getTransactionId(), options,timeout), sessionManager.getCurrentReq());
+		sessionManager.getCurrentSession().setTransactionInProgress(false);//If the commit is a success, the transaction is killed
 		return commitResult;
 	}
 	
@@ -507,11 +505,11 @@ public class NSOController {
 		CommitOptions options = new CommitOptions();
 		options.addDryRun("native");
 		options.addDryRunReverse();
-		if(isCommitValidated() == false) {
+		if(sessionManager.isCommitValidated() == false) {
 			validateCommit();
 		}
-		setCommitValidated(false);
-		return ResultParser.processRawData(new Commit(getTransactionId(), options,timeout), getReq());
+		sessionManager.setCommitValidated(false);
+		return ResultParser.processRawData(new Commit(sessionManager.getTransactionId(), options,timeout), sessionManager.getCurrentReq());
 	}
 	
 	/**
@@ -589,7 +587,7 @@ public class NSOController {
 	 */
 	public String getListKeys(String path) throws RPCException, NSOException {
 		testTransaction();
-		String result = ResultParser.processRawData(new GetListKeys(getTransactionId(), path), getReq());
+		String result = ResultParser.processRawData(new GetListKeys(sessionManager.getTransactionId(), path), sessionManager.getCurrentReq());
 		return result;
 	}
 	
@@ -605,7 +603,7 @@ public class NSOController {
 	 */
 	public void appendListEntry(String path, String value) throws NSOException, RPCException  {
 		testTransaction();
-		String result = getReq().send(new AppendListEntry(getTransactionId(), path, value));
+		String result = sessionManager.getCurrentReq().send(new AppendListEntry(sessionManager.getTransactionId(), path, value));
 		JSONObject error = ResultParser.parseError(result);
 		if (error != null) {
 			throw new RPCException(error.toString());
@@ -624,7 +622,7 @@ public class NSOController {
 	 */
 	public String getLeafRefValues(String path) throws NSOException, RPCException {
 		testTransaction();
-		String result = getReq().send(new GetLeafRefValues(getTransactionId(), path));
+		String result = sessionManager.getCurrentReq().send(new GetLeafRefValues(sessionManager.getTransactionId(), path));
 		return result;
 	}
 
@@ -641,7 +639,7 @@ public class NSOController {
 	 */
 	public String confirmCommit() throws NSOException, RPCException {
 		testTransaction();
-		String result = getReq().send(new ConfirmCommit(getTransactionId()));
+		String result = sessionManager.getCurrentReq().send(new ConfirmCommit(sessionManager.getTransactionId()));
 		return result;
 	}
 
@@ -986,7 +984,7 @@ public class NSOController {
 	 */
 	public String setValue(String path, String data) throws RPCException, NSOException  {
 		testTransaction();
-		return ResultParser.processRawData(new SetValue(getTransactionId(), path, data), getReq());
+		return ResultParser.processRawData(new SetValue(sessionManager.getTransactionId(), path, data), sessionManager.getCurrentReq());
 	}
 
 	/**
@@ -1002,7 +1000,7 @@ public class NSOController {
 	 */
 	public String setValue(String path, boolean data) throws RPCException, NSOException {
 		testTransaction();
-		return ResultParser.processRawData(new SetValue(getTransactionId(), path, data), getReq());
+		return ResultParser.processRawData(new SetValue(sessionManager.getTransactionId(), path, data), sessionManager.getCurrentReq());
 	}
 
 	/**
@@ -1017,7 +1015,7 @@ public class NSOController {
 	 */
 	public String setValue(String path, int data) throws RPCException, NSOException {
 		testTransaction();
-		return ResultParser.processRawData(new SetValue(getTransactionId(), path, data), getReq());
+		return ResultParser.processRawData(new SetValue(sessionManager.getTransactionId(), path, data), sessionManager.getCurrentReq());
 	}
 
 	/**
@@ -1029,7 +1027,7 @@ public class NSOController {
 	 */
 	public String abort() throws RPCException, NSOException {
 		testTransaction();
-		return ResultParser.processRawData(new Abort(getCurrentSession().getId()), getReq());
+		return ResultParser.processRawData(new Abort(sessionManager.getCurrentSession().getId()), sessionManager.getCurrentReq());
 	}
 
 	/**
@@ -1042,7 +1040,7 @@ public class NSOController {
 	 */
 	public String create(String path) throws RPCException, NSOException {
 		testTransaction();
-		return ResultParser.processRawData(new Create(getTransactionId(), path), getReq());
+		return ResultParser.processRawData(new Create(sessionManager.getTransactionId(), path), sessionManager.getCurrentReq());
 	}
 
 	/**
@@ -1064,11 +1062,11 @@ public class NSOController {
 	 * @throws NSOException 
 	 */
 	public int startTransaction(String db, String mode, String conf_mode, String tag, String on_pending_change) throws  NSOException, RPCException, RCPparameterException {
-		String requestValue = getReq().send(new NewTrans(db, mode, conf_mode, tag, on_pending_change));
+		String requestValue = sessionManager.getCurrentReq().send(new NewTrans(db, mode, conf_mode, tag, on_pending_change));
 		int th = 0;
 		try {
 		th = JsonPath.read(requestValue,"$.result.th");
-		getCurrentSession().setTransactionInProgress(true);// Set the transaction to true
+		sessionManager.getCurrentSession().setTransactionInProgress(true);// Set the transaction to true
 		//this.transactionId = th;
 		}
 		catch(PathNotFoundException e) {
@@ -1093,7 +1091,7 @@ public class NSOController {
 	 */
 	public String getModel(String path) throws RPCException, NSOException {
 		testTransaction();
-		return ResultParser.processRawData(new GetSchema(getTransactionId(), path), getReq());
+		return ResultParser.processRawData(new GetSchema(sessionManager.getTransactionId(), path), sessionManager.getCurrentReq());
 	}
 	
 	/**
@@ -1104,19 +1102,15 @@ public class NSOController {
 	 * @throws NSOException 
 	 */
 	private void testTransaction() throws RPCException, NSOException {
-		if (getCurrentSession().isTransactionInProgress() == false) {
+		if (sessionManager.getCurrentSession().isTransactionInProgress() == false) {
 			//throw new RPCException("No transaction initated, make sure you start a transaction before any call");
 			try {
-				getCurrentSession().setTransactionId(startTransaction());//Instead of throwing an exception, start a new one
-				getCurrentSession().setTransactionInProgress(true);//Set the transaction in progress
+				sessionManager.getCurrentSession().setTransactionId(startTransaction());//Instead of throwing an exception, start a new one
+				sessionManager.getCurrentSession().setTransactionInProgress(true);//Set the transaction in progress
 			} catch (RCPparameterException e) {
 				throw new NSOException(e);
 			}
 		}
-	}
-
-	private RpcSession getCurrentSession() {
-		return this.sessionList.get(currentIndex);
 	}
 	
 	/**
@@ -1128,7 +1122,7 @@ public class NSOController {
 	 */
 	public String syncFrom() throws RPCException, NSOException {
 		testTransaction();
-		String result = getReq().send(new RunAction(getTransactionId(), "/devices/sync-from"));
+		String result = sessionManager.getCurrentReq().send(new RunAction(sessionManager.getTransactionId(), "/devices/sync-from"));
 		JSONArray syncs = JsonPath.read(result, "$.result[*]");
 		String processed = new String();
 		for (int i = 0; i < syncs.size(); i++) {
@@ -1152,7 +1146,7 @@ public class NSOController {
 	 */
 	public boolean syncFrom(String deviceName) throws RPCException, NSOException {
 		testTransaction();
-		String result = getReq().send(new RunAction(getTransactionId(), "/devices/device{"+deviceName+"}/sync-from"));
+		String result = sessionManager.getCurrentReq().send(new RunAction(sessionManager.getTransactionId(), "/devices/device{"+deviceName+"}/sync-from"));
 		JSONArray syncs = JsonPath.read(result, "$.result[*]");
 		String processed = syncs.toJSONString();
 		for (int i = 0; i < syncs.size(); i++) {
@@ -1173,7 +1167,7 @@ public class NSOController {
 	 */
 	public String runAction(String action) throws RPCException, NSOException {
 		testTransaction();
-		String result = getReq().send(new RunAction(getTransactionId(), action));
+		String result = sessionManager.getCurrentReq().send(new RunAction(sessionManager.getTransactionId(), action));
 		JSONArray syncs = JsonPath.read(result, "$.result[*]");
 		String processed = new String();
 		for (int i = 0; i < syncs.size(); i++) {
@@ -1204,7 +1198,7 @@ public class NSOController {
 	 */
 	public String load(String path,String filePath,String mode,String format) throws RPCException, RCPparameterException, NSOException {
 		testTransaction();
-		return ResultParser.processRawData(new Load(getTransactionId(),path,filePath,mode,format), getReq());
+		return ResultParser.processRawData(new Load(sessionManager.getTransactionId(),path,filePath,mode,format), sessionManager.getCurrentReq());
 	}
 	
 	/**
@@ -1225,7 +1219,7 @@ public class NSOController {
 	 */
 	public String load(String path,String filePath) throws RPCException, RCPparameterException, NSOException {
 		testTransaction();
-		return ResultParser.processRawData(new Load(getTransactionId(),path,filePath,"merge","json"), getReq());
+		return ResultParser.processRawData(new Load(sessionManager.getTransactionId(),path,filePath,"merge","json"), sessionManager.getCurrentReq());
 	}
 	
 	/**
@@ -1239,7 +1233,7 @@ public class NSOController {
 	 */
 	public String serviceCheckSync(String path) throws RPCException, NSOException {
 		testTransaction();
-		String result = getReq().send(new RunAction(getTransactionId(), path + "/check-sync"));
+		String result = sessionManager.getCurrentReq().send(new RunAction(sessionManager.getTransactionId(), path + "/check-sync"));
 		JSONArray syncs = JsonPath.read(result, "$.result[*]");
 		String processed = new String();
 		for (int i = 0; i < syncs.size(); i++) {
@@ -1300,7 +1294,7 @@ public class NSOController {
 	 */
 	public String serviceDeepCheckSync(String path) throws RPCException, NSOException {
 		testTransaction();
-		String result = getReq().send(new RunAction(getTransactionId(), path + "/deep-check-sync"));
+		String result = sessionManager.getCurrentReq().send(new RunAction(sessionManager.getTransactionId(), path + "/deep-check-sync"));
 		JSONObject error = ResultParser.parseError(result);
 		// If no error
 		if (error != null) {
@@ -1353,7 +1347,7 @@ public class NSOController {
 	 */
 	public String liveStatus(String device, String cmd, String action) throws NSOException, RPCException {
 		testTransaction();
-		String result = getReq().send(new RunAction(getTransactionId(), "/devices/device{" + device + "}/live-status/" + action + "/any/", cmd));
+		String result = sessionManager.getCurrentReq().send(new RunAction(sessionManager.getTransactionId(), "/devices/device{" + device + "}/live-status/" + action + "/any/", cmd));
 		JSONArray syncs = JsonPath.read(result, "$.result[*]");
 		String processed = new String();
 		for (int i = 0; i < syncs.size(); i++) {
@@ -1376,7 +1370,7 @@ public class NSOController {
 	 * @throws NSOException 
 	 */
 	public boolean isExisting(String path) throws RPCException, NSOException {
-		String data = ResultParser.processRawData(new Exists(getTransactionId(), path), getReq());
+		String data = ResultParser.processRawData(new Exists(sessionManager.getTransactionId(), path), sessionManager.getCurrentReq());
 		boolean result = ResultParser.parseBool(data, "$.exists");
 		return result;
 	}
@@ -1390,7 +1384,7 @@ public class NSOController {
 	 */
 	public String logout()  {
 		try {
-			return ResultParser.processRawData(new com.apaulin.http.rpc.Logout(), getReq());
+			return ResultParser.processRawData(new com.apaulin.http.rpc.Logout(), sessionManager.getCurrentReq());
 		}
 		catch(Exception e) {
 			e.printStackTrace();
@@ -1409,7 +1403,7 @@ public class NSOController {
 	 */
 	public String showConfig(String path) throws RPCException, NSOException {
 		testTransaction();
-		String result = ResultParser.processRawData(new ShowConfig(getTransactionId(), path), getReq());
+		String result = ResultParser.processRawData(new ShowConfig(sessionManager.getTransactionId(), path), sessionManager.getCurrentReq());
 		return ResultParser.parseStringResult(result, "$.config");
 	}
 	
@@ -1439,7 +1433,7 @@ public class NSOController {
 	 */
 	public String showConfig(String path, String resultAs) throws RPCException, RCPparameterException, NSOException {
 		testTransaction();
-		String result = ResultParser.processRawData(new ShowConfig(getTransactionId(), path, resultAs, false, 0), getReq());
+		String result = ResultParser.processRawData(new ShowConfig(sessionManager.getTransactionId(), path, resultAs, false, 0), sessionManager.getCurrentReq());
 		if (resultAs.compareTo("string") == 0) {
 			return ResultParser.parseStringResult(result, "$.config");
 		} else {
@@ -1458,11 +1452,11 @@ public class NSOController {
 	 */
 	public String getNSOVersion() throws RPCException, NSOException, RCPparameterException {
 		testTransaction();
-		String parsedResult = ResultParser.parseStringResult(getReq().send(new GetSystemSetting(getTransactionId(), "version")), "$.result");
+		String parsedResult = ResultParser.parseStringResult(sessionManager.getCurrentReq().send(new GetSystemSetting(sessionManager.getTransactionId(), "version")), "$.result");
 		//Version major and minor can be use to manage the capabilities from the NSO version used.
 		this.major_version = Integer.parseInt(parsedResult.split("\\.")[0]);
 		this.minor_version = Integer.parseInt(parsedResult.split("\\.")[1]);
-		return ResultParser.parseStringResult(getReq().send(new GetSystemSetting(getTransactionId(), "version")), "$.result");
+		return ResultParser.parseStringResult(sessionManager.getCurrentReq().send(new GetSystemSetting(sessionManager.getTransactionId(), "version")), "$.result");
 	}
 	
 	/**
@@ -1493,62 +1487,7 @@ public class NSOController {
 	 */
 	public String getNSOSettings() throws RPCException, JsonException, RCPparameterException, NSOException  {
 		testTransaction();
-		return new JSONDisplay(ResultParser.processRawData(new GetSystemSetting(getTransactionId(), "all"), getReq())).getJsonString();
-	}
-
-	/**
-	 * @return the id of the session
-	 */
-	public int getId() {
-		return getCurrentSession().getId();
-	}
-
-	/**
-	 * Set a random id for the session (called by default)
-	 */
-	private int setId() {
-		Random rand = new Random();
-		return rand.nextInt(100) + 1;
-	}
-
-	/**
-	 * Set the ID
-	 * 
-	 * @param id
-	 */
-	/*private void setId(int id) {
-		return id;
-	}*/
-
-	/**
-	 * 
-	 * @return the req
-	 * @throws RPCException
-	 * @throws NSOException 
-	 */
-	public RpcRequest getReq() throws RPCException, NSOException {
-		//testTransaction();
-		return getCurrentSession().getReq();
-	}
-
-	/**
-	 * Return the HTTPRequest object
-	 * @param req
-	 * - the request to set
-	 */
-	public void setReq(RpcRequest req) {
-		this.getCurrentSession().setReq(req);
-	}
-
-
-	/**
-	 * Return the transaction id (th) without a new request (local saved)
-	 * This will not work if you managed your transaction yourself
-	 * 
-	 * @return
-	 */
-	public int getTransactionId() {
-		return getCurrentSession().getTransactionId();
+		return new JSONDisplay(ResultParser.processRawData(new GetSystemSetting(sessionManager.getTransactionId(), "all"), sessionManager.getCurrentReq())).getJsonString();
 	}
 
 	/**
@@ -1558,7 +1497,7 @@ public class NSOController {
 	public static String getVersion() {
 		return VERSION;
 	}
-	
+
 	/**
 	 * Expose the NSO representation
 	 */
@@ -1566,21 +1505,4 @@ public class NSOController {
 	public String toString() {
 		return "NSO (Network service orchestrator) version "+this.major_version+"."+this.minor_version+".X, NSO Controller API v"+VERSION;
 	}
-
-	/**
-	 * This is used to check if you validated the commit
-	 * @return the commitValidated
-	 */
-	public boolean isCommitValidated() {
-		return this.getCurrentSession().isCommitValidated();
-	}
-
-	/**
-	 * Modify the commit validation
-	 * @param commitValidated the commitValidated to set
-	 */
-	private void setCommitValidated(boolean commitValidated) {
-		this.getCurrentSession().setCommitValidated(commitValidated);
-	}
-
 }
