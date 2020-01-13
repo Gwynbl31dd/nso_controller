@@ -3,6 +3,7 @@
  */
 package com.apaulin.xplorer;
 
+import com.apaulin.examples.ShowRunExample;
 
 /**
  * @author Anthony Paulin
@@ -13,11 +14,13 @@ package com.apaulin.xplorer;
  */
 public class Main {
 	
+
+	
 	/**
 	 * @param args
 	 * @category test
 	 */
 	public static void main(String[] args) {
-		System.out.println("Lol");
+		new ShowRunExample();
 	}
 }
