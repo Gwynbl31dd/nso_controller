@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.apaulin.nso_controller.http;
 
 import java.io.IOException;
@@ -42,7 +39,6 @@ import net.minidev.json.parser.ParseException;
  * @author Anthony Paulin
  * @since 10/07/2018
  * @version 0.3
- *
  */
 public class RpcRequest {
 
@@ -55,14 +51,14 @@ public class RpcRequest {
 	 * Build a new HTTP request
 	 * 
 	 * @param addr
-	 *            <String> address of the jsonRPC API
+	 *            address of the jsonRPC API
 	 * @param user
-	 *            <String> username
+	 *            username
 	 * @param password
-	 *            <String> password
+	 *            password
 	 * @param id
-	 *            <String> connection ID
-	 * @throws NSOException  
+	 *            connection ID
+	 * @throws NSOException  NSO related exception
 	 */
 	public RpcRequest(String addr, String user, String password, int id) throws NSOException {
 		this.id = id;
@@ -77,8 +73,8 @@ public class RpcRequest {
 	 * 
 	 * @param request
 	 *            Implementation of RPCRequest
-	 * @return <String> decoded header
-	 * @throws NSOException 
+	 * @return  decoded header
+	 * @throws NSOException NSO related exception
 	 */
 	public String send(RpcData request) throws NSOException {
 		String responseGenerated = null;
@@ -99,7 +95,7 @@ public class RpcRequest {
 	/**
 	 * Return the current transaction number
 	 * 
-	 * @throws NSOException 
+	 * @throws NSOException  NSO related exception
 	 */
 	public List<Integer> getTransaction() throws NSOException {
 		List<Integer> th = JsonPath.read(this.send(new GetTrans()), "$.result.trans[*].th");
@@ -112,8 +108,7 @@ public class RpcRequest {
 	 * @param response
 	 *            CloseableHttpResponse response from the request
 	 * @return String representation of the JSON data
-	 * @throws org.apache.http.ParseException
-	 * @throws IOException
+	 * @throws IOException Cannot decode the header
 	 */
 	private String decodeHeader(CloseableHttpResponse response) throws IOException {
 		// Get the entity to decode the response
@@ -128,10 +123,10 @@ public class RpcRequest {
 	/**
 	 * Return the configuration
 	 * 
-	 * @param path
-	 * @param th
-	 * @return
-	 * @throws NSOException 
+	 * @param path the keypath
+	 * @param th the transaction
+	 * @return the config
+	 * @throws NSOException  NSO related exception
 	 */
 	public String getConfig(String path, int th) throws NSOException {
 		JSONObject jO = null;
@@ -165,8 +160,9 @@ public class RpcRequest {
 	 * @param addr
 	 *  -          addresse for the RPC connection
 	 * @return a CookieStore representation
-	 * @throws NSOException 
+	 * @throws NSOException NSO related exception
 	 */
+	@SuppressWarnings("unused")
 	private CookieStore getRPCCookie(String user, String password, String addr) throws NSOException  {
 		CookieStore cookieStore = null;
 		try {
@@ -221,6 +217,11 @@ public class RpcRequest {
 				+ getContext().getCookieOrigin() + "\n" + "Session ID :" + getId();
 	}
 	
+	/**
+	 * Overide the HTTP client for HTTPS bypas
+	 * @return the new http client
+	 * @throws NSOException NSO related exception
+	 */
 	private CloseableHttpClient buildCustomHttpClient() throws NSOException {
 		SSLConnectionSocketFactory sslsf = null;
 		try {

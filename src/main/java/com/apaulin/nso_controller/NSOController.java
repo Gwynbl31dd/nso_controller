@@ -442,7 +442,8 @@ public class NSOController {
 	/**
 	 * Equivalent to dryRun(int timeout);
 	 * 
-	 * @param timeout the timeout in ms
+	 * @param timeout
+	 *            the timeout in ms
 	 * @return commit dry run in cli format
 	 * @throws RPCException
 	 *             RPC related exception
@@ -457,7 +458,8 @@ public class NSOController {
 	 * Run a dry run using the CLI (Default on NSO) option Prefer dry run native for
 	 * JSON, because CLI will return a String using + - and is difficult to process.
 	 * 
-	 * @param timeout the timeout in ms
+	 * @param timeout
+	 *            the timeout in ms
 	 * @return commit dry run in json (default)
 	 * @throws NSOException
 	 *             for NSO related exception
@@ -510,7 +512,8 @@ public class NSOController {
 	/**
 	 * Run a commit with the no networking flag (No modification on the device(s))
 	 * 
-	 * @param timeout the timeout in ms
+	 * @param timeout
+	 *            the timeout in ms
 	 * @return The commit result from NSO
 	 * @throws RPCException
 	 *             RPC related exception
@@ -552,7 +555,8 @@ public class NSOController {
 	 * Example : nso.commitDryRunReverse(); This is equivalent of doing :
 	 * nso.validateCommit(); nso.commitDryRunReverse();
 	 * 
-	 * @param timeout the timeout in ms
+	 * @param timeout
+	 *            the timeout in ms
 	 * @return the commit dry run reverse result
 	 * @throws RPCException
 	 *             RPC related exception
@@ -634,7 +638,8 @@ public class NSOController {
 	/**
 	 * TODO In progress
 	 * 
-	 * @param path  KeyPath String expression
+	 * @param path
+	 *            KeyPath String expression
 	 * @return the list keys
 	 * @throws NSOException
 	 *             NSO related exception
@@ -695,9 +700,6 @@ public class NSOController {
 	 * @return the confirm commit result
 	 * @throws NSOException
 	 *             NSO related exception
-	 * @throws KeyManagementException
-	 * @throws NoSuchAlgorithmException
-	 * @throws KeyStoreException
 	 * @throws RPCException
 	 *             RPC related exception
 	 */
@@ -734,7 +736,8 @@ public class NSOController {
 	/**
 	 * Return the post request from the rest API
 	 * 
-	 * @param path  KeyPath String expression
+	 * @param path
+	 *            KeyPath String expression
 	 * @return the post result
 	 * @throws NSOException
 	 *             NSO related exception
@@ -754,7 +757,6 @@ public class NSOController {
 	 *            - KeyPath String expression
 	 * @param data
 	 *            - Data payload to send (JSON format)
-	 * @return the patch result
 	 * @throws NSOException
 	 *             NSO related exception
 	 * @throws HTTPException
@@ -971,8 +973,8 @@ public class NSOController {
 	 * @param path
 	 *            - URL path to the service (Refer to the NSO doc for the http
 	 *            request path) this is different to the KeyPath.
-	 * @param -
-	 *            type (cli,native)
+	 * @param type
+	 *            (cli,native)
 	 * @return the delete dry run result
 	 * @throws NSOException
 	 *             NSO related exception
@@ -1055,8 +1057,10 @@ public class NSOController {
 	/**
 	 * end data by REST and commit dry-run native (post)
 	 * 
-	 * @param path the url path
-	 * @param data the json data
+	 * @param path
+	 *            the url path
+	 * @param data
+	 *            the json data
 	 * @return the dry run result native
 	 * @throws NSOException
 	 *             NSO related exception
@@ -1070,8 +1074,10 @@ public class NSOController {
 	/**
 	 * end data by REST and commit dry-run cli (post)
 	 * 
-	 * @param path the url path
-	 * @param data the json data
+	 * @param path
+	 *            the url path
+	 * @param data
+	 *            the json data
 	 * @return the dry run result cli
 	 * @throws NSOException
 	 *             NSO related exception
@@ -1158,6 +1164,7 @@ public class NSOController {
 	 * 
 	 * @param path
 	 *            - KeyPath String expression
+	 * @return result
 	 * @throws RPCException
 	 *             RPC related exception
 	 * @throws NSOException
@@ -1185,7 +1192,8 @@ public class NSOController {
 	 * @return the transaction id
 	 * @throws RPCException
 	 *             RPC related exception
-	 * @throws RCPparameterException parameters exception
+	 * @throws RCPparameterException
+	 *             parameters exception
 	 * @throws NSOException
 	 *             NSO related exception
 	 */
@@ -1339,7 +1347,7 @@ public class NSOController {
 	 *            - "json","xml"
 	 * @return the result
 	 * @throws RCPparameterException
-	 * 				Parameters related exception
+	 *             Parameters related exception
 	 * @throws RPCException
 	 *             RPC related exception
 	 * @throws NSOException
@@ -1366,7 +1374,7 @@ public class NSOController {
 	 * @throws RPCException
 	 *             RPC related exception
 	 * @throws RCPparameterException
-	 * 				Parameters exception
+	 *             Parameters exception
 	 * @throws NSOException
 	 *             NSO related exception
 	 */
@@ -1568,7 +1576,8 @@ public class NSOController {
 	/**
 	 * Select a session from the session's list
 	 * 
-	 * @param index The index of the session
+	 * @param index
+	 *            The index of the session
 	 */
 	public void useSession(int index) throws IndexOutOfBoundsException {
 		sessionManager.setIndex(index);
@@ -1619,7 +1628,7 @@ public class NSOController {
 	 * @throws RPCException
 	 *             RPC related exception
 	 * @throws RCPparameterException
-	 * 			parameters exception
+	 *             parameters exception
 	 * @throws NSOException
 	 *             NSO related exception
 	 */
@@ -1685,8 +1694,10 @@ public class NSOController {
 	 * @return The NSO settings
 	 * @throws RPCException
 	 *             RPC related exception
-	 * @throws RCPparameterException parameters exception
-	 * @throws JsonException
+	 * @throws RCPparameterException
+	 *             parameters exception
+	 * @throws JsonPathException 
+	 * 			Json path exception
 	 * @throws NSOException
 	 *             NSO related exception
 	 */
