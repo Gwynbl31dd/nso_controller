@@ -15,7 +15,6 @@ public class Exists extends GetSchema {
 	 * Checks if optional data exists
 	 * @param th Transaction
 	 * @param path Path to check
-	 * @param id transaction ID
 	 */
 	public Exists(int th,String path) {
 		super("exists");

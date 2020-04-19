@@ -96,6 +96,7 @@ public class CommitOptions extends StringArray {
      * maximum number of seconds to wait for the transaction to be committed. If the timer expires, the
      * transaction is kept in the commit-queue, and the operation returns successfully. If the timeout is not
      * set, the operation waits until the transaction is committed.
+     * @param timeout timeout in ms
      */
     public void addCommitQueueTimeout(int timeout) {
     	this.add("commit-queue-timeout="+timeout);

@@ -1130,6 +1130,7 @@ public class NSOController {
 	 *            - KeyPath String expression
 	 * @param data
 	 *            - Integer value
+	 * @return the result
 	 * @throws RPCException
 	 *             RPC related exception
 	 * @throws NSOException

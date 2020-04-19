@@ -12,7 +12,6 @@ package com.apaulin.nso_controller.http.rpc;
 public class GetTrans extends RpcData {	
 	/**
 	 * Craft a transaction number request
-	 * @param id Transaction id
 	 */
 	public GetTrans() {
 		super("get_trans");

@@ -18,9 +18,9 @@ public class CommonUtility {
 	
 	/**
 	 * Read a file
-	 * @param path
-	 * @return
-	 * @throws IOException
+	 * @param path path to use
+	 * @return the file 
+	 * @throws IOException Cannot read the data
 	 */
 	public static String readFile(String path) throws IOException {
 		@SuppressWarnings("resource")

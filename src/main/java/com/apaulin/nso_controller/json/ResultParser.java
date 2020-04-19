@@ -19,10 +19,10 @@ public class ResultParser {
 	 * Process the raw data to extract the result
 	 * This validate JSON
 	 * 
-	 * @param request
-	 * @return
-	 * @throws RPCException
-	 * @throws NSOException 
+	 * @param request RPC request
+	 * @return the parsed result
+	 * @throws RPCException rpc related exception
+	 * @throws NSOException  nso related exception
 	 */
 	public static String processRawData(RpcData request,RpcRequest req) throws RPCException, NSOException {
 		String raw = null;
@@ -38,9 +38,9 @@ public class ResultParser {
 	
 	/**
 	 * Parse the result
-	 * @param jsonResult
-	 * @param parser
-	 * @return
+	 * @param jsonResult json to parse
+	 * @param parser parser to use
+	 * @return json object
 	 */
 	public static JSONObject parseResult(String jsonResult, String parser) {
 		JSONObject jO = JsonPath.parse(jsonResult).read(parser, JSONObject.class);
@@ -49,9 +49,9 @@ public class ResultParser {
 	
 	/**
 	 * Parse the result as a String
-	 * @param jsonResult
-	 * @param parser
-	 * @return
+	 * @param jsonResult json to parse
+	 * @param parser parser to use
+	 * @return json object
 	 */
 	public static String parseStringResult(String jsonResult, String parser) {
 		String jO = JsonPath.parse(jsonResult).read(parser, String.class);
@@ -60,9 +60,9 @@ public class ResultParser {
 	
 	/**
 	 * Parse as a boolean
-	 * @param jsonResult
-	 * @param parser
-	 * @return
+	 * @param jsonResult json to parse
+	 * @param parser parser to use
+	 * @return json object
 	 */
 	public static Boolean parseBool(String jsonResult, String parser) {
 		Boolean jO = JsonPath.parse(jsonResult).read(parser, Boolean.class);
@@ -71,8 +71,8 @@ public class ResultParser {
 	
 	/**
 	 * Parse the result
-	 * @param jsonResult
-	 * @return
+	 * @param jsonResult json to parse
+	 * @return json object
 	 */
 	private static JSONObject parseResult(String jsonResult) {
 		return parseResult(jsonResult, "$.result");
@@ -80,8 +80,8 @@ public class ResultParser {
 
 	/**
 	 * Parse the error
-	 * @param jsonResult
-	 * @return
+	 * @param jsonResult json to parse
+	 * @return json object
 	 */
 	public static JSONObject parseError(String jsonResult) {
 		try {

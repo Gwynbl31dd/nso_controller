@@ -84,22 +84,6 @@ public class RestRequest {
 		return this.get(path,url,user,password,"application/vnd.yang.collection+json");
 	}
 	
-	/**
-	 * Return the Header
-	 * @param path
-	 * @param url
-	 * @param user
-	 * @param password
-	 * @param header
-	 * @return
-	 * @throws ClientProtocolException
-	 * @throws IOException
-	 * @throws HTTPException
-	 * @throws NSOException 
-	 * @throws KeyManagementException
-	 * @throws NoSuchAlgorithmException
-	 * @throws KeyStoreException
-	 */
 	public String head(String path,String url,String user,String password,String header) throws HTTPException, NSOException, IOException {
 		StringBuffer result = null;
 		CloseableHttpClient client = null;

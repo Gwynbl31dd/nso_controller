@@ -125,7 +125,7 @@ public class ShowConfig extends GetSchema {
 	
 	/**
 	 * Build the request
-	 * @param Set the result as
+	 * @param noResultAs Set the result as
 	 * 
 	 */
 	public void setRequest(boolean noResultAs) {

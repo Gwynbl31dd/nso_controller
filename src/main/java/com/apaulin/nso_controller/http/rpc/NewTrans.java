@@ -29,17 +29,15 @@ public class NewTrans extends RpcData {
 	 * Build a new transaction request
 	 * 
 	 * @param db
-	 *    -        <"startup" | "running" | "candidate", default: "running">
+	 *    -        "startup" | "running" | "candidate", default: "running"
 	 * @param mode
-	 *    -       <"read" | "read_write", default: "read">
+	 *    -       "read" | "read_write", default: "read"
 	 * @param conf_mode
-	 *    -       <"private" | "shared" | "exclusive", default: "private">
+	 *    -       "private" | "shared" | "exclusive", default: "private"
 	 * @param tag
 	 *    -       String
 	 * @param on_pending_changes
-	 *    -       <"reuse" | "reject" | "discard", default: "reuse">
-	 * @param id
-	 *    -       Transaction ID
+	 *    -       "reuse" | "reject" | "discard", default: "reuse"
 	 * @throws RCPparameterException RPC related exception
 	 */
 	public NewTrans(String db, String mode, String conf_mode, String tag, String on_pending_changes)
