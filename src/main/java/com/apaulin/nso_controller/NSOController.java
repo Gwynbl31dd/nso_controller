@@ -206,8 +206,8 @@ public class NSOController {
 	 * determine the header required for GET Example : String result =
 	 * nso.restHead("/config/aaa","application/vnd.yang.collection+xml");
 	 * 
-	 * @param path
-	 *            Path to the leaf
+	 * @param path Path to the leaf
+	 * @param request The request format
 	 * @return THe header as a String Ex: "Content-Type: text/xml"
 	 * @throws NSOException
 	 *             - NSO related exception
@@ -233,7 +233,7 @@ public class NSOController {
 	 *            - http header requested / E.g :
 	 *            application/vnd.yang.collection+json - Refer to the NSO
 	 *            documentation for more information.
-	 * @return
+	 * @return The NSO response
 	 * @throws NSOException
 	 *             NSO related exception
 	 * @throws HTTPException HTTP related exception
@@ -288,7 +288,7 @@ public class NSOController {
 	/**
 	 * Same as commit, but provide a Force LSA Option
 	 * 
-	 * @return
+	 * @return The commit's result
 	 * @throws RPCException RPC related exception
 	 * @throws NSOException
 	 *             for NSO related exception
@@ -315,7 +315,7 @@ public class NSOController {
 	 * 
 	 * The default timeout is 600.
 	 * 
-	 * @return
+	 * @return The commit result
 	 * @throws RPCException RPC related exception
 	 * @throws NSOException
 	 *             for NSO related exception
@@ -327,8 +327,8 @@ public class NSOController {
 	/**
 	 * Simple commit
 	 * 
-	 * @param comment
-	 * @return
+	 * @param comment comment to add
+	 * @return The commit result
 	 * @throws RPCException RPC related exception
 	 * @throws NSOException
 	 *             for NSO related exception
@@ -342,7 +342,7 @@ public class NSOController {
 	 * Set the commit comment
 	 * 
 	 * @param comment
-	 * @return
+	 * @return the result
 	 * @throws RPCException RPC related exception
 	 * @throws NSOException
 	 *             for NSO related exception
@@ -400,7 +400,7 @@ public class NSOController {
 	 * 
 	 * This set the default timeout at 600
 	 * 
-	 * @return
+	 * @return Commit dry run result
 	 * @throws RPCException RPC related exception
 	 * @throws NSOException
 	 *             for NSO related exception
@@ -412,7 +412,7 @@ public class NSOController {
 	/**
 	 * Equivalent to dryRun();
 	 * 
-	 * @return
+	 * @return commit dry run in cli format
 	 * @throws RPCException RPC related exception
 	 * @throws NSOException
 	 *             for NSO related exception
@@ -425,7 +425,7 @@ public class NSOController {
 	 * Equivalent to dryRun(int timeout);
 	 * 
 	 * @param timeout
-	 * @return
+	 * @return commit dry run in cli format
 	 * @throws RPCException RPC related exception
 	 * @throws NSOException
 	 *             for NSO related exception
@@ -439,7 +439,7 @@ public class NSOController {
 	 * JSON, because CLI will return a String using + - and is difficult to process.
 	 * 
 	 * @param timeout
-	 * @return
+	 * @return commit dry run in json (default)
 	 * @throws NSOException
 	 *             for NSO related exception
 	 * @throws RPCException RPC related exception
@@ -477,7 +477,7 @@ public class NSOController {
 	 * 
 	 * Default timeout 600
 	 * 
-	 * @return
+	 * @return commit dry run (600ms default)
 	 * @throws NSOException
 	 *             for NSO related exception
 	 * @throws RPCException RPC related exception
@@ -530,7 +530,7 @@ public class NSOController {
 	 * nso.validateCommit(); nso.commitDryRunReverse();
 	 * 
 	 * @param timeout
-	 * @return
+	 * @return the commit dry run reverse result
 	 * @throws RPCException RPC related exception
 	 * @throws NSOException
 	 *             NSO related exception
@@ -555,7 +555,7 @@ public class NSOController {
 	 * 
 	 * Default timeout 600
 	 * 
-	 * @return
+	 * @return the commit dry run reverse result
 	 * @throws RPCException RPC related exception
 	 * @throws NSOException
 	 *             NSO related exception
@@ -588,7 +588,7 @@ public class NSOController {
 	 * Return a list of device name on the NSO instance Example : String devices =
 	 * nso.getDevicesSummary();
 	 * 
-	 * @return
+	 * @return the device summary
 	 * @throws NSOException
 	 *             NSO related exception
 	 * @throws HTTPException HTTP related exception
@@ -607,22 +607,8 @@ public class NSOController {
 	/**
 	 * TODO In progress
 	 * 
-	 * @return
-	 * @throws NSOException
-	 *             NSO related exception
-	 * @throws HTTPException HTTP related exception
-	 * @throws RPCException RPC related exception
-	 */
-	public String getDevicesDetails() throws HTTPException, NSOException, RPCException {
-		String result = this.showConfig("/devices");
-		return result;
-	}
-
-	/**
-	 * TODO In progress
-	 * 
 	 * @param path
-	 * @return
+	 * @return the list keys
 	 * @throws NSOException
 	 *             NSO related exception
 	 * @throws RPCException RPC related exception
@@ -660,7 +646,7 @@ public class NSOController {
 	 * 
 	 * @param path
 	 *            - KeyPath String expression
-	 * @return
+	 * @return the leaf ref values
 	 * @throws NSOException
 	 *             NSO related exception
 	 * @throws RPCException RPC related exception
@@ -676,13 +662,12 @@ public class NSOController {
 	/**
 	 * Confirms the currently pending confirmed commit
 	 * 
-	 * @return
+	 * @return the confirm commit result
 	 * @throws NSOException
 	 *             NSO related exception
 	 * @throws KeyManagementException
 	 * @throws NoSuchAlgorithmException
 	 * @throws KeyStoreException
-	 * @throws IOException
 	 * @throws RPCException RPC related exception
 	 */
 	public String confirmCommit() throws NSOException, RPCException {
@@ -698,7 +683,7 @@ public class NSOController {
 	 *            - KeyPath String expression
 	 * @param data
 	 *            - Data payload to send (In JSON format)
-	 * @return
+	 * @return the POST result
 	 * @throws HTTPException HTTP related exception
 	 * @throws NSOException
 	 *             NSO related exception
@@ -717,7 +702,7 @@ public class NSOController {
 	 * Return the post request from the rest API
 	 * 
 	 * @param path
-	 * @return
+	 * @return the post result
 	 * @throws NSOException
 	 *             NSO related exception
 	 * @throws HTTPException HTTP related exception
@@ -734,7 +719,7 @@ public class NSOController {
 	 *            - KeyPath String expression
 	 * @param data
 	 *            - Data payload to send (JSON format)
-	 * @return
+	 * @return the patch result
 	 * @throws NSOException
 	 *             NSO related exception
 	 * @throws HTTPException HTTP related exception
@@ -773,7 +758,7 @@ public class NSOController {
 	 *            - KeyPath String expression
 	 * @param data
 	 *            - Data payload to send (In JSON format)
-	 * @return
+	 * @return the rest dry run
 	 * @throws NSOException
 	 *             NSO related exception
 	 * @throws HTTPException HTTP related exception
@@ -791,7 +776,7 @@ public class NSOController {
 	 *            - KeyPath String expression
 	 * @param type
 	 *            - type (cli, native)
-	 * @return
+	 * @return the rest dry run
 	 * @throws HTTPException HTTP related exception
 	 * @throws NSOException
 	 *             NSO related exception
@@ -808,7 +793,7 @@ public class NSOController {
 	 *            - KeyPath String expression
 	 * @param data
 	 *            - Data payload to send (In JSON format)
-	 * @return
+	 * @return the rest5 dry run native 
 	 * @throws NSOException
 	 *             NSO related exception
 	 * @throws HTTPException HTTP related exception
@@ -824,7 +809,7 @@ public class NSOController {
 	 *            - KeyPath String expression
 	 * @param data
 	 *            - Data payload to send (In JSON format)
-	 * @return
+	 * @return the drun run cli
 	 * @throws NSOException
 	 *             NSO related exception
 	 * @throws HTTPException HTTP related exception
@@ -840,7 +825,7 @@ public class NSOController {
 	 *            - KeyPath String expression
 	 * @param data
 	 *            - Data payload to send (In JSON format)
-	 * @return
+	 * @return the patch dry run result
 	 * @throws NSOException
 	 *             NSO related exception
 	 * @throws HTTPException HTTP related exception
@@ -858,7 +843,7 @@ public class NSOController {
 	 *            - Data payload to send (In JSON format)
 	 * @param type
 	 *            - type (cli, native)
-	 * @return
+	 * @return the patch dry run result
 	 * @throws NSOException
 	 *             NSO related exception
 	 * @throws HTTPException HTTP related exception
@@ -875,7 +860,7 @@ public class NSOController {
 	 *            - KeyPath String expression
 	 * @param data
 	 *            - Data payload to send (In JSON format)
-	 * @return
+	 * @return the patch dry run result cli
 	 * @throws NSOException
 	 *             NSO related exception
 	 * @throws HTTPException HTTP related exception
@@ -891,7 +876,7 @@ public class NSOController {
 	 *            - KeyPath String expression
 	 * @param data
 	 *            - Data payload to send (In JSON format)
-	 * @return
+	 * @return the patch dry run result native
 	 * @throws NSOException
 	 *             NSO related exception
 	 * @throws HTTPException HTTP related exception
@@ -941,7 +926,7 @@ public class NSOController {
 	 *            request path) this is different to the KeyPath.
 	 * @param -
 	 *            type (cli,native)
-	 * @return
+	 * @return the delete dry run result
 	 * @throws NSOException
 	 *             NSO related exception
 	 * @throws HTTPException HTTP related exception
@@ -956,7 +941,7 @@ public class NSOController {
 	 * @param path
 	 *            - URL path to the service (Refer to the NSO doc for the http
 	 *            request path) this is different to the KeyPath.
-	 * @return
+	 * @return the delete dry run result
 	 * @throws NSOException
 	 *             NSO related exception
 	 * @throws HTTPException HTTP related exception
@@ -971,7 +956,7 @@ public class NSOController {
 	 * @param path
 	 *            - URL path to the service (Refer to the NSO doc for the http
 	 *            request path) this is different to the KeyPath.
-	 * @return
+	 * @return the delete dry run result
 	 * @throws NSOException
 	 *             NSO related exception
 	 * @throws HTTPException HTTP related exception
@@ -987,7 +972,7 @@ public class NSOController {
 	 *            - KeyPath String expression
 	 * @param data
 	 *            - Data payload to send (In JSON format)
-	 * @return
+	 * @return the dry run result
 	 * @throws HTTPException HTTP related exception
 	 * @throws NSOException
 	 *             NSO related exception
@@ -1005,7 +990,7 @@ public class NSOController {
 	 *            - Data payload to send (In JSON format)
 	 * @param type
 	 *            - type (cli,native)
-	 * @return
+	 * @return the dry run result
 	 * @throws NSOException
 	 *             NSO related exception
 	 * @throws HTTPException HTTP related exception
@@ -1020,7 +1005,7 @@ public class NSOController {
 	 * 
 	 * @param path
 	 * @param data
-	 * @return
+	 * @return the dry run result native
 	 * @throws NSOException
 	 *             NSO related exception
 	 * @throws HTTPException HTTP related exception
@@ -1034,7 +1019,7 @@ public class NSOController {
 	 * 
 	 * @param path
 	 * @param data
-	 * @return
+	 * @return the dry run result cli
 	 * @throws NSOException
 	 *             NSO related exception
 	 * @throws HTTPException
@@ -1051,7 +1036,7 @@ public class NSOController {
 	 *            - KeyPath String expression
 	 * @param data
 	 *            - String data
-	 * @return
+	 * @return the result
 	 * @throws RPCException RPC related exception
 	 * @throws NSOException
 	 *             NSO related exception
@@ -1069,7 +1054,7 @@ public class NSOController {
 	 *            - KeyPath String expression
 	 * @param data
 	 *            - Boolean value
-	 * @return
+	 * @return the result
 	 * @throws RPCException RPC related exception
 	 * @throws NSOException
 	 *             NSO related exception
@@ -1100,7 +1085,7 @@ public class NSOController {
 	/**
 	 * Abort a JSON-RPC method by its associated id.
 	 * 
-	 * @return
+	 * @return the result
 	 * @throws RPCException RPC related exception
 	 * @throws NSOException
 	 *             NSO related exception
@@ -1139,7 +1124,7 @@ public class NSOController {
 	 *            - Tag use for the rollback system
 	 * @param on_pending_change
 	 *            - "reuse", "reject", "discard"
-	 * @return
+	 * @return the transaction id
 	 * @throws RPCException RPC related exception
 	 * @throws RCPparameterException
 	 * @throws NSOException
@@ -1170,7 +1155,7 @@ public class NSOController {
 	 * 
 	 * @param path
 	 *            - KeyPath String expression
-	 * @return
+	 * @return the model
 	 * @throws RPCException RPC related exception
 	 * @throws NSOException
 	 *             NSO related exception
@@ -1194,8 +1179,8 @@ public class NSOController {
 			// throw new RPCException("No transaction initated, make sure you start a
 			// transaction before any call");
 			try {
-				sessionManager.getCurrentSession().setTransactionId(startTransaction());// Instead of throwing an
-																						// exception, start a new one
+				// Instead of throwing anexception, start a new one
+				sessionManager.getCurrentSession().setTransactionId(startTransaction());
 				sessionManager.getCurrentSession().setTransactionInProgress(true);// Set the transaction in progress
 			} catch (RCPparameterException e) {
 				throw new NSOException(e);
@@ -1206,7 +1191,7 @@ public class NSOController {
 	/**
 	 * Try a sync from but does not valid the devices Example : nso.syncFrom();
 	 * 
-	 * @return
+	 * @return the sync from result
 	 * @throws RPCException RPC related exception
 	 * @throws NSOException
 	 *             NSO related exception
@@ -1257,7 +1242,7 @@ public class NSOController {
 	 * 
 	 * @param action
 	 *            - KeyPath String expression to the action
-	 * @return
+	 * @return the action result
 	 * @throws RPCException RPC related exception
 	 * @throws NSOException
 	 *             NSO related exception
@@ -1289,7 +1274,7 @@ public class NSOController {
 	 *            - "create","merge","replace"
 	 * @param format
 	 *            - "json","xml"
-	 * @return
+	 * @return the result
 	 * @throws RCPparameterException
 	 * @throws RPCException RPC related exception
 	 * @throws NSOException
@@ -1312,7 +1297,7 @@ public class NSOController {
 	 *            - KeyPath String expression
 	 * @param filePath
 	 *            - path to the file (from the system calling it)
-	 * @return
+	 * @return the result
 	 * @throws RPCException RPC related exception
 	 * @throws RCPparameterException
 	 * @throws NSOException
@@ -1329,7 +1314,7 @@ public class NSOController {
 	 * 
 	 * @param path
 	 *            - KeyPath String expression to the service
-	 * @return
+	 * @return check sync result
 	 * @throws RPCException RPC related exception
 	 * @throws NSOException
 	 *             NSO related exception
@@ -1396,7 +1381,7 @@ public class NSOController {
 	 * 
 	 * @param path
 	 *            - KeyPath String expression to the service
-	 * @return
+	 * @return The status
 	 * @throws RPCException RPC related exception
 	 * @throws NSOException
 	 *             NSO related exception
@@ -1431,7 +1416,7 @@ public class NSOController {
 	 *            - device name
 	 * @param cmd
 	 *            - command to send to the device
-	 * @return
+	 * @return live status result
 	 * @throws RPCException RPC related exception
 	 * @throws NSOException
 	 *             NSO related exception
@@ -1449,7 +1434,7 @@ public class NSOController {
 	 *            - command to send to the device
 	 * @param action
 	 *            - exec, bigip-actions,...
-	 * @return
+	 * @return live status result
 	 * @throws NSOException
 	 *             NSO related exception
 	 * @throws RPCException RPC related exception
@@ -1475,7 +1460,7 @@ public class NSOController {
 	 * 
 	 * @param path
 	 *            - KeyPath String expression to the leaf
-	 * @return
+	 * @return a boolean representing the leaf
 	 * @throws RPCException RPC related exception
 	 * @throws NSOException
 	 *             NSO related exception
@@ -1491,7 +1476,7 @@ public class NSOController {
 	 * Log out from the NPC sessions This should always be called after your
 	 * operations. If not, NSO will keep the session open.
 	 * 
-	 * @return
+	 * @return returns the sessions or null if it does not exist
 	 */
 	public String logout() {
 		String back = new String();
@@ -1520,7 +1505,7 @@ public class NSOController {
 	 * 
 	 * @param path
 	 *            - KeyPath String expression to the leaf
-	 * @return
+	 * @return the config
 	 * @throws RPCException RPC related exception
 	 * @throws NSOException
 	 *             NSO related exception
@@ -1554,7 +1539,7 @@ public class NSOController {
 	 *            - KeyPath String expression to the leaf
 	 * @param resultAs
 	 *            - "string","json"
-	 * @return
+	 * @return the config
 	 * @throws RPCException RPC related exception
 	 * @throws RCPparameterException
 	 * @throws NSOException
@@ -1576,7 +1561,7 @@ public class NSOController {
 	/**
 	 * Return the NSOVersion
 	 * 
-	 * @return
+	 * @return the nso version
 	 * @throws RPCException RPC related exception
 	 * @throws RCPparameterException
 	 * @throws NSOException
@@ -1597,18 +1582,18 @@ public class NSOController {
 	}
 
 	/**
-	 * Get the Minor NSO version Example : 4.5.3 -> Minor is 5
+	 * Get the Minor NSO version Example : 4.5.3 : Minor is 5
 	 * 
-	 * @return
+	 * @return the minor version
 	 */
 	public int getMinorVersion() {
 		return this.minor_version;
 	}
 
 	/**
-	 * Get the Major NSO Version Example : 4.5.3 -> Major is 4
+	 * Get the Major NSO Version Example : 4.5.3 : Major is 4
 	 * 
-	 * @return
+	 * @return the major version
 	 */
 	public int getMajorVersion() {
 		return this.major_version;
@@ -1644,7 +1629,7 @@ public class NSOController {
 	/**
 	 * Return the index of the current session
 	 * 
-	 * @return
+	 * @return the current session
 	 */
 	public int getSessionIndex() {
 		return sessionManager.getCurrentIndex();
@@ -1653,7 +1638,7 @@ public class NSOController {
 	/**
 	 * Return the total sessions available
 	 * 
-	 * @return
+	 * @return the current session list size
 	 */
 	public int getTotalSessions() {
 		return sessionManager.getSessionList().size();
