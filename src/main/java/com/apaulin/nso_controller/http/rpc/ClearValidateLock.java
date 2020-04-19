@@ -12,7 +12,7 @@ public class ClearValidateLock extends ValidateTrans{
 
 	/**
 	 * 
-	 * @param th
+	 * @param th the transaction id
 	 */
 	public ClearValidateLock(int th) {
 		super(th,"clear_validate_lock");

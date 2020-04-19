@@ -13,7 +13,7 @@ public class AbortCommit extends ValidateTrans{
 	
 	/**
 	 * Build the request
-	 * @param th
+	 * @param th the transaction
 	 */
 	public AbortCommit(int th) {
 		super(th,"abort_commit");

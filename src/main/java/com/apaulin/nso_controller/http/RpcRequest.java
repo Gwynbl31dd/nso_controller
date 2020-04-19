@@ -95,6 +95,7 @@ public class RpcRequest {
 	/**
 	 * Return the current transaction number
 	 * 
+	 * @return the current transaction
 	 * @throws NSOException  NSO related exception
 	 */
 	public List<Integer> getTransaction() throws NSOException {

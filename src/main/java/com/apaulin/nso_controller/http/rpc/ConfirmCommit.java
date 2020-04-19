@@ -13,7 +13,7 @@ public class ConfirmCommit extends ValidateTrans{
 	
 	/**
 	 * Build the request
-	 * @param th
+	 * @param th transaction id
 	 */
 	public ConfirmCommit(int th) {
 		super(th,"confirm_commit");

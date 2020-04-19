@@ -13,9 +13,9 @@ package com.apaulin.nso_controller.http.rpc;
 public class Delete extends GetSchema{
 
 	/**
-	 * 
-	 * @param th
-	 * @param path
+	 * Delete 
+	 * @param th transaction id
+	 * @param path keypath
 	 */
 	public Delete(int th, String path) {
 		super("delete");

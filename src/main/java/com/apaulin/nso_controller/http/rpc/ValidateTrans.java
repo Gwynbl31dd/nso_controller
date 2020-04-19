@@ -23,8 +23,8 @@ public class ValidateTrans extends RpcData {
 	
 	/**
 	 * Validate a transaction
-	 * @param th
-	 * @param method
+	 * @param th transaction id
+	 * @param method method to use
 	 */
 	protected ValidateTrans(int th,String method) {
 		super(method);

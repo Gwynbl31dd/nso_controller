@@ -15,9 +15,8 @@ public class SetTransactionComment extends RpcData {
 	
 	/**
 	 * Craft a request to get the schema
-	 * @param th
-	 * @param path
-	 * @param id
+	 * @param th transaction id
+	 * @param comment transaction comment
 	 */
 	public SetTransactionComment(int th,String comment) {
 		this("set_trans_comment");//Set the action name
@@ -28,8 +27,7 @@ public class SetTransactionComment extends RpcData {
 	
 	/**
 	 * Call super constructor
-	 * @param id
-	 * @param method
+	 * @param method method to use
 	 */
 	protected SetTransactionComment(String method) {
 		super(method);//Set the method/action to use with JRPC
@@ -45,7 +43,7 @@ public class SetTransactionComment extends RpcData {
 	
 	/**
 	 * Return the comment
-	 * @return
+	 * @return the comment
 	 */
 	public String getComment() {
 		return comment;
@@ -53,7 +51,7 @@ public class SetTransactionComment extends RpcData {
 
 	/**
 	 * Get the transaction number
-	 * @return
+	 * @return the transaction id
 	 */
 	public int getTh() {
 		return th;
@@ -61,7 +59,7 @@ public class SetTransactionComment extends RpcData {
 
 	/**
 	 * Set the transaction number
-	 * @param th
+	 * @param th transaction id
 	 */
 	public void setTh(int th) {
 		this.th = th;

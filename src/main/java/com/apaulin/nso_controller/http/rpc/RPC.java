@@ -10,7 +10,6 @@ import org.apache.http.entity.StringEntity;
 /**
  * @author Anthony Paulin
  * @version 0.1
- * @category RPC
  * @since 06-01-2020
  *
  */

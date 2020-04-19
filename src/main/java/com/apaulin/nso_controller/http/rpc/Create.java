@@ -14,8 +14,8 @@ public class Create extends GetSchema {
 
 	/**
 	 * Build the request
-	 * @param th
-	 * @param path
+	 * @param th transaction id
+	 * @param path keypath
 	 */
 	public Create(int th, String path) {
 		super("create");

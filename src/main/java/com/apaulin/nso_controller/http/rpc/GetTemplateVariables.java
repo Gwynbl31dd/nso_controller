@@ -16,8 +16,8 @@ public class GetTemplateVariables extends GetSchema{
 	
 	/**
 	 * Build the template variable request
-	 * @param th
-	 * @param name
+	 * @param th transaction id
+	 * @param name template name
 	 */
 	public GetTemplateVariables(int th,String name) {
 	 	super("get_template_variables");

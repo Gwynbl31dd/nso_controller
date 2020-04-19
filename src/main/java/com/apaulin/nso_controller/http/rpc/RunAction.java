@@ -15,8 +15,8 @@ public class RunAction extends GetSchema {
 	
 	/**
 	 * Run an action
-	 * @param th
-	 * @param path
+	 * @param th transaction id
+	 * @param path keypath
 	 */
 	public RunAction(int th,String path) {
 			super("run_action");

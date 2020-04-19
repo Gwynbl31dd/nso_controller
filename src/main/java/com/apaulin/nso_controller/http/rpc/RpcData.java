@@ -21,8 +21,7 @@ abstract public class RpcData implements RPC {
     
 	/**
 	 * Build base for NCPRequest
-	 * @param id
-	 * @param method
+	 * @param method method to use
 	 */
 	public RpcData(String method) {
 		this.setMethod(method);
@@ -30,7 +29,7 @@ abstract public class RpcData implements RPC {
 	
 	/**
 	 * Get the method
-	 * @return
+	 * @return returns the method
 	 */
 	public String getMethod() {
 		return method;
@@ -38,7 +37,7 @@ abstract public class RpcData implements RPC {
 
 	/**
 	 * Set the method
-	 * @param method
+	 * @param method The method
 	 */
 	public void setMethod(String method) {
 		this.method = method;
@@ -46,7 +45,7 @@ abstract public class RpcData implements RPC {
     
 	/**
 	 * Get the ID
-	 * @return
+	 * @return the id
 	 */
 	public int getId() {
 		return id;
@@ -54,7 +53,7 @@ abstract public class RpcData implements RPC {
 
 	/**
 	 * Set the ID
-	 * @param id
+	 * @param id the id to set
 	 */
 	public void setId(int id) {
 		this.id = id;
@@ -62,7 +61,7 @@ abstract public class RpcData implements RPC {
 
 	/**
 	 * Return the built request
-	 * @return
+	 * @return the request
 	 */
 	public String getRequest() {
 		return request;

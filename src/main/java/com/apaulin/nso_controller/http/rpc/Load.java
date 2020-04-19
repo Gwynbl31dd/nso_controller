@@ -8,15 +8,16 @@ import java.io.IOException;
 /**
  * Load XML/JSON configuration into current transaction
  * 
+ * The data param is the data to be loaded into the transaction.
+ * mode controls how the data is loaded into the transaction, analogous
+ * with the CLI command load.format informs load about which format
+ * data is in. If format is xml the data must be an XML document
+ * encoded as a string. If format is json data can either be a JSON
+ * document encoded as a string or the JSON data itself.
+ * 
  * @author Anthony Paulin
  * @since 19/07/2018
- * @version 0.1 
- * 			The data param is the data to be loaded into the transaction.
- *          mode controls how the data is loaded into the transaction, analogous
- *          with the CLI command load.format informs load about which format
- *          data is in. If format is xml the data must be an XML document
- *          encoded as a string. If format is json data can either be a JSON
- *          document encoded as a string or the JSON data itself.
+ * @version 0.1 		
  */
 public class Load extends GetSchema {
 	private String data;
@@ -28,11 +29,11 @@ public class Load extends GetSchema {
 	/**
 	 * Load the file
 	 * 
-	 * @param th
-	 * @param path
-	 * @param data
-	 * @throws FileNotFoundException
-	 * @throws IOException
+	 * @param th transaction id
+	 * @param path keypath
+	 * @param data data 
+	 * @throws FileNotFoundException Cannot find the file
+	 * @throws IOException Input output exception
 	 */
 	public Load(int th, String path, String data) throws FileNotFoundException, IOException {
 		super("load");
@@ -45,12 +46,12 @@ public class Load extends GetSchema {
 	/**
 	 * Load the file
 	 * 
-	 * @param th
-	 * @param path
-	 * @param data
-	 * @param mode
-	 * @param format
-	 * @throws RCPparameterException
+	 * @param th transaction id
+	 * @param path keypath
+	 * @param data data to load
+	 * @param mode mode used
+	 * @param format format of the data
+	 * @throws RCPparameterException RPC related exception
 	 */
 	public Load(int th, String path, String data, String mode, String format) throws RCPparameterException {
 		super("load");
@@ -65,9 +66,9 @@ public class Load extends GetSchema {
 	/**
 	 * Read the file
 	 * 
-	 * @return
-	 * @throws FileNotFoundException
-	 * @throws IOException
+	 * @return The data
+	 * @throws FileNotFoundException cannot find the file
+	 * @throws IOException cannot read the file
 	 */
 	private String getData() throws FileNotFoundException, IOException {
 		@SuppressWarnings("resource")
@@ -86,7 +87,7 @@ public class Load extends GetSchema {
 	/**
 	 * Set the data
 	 * 
-	 * @param data
+	 * @param data data to use
 	 */
 	private void setData(String data) {
 		this.data = data;
@@ -95,7 +96,7 @@ public class Load extends GetSchema {
 	/**
 	 * Get the format
 	 * 
-	 * @return
+	 * @return file format
 	 */
 	private String getFormat() {
 		return format;
@@ -104,8 +105,8 @@ public class Load extends GetSchema {
 	/**
 	 * Set format
 	 * 
-	 * @param format
-	 * @throws RCPparameterException
+	 * @param format file format
+	 * @throws RCPparameterException rpc related exception
 	 */
 	private void setFormat(String format) throws RCPparameterException {
 		valueListExist(format, FORMAT_VALUES);
@@ -124,8 +125,8 @@ public class Load extends GetSchema {
 	/**
 	 * Set the mode
 	 * 
-	 * @param mode
-	 * @throws RCPparameterException
+	 * @param mode mode to use
+	 * @throws RCPparameterException RPC related exception
 	 */
 	private void setMode(String mode) throws RCPparameterException {
 		valueListExist(mode, MODE_VALUES);

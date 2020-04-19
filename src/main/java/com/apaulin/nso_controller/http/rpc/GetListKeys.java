@@ -21,9 +21,8 @@ public class GetListKeys extends GetSchema {
 	
 	/**
 	 * Craft a config request
-	 * @param th
-	 * @param path
-	 * @param id
+	 * @param th transaction id
+	 * @param path keypath
 	 */
 	public GetListKeys(int th,String path) {
 		super("get_list_keys");
@@ -35,6 +34,7 @@ public class GetListKeys extends GetSchema {
 	
 	/**
 	 * Build the request
+	 * @param noResultAs no result as
 	 */
 	public void setRequest(boolean noResultAs) {
 		String request = "{\"th\": "+getTh()+",\"path\":\""+getPath()+"}";

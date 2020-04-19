@@ -8,7 +8,6 @@ package com.apaulin.nso_controller.http;
  * @author Anthony Paulin
  * @version 0.1
  * @since 06-01-2020
- * @category RPC
  *
  */
 public class RpcSession {

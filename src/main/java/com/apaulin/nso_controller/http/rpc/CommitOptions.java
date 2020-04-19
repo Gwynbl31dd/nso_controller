@@ -44,6 +44,8 @@ public class CommitOptions extends StringArray {
      * transaction data has been sent to all devices, or a timeout occurs. The bypass value means that if /
      * devices/global-settings/commit-queue/enabled-by-default is true the data in
      * this transaction will bypass the commit queue. The data will be written directly to the devices.
+     * 
+     * @param mode commit queue mode
 	 */
 	public void addCommitQueue(String mode) {
         this.add("commit-queue="+mode);
@@ -54,6 +56,8 @@ public class CommitOptions extends StringArray {
      * the resulting queue item. If ATOMIC is set to false, the devices contained in the resulting queue item
      * can start executing if the same devices in other non-atomic queue items ahead of it in the queue are
      * completed. If set to true, the atomic integrity of the queue item is preserved.
+     * 
+     * @param atomic value
 	 */
 	public void addCommitQueueAtomic(boolean atomic) {
 		this.add("commit-queue-atomic="+atomic);
@@ -80,6 +84,8 @@ public class CommitOptions extends StringArray {
     /**
      * commit-queue-tag=TAG - Where TAG is a user defined opaque tag. The tag is present in all
      * notifications and events sent referencing the specific queue item.
+     * 
+     * @param tag commit tag
      */
     public void addCommitQueueTag(String tag) {
     	this.add("commit-queue-tag="+tag);
@@ -107,6 +113,8 @@ public class CommitOptions extends StringArray {
      * dry-run=FORMAT - Where FORMAT is the desired output format: xml, cli or native. Validate and
      * display the configuration changes but do not perform the actual commit. Neither CDB nor the devices
      * are affected. Instead the effects that would have taken place is showed in the returned output.
+     * 
+     * @param format string format
      */
     public void addDryRun(String format) {
     	this.add("dry-run="+format);

@@ -18,9 +18,8 @@ public class GetSchema extends RpcData {
 	
 	/**
 	 * Craft a request to get the schema
-	 * @param th
-	 * @param path
-	 * @param id
+	 * @param th transaction id
+	 * @param path keypath
 	 */
 	public GetSchema(int th,String path) {
 		this("get_schema");
@@ -31,8 +30,7 @@ public class GetSchema extends RpcData {
 	
 	/**
 	 * Call super constructor
-	 * @param id
-	 * @param method
+	 * @param method method to use
 	 */
 	protected GetSchema(String method) {
 		super(method);
@@ -48,7 +46,7 @@ public class GetSchema extends RpcData {
 	
 	/**
 	 * Return the path
-	 * @return
+	 * @return the path
 	 */
 	public String getPath() {
 		return path;
@@ -56,7 +54,7 @@ public class GetSchema extends RpcData {
 
 	/**
 	 * Set the path
-	 * @param path
+	 * @param path the keypath
 	 */
 	public void setPath(String path) {
 		this.path = path;
@@ -64,7 +62,7 @@ public class GetSchema extends RpcData {
 
 	/**
 	 * Get the transaction number
-	 * @return
+	 * @return the transaction id
 	 */
 	public int getTh() {
 		return th;
@@ -72,7 +70,7 @@ public class GetSchema extends RpcData {
 
 	/**
 	 * Set the transaction number
-	 * @param th
+	 * @param th the transaction id
 	 */
 	public void setTh(int th) {
 		this.th = th;

@@ -15,9 +15,8 @@ public class KickUser extends GetSchema {
 	
 	/**
 	 * Craft a config request
-	 * @param th
-	 * @param path
-	 * @param id
+	 * @param th transaction id
+	 * @param user username
 	 */
 	public KickUser(int th,String user) {
 		super("kick_user");
@@ -27,8 +26,7 @@ public class KickUser extends GetSchema {
 	}
 
 	/**
-	 *  Build the request
-	 * @param noResultAs2 ASR9Ks (9912/9010s) with 2 Tengig Ports in each box
+	 * Build the request
 	 */
 	@Override
 	public void setRequest() {

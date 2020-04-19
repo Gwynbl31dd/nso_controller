@@ -18,9 +18,9 @@ public class GetValues extends GetSchema {
 	private StringArray leafs;
 	/**
 	 * Build the request
-	 * @param th
-	 * @param path
-	 * @param leafs
+	 * @param th transaction id
+	 * @param path keypath
+	 * @param leafs Array of leaf
 	 */
 	public GetValues(int th, String path, StringArray leafs) {
 		super("get_values");

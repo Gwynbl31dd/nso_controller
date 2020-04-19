@@ -20,8 +20,8 @@ public class JSONDisplay {
 	
 	/**
 	 * Initiate JSONDispay
-	 * @param jsonString
-	 * @throws JsonException
+	 * @param jsonString json string 
+	 * @throws JsonPathException JSOn related exception
 	 */
 	public JSONDisplay(String jsonString) throws JsonPathException {
 		String tmp = spaceCalculator(splitComma(splitBracketRight(splitBracketleft(splitEscaped(jsonString)))));
@@ -48,7 +48,7 @@ public class JSONDisplay {
 	
 	/**
 	 * Decrement spaces
-	 * @throws JsonException
+	 * @throws JsonPathException json related exception
 	 */
 	private void decrementSpaces() throws JsonPathException {
 		this.spaceNumber -= this.spaceInc;
@@ -59,8 +59,8 @@ public class JSONDisplay {
 	
 	/**
 	 * Split the right bracket
-	 * @param jsonString
-	 * @return
+	 * @param jsonString the json data
+	 * @return the modified json
 	 */
 	private String splitBracketRight(String jsonString) {
 		String jsonModified = new String();
@@ -73,8 +73,8 @@ public class JSONDisplay {
 	
 	/**
 	 * Split the left bracket
-	 * @param jsonString
-	 * @return
+	 * @param jsonString the json data
+	 * @return the modified json
 	 */
 	private String splitBracketleft(String jsonString) {
 		String jsonModified = new String();
@@ -86,9 +86,9 @@ public class JSONDisplay {
 	}
 	
 	/**
-	 * Split espaced character
-	 * @param jsonString
-	 * @return
+	 * Split spaced character
+	 * @param jsonString the json data
+	 * @return the modified json
 	 */
 	private String splitEscaped(String jsonString) {
 		String jsonModified = jsonString.trim().replaceAll("\\\\n", "\n");
@@ -97,8 +97,8 @@ public class JSONDisplay {
 	
 	/**
 	 * Split comma
-	 * @param jsonString
-	 * @return
+	 * @param jsonString the json data
+	 * @return the modified json
 	 */
 	private String splitComma(String jsonString) {
 		String jsonModified = jsonString.trim().replaceAll(",", ",\n");
@@ -107,9 +107,9 @@ public class JSONDisplay {
 	
 	/**
 	 * Calculate the number of spaces
-	 * @param jsonString
-	 * @return
-	 * @throws JsonException
+	 * @param jsonString the json data
+	 * @return the modified json
+	 * @throws JsonPathException
 	 */
 	private String spaceCalculator(String jsonString) throws JsonPathException {
 		String jsonModified = new String();
@@ -133,6 +133,7 @@ public class JSONDisplay {
 	
 	/**
 	 * Return the JSON file modified
+	 * @return the modified json
 	 */
 	@Override
 	public String toString() {

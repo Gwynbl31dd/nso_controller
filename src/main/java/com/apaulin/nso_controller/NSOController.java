@@ -1,9 +1,6 @@
 package com.apaulin.nso_controller;
 
 import java.io.IOException;
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
 
 import com.apaulin.nso_controller.exception.NSOException;
 import com.apaulin.nso_controller.http.RpcRequest;
@@ -1437,8 +1434,6 @@ public class NSOController {
 	 * Same as deviceCheckSync(String device), but return a RPCException if one of
 	 * the device is out of sync.
 	 * 
-	 * @param device
-	 *            The device name
 	 * @return The status
 	 * @throws NSOException
 	 *             NSO related exception

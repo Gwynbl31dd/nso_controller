@@ -40,7 +40,7 @@ public class NewTrans extends RpcData {
 	 *    -       <"reuse" | "reject" | "discard", default: "reuse">
 	 * @param id
 	 *    -       Transaction ID
-	 * @throws RCPparameterException
+	 * @throws RCPparameterException RPC related exception
 	 */
 	public NewTrans(String db, String mode, String conf_mode, String tag, String on_pending_changes)
 			throws RCPparameterException {
@@ -66,8 +66,8 @@ public class NewTrans extends RpcData {
 	/**
 	 * Build a new transaction request
 	 * 
-	 * @param tag 
-	 * @throws RCPparameterException
+	 * @param tag tag used for the new transaction
+	 * @throws RCPparameterException RPC related exception
 	 */
 	public NewTrans(String tag) throws RCPparameterException {
 		this("running", "read", "private", tag, "reuse");
@@ -83,8 +83,7 @@ public class NewTrans extends RpcData {
 	/**
 	 * @param db
 	 *            the db to set
-	 * @throws RCPparameterException
-	 * @throws Exception
+	 * @throws RCPparameterException RPC related exception
 	 */
 	public void setDb(String db) throws RCPparameterException {
 		valueListExist(db, DB_VALUES);
@@ -101,7 +100,7 @@ public class NewTrans extends RpcData {
 	/**
 	 * @param mode
 	 *            the mode to set
-	 * @throws RCPparameterException
+	 * @throws RCPparameterException RPC related exception
 	 */
 	public void setMode(String mode) throws RCPparameterException {
 		valueListExist(mode, MODE_VALUES);
@@ -118,7 +117,7 @@ public class NewTrans extends RpcData {
 	/**
 	 * @param conf_mode
 	 *            the conf_mode to set
-	 * @throws RCPparameterException
+	 * @throws RCPparameterException RPC related exception
 	 */
 	public void setConfMode(String conf_mode) throws RCPparameterException {
 		valueListExist(conf_mode, CONF_MODE_VALUES);
@@ -150,7 +149,7 @@ public class NewTrans extends RpcData {
 	/**
 	 * @param on_pending_changes
 	 *            the on_pending_changes to set
-	 * @throws RCPparameterException
+	 * @throws RCPparameterException RPC related exception
 	 */
 	public void setOnPendingChanges(String on_pending_changes) throws RCPparameterException {
 		valueListExist(on_pending_changes, ON_PENDING_CHANGES_VALUES);

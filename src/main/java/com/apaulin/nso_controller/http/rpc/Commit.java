@@ -21,7 +21,7 @@ public class Commit extends ValidateTrans{
 	
 	/**
 	 * Build the request
-	 * @param th
+	 * @param th transaction id
 	 */
 	public Commit(int th) {
 		super(th,"commit");
@@ -30,8 +30,8 @@ public class Commit extends ValidateTrans{
 	
 	/**
 	 * Built the request
-	 * @param th
-	 * @param timeout
+	 * @param th transaction id
+	 * @param timeout timeout in ms
 	 */
 	public Commit(int th,int timeout) {
 		super(th,"commit");
@@ -40,8 +40,8 @@ public class Commit extends ValidateTrans{
 	
 	/**
 	 * Build the request
-	 * @param th
-	 * @param flags
+	 * @param th transaction id
+	 * @param flags commit options
 	 */
 	public Commit(int th,CommitOptions flags) {
 		super(th,"commit");
@@ -51,9 +51,9 @@ public class Commit extends ValidateTrans{
 	
 	/**
 	 * Build the request
-	 * @param th
-	 * @param flags
-	 * @param timeout
+	 * @param th transaction id
+	 * @param flags commit options
+	 * @param timeout  timeout timeout in ms
 	 */
 	public Commit(int th,CommitOptions flags, int timeout) {
 		super(th,"commit");
@@ -64,10 +64,10 @@ public class Commit extends ValidateTrans{
 	
 	/**
 	 * Build the request
-	 * @param th
-	 * @param flags
-	 * @param timeout
-	 * @param releaseLock
+	 * @param th transaction id
+	 * @param flags commit options
+	 * @param timeout timeout timeout in ms
+	 * @param releaseLock boolean to release the lock
 	 */
 	public Commit(int th,CommitOptions flags, int timeout, boolean releaseLock) {
 		super(th,"commit");

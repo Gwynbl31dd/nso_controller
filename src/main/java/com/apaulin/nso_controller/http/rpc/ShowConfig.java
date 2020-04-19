@@ -21,9 +21,8 @@ public class ShowConfig extends GetSchema {
 	
 	/**
 	 * Craft a config request
-	 * @param th
-	 * @param path
-	 * @param id
+	 * @param th transaction id
+	 * @param path keypath
 	 */
 	public ShowConfig(int th,String path) {
 		super("show_config");
@@ -34,12 +33,12 @@ public class ShowConfig extends GetSchema {
 	
 	/**
 	 * Craft a config request
-	 * @param th 
-	 * @param path
-	 * @param resultAs
-	 * @param withOper
-	 * @param maxSize
-	 * @throws RCPparameterException 
+	 * @param th transaction id
+	 * @param path keypath
+	 * @param resultAs result format
+	 * @param withOper with oepration
+	 * @param maxSize size max
+	 * @throws RCPparameterException  RPC related exception
 	 */
 	public ShowConfig(int th,String path,String resultAs, boolean withOper,int maxSize) throws RCPparameterException {
 		super("show_config");
@@ -53,11 +52,11 @@ public class ShowConfig extends GetSchema {
 
 	/**
 	 * Craft a config request
-	 * @param th 
-	 * @param path
-	 * @param withOper
-	 * @param maxSize
-	 * @throws RCPparameterException 
+	 * @param th transaction id
+	 * @param path keypath
+	 * @param withOper operation
+	 * @param maxSize max size
+	 * @throws RCPparameterException rpc related exception
 	 */
 	public ShowConfig(int th,String path, boolean withOper,int maxSize) throws RCPparameterException {
 		super("show_config");
@@ -69,7 +68,7 @@ public class ShowConfig extends GetSchema {
 	}
 	/**
 	 * Get the max size
-	 * @return
+	 * @return the max size
 	 */
 	private int getMaxSize() {
 		return maxSize;
@@ -77,8 +76,8 @@ public class ShowConfig extends GetSchema {
 
 	/**
 	 * Set Max size
-	 * @param maxSize
-	 * @throws RCPparameterException
+	 * @param maxSize max size
+	 * @throws RCPparameterException rpc related excpetion
 	 */
 	private void setMaxSize(int maxSize) throws RCPparameterException {
 		if(maxSize >= 0) {
@@ -92,7 +91,7 @@ public class ShowConfig extends GetSchema {
 
 	/**
 	 * Check if with oper
-	 * @return
+	 * @return with operation
 	 */
 	private boolean isWithOper() {
 		return withOper;
@@ -100,7 +99,7 @@ public class ShowConfig extends GetSchema {
 
 	/**
 	 * set with oper
-	 * @param withOper
+	 * @param withOper set the operation
 	 */
 	private void setWithOper(boolean withOper) {
 		this.withOper = withOper;
@@ -108,7 +107,7 @@ public class ShowConfig extends GetSchema {
 	
 	/**
 	 * get the result as
-	 * @return
+	 * @return the result format
 	 */
 	private String getResultAs() {
 		return resultAs;
@@ -116,8 +115,8 @@ public class ShowConfig extends GetSchema {
 
 	/**
 	 * Set result type
-	 * @param resultAs
-	 * @throws RCPparameterException
+	 * @param resultAs format required
+	 * @throws RCPparameterException rpc related exception
 	 */
 	private void setResultAs(String resultAs) throws RCPparameterException {
 		valueListExist(resultAs,RESULT_AS_VALUES);
@@ -126,6 +125,8 @@ public class ShowConfig extends GetSchema {
 	
 	/**
 	 * Build the request
+	 * @param Set the result as
+	 * 
 	 */
 	public void setRequest(boolean noResultAs) {
 		String request = new String();

@@ -5,13 +5,15 @@ package com.apaulin.nso_controller.http.rpc;
 
 /**
  * Sets a leaf value
- * @author Anthony Paulin
- * @since 19/07/2018
- * @version 0.1
+ * 
  * The path param is the keypath to give a new value as specified with the value param.
  * value can be an array when the path is a leaf-list node.
  * When value is null, the set_value method acts like delete.
  * When dryrun is true, this function can be used to test if a value is valid or not.
+ * 
+ * @author Anthony Paulin
+ * @since 19/07/2018
+ * @version 0.1
  */
 public class SetValue extends GetSchema {
 	private boolean dryRun = false;
@@ -20,8 +22,9 @@ public class SetValue extends GetSchema {
 	
 	/**
 	 * Build a request
-	 * @param th
-	 * @param path
+	 * @param th transaction id
+	 * @param path keypath
+	 * @param value value to set
 	 */
 	public SetValue(int th, String path,String value) {
 		super("set_value");
@@ -34,9 +37,9 @@ public class SetValue extends GetSchema {
 	
 	/**
 	 * Build a request
-	 * @param th
-	 * @param path
-	 * @param value
+	 * @param th transaction id
+	 * @param path keypath
+	 * @param value boolean value
 	 */
 	public SetValue(int th,String path,boolean value) {
 		super("set_value");
@@ -48,9 +51,9 @@ public class SetValue extends GetSchema {
 
 	/**
 	 * Build a request
-	 * @param th
-	 * @param path
-	 * @param value
+	 * @param th transaction id
+	 * @param path keypath
+	 * @param value integer value
 	 */
 	public SetValue(int th,String path,int value) {
 		super("set_value");

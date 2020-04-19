@@ -13,7 +13,7 @@ public class DeleteTrans extends ValidateTrans{
 	
 	/**
 	 * Build the request
-	 * @param th
+	 * @param th transaction id
 	 */
 	public DeleteTrans(int th) {
 		super(th,"delete_trans");
