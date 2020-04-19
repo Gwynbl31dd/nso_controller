@@ -120,7 +120,7 @@ public class NSOController {
 	 * -  username for the NSO connection  
 	 * @param password 
 	 * -  password for the NSO connection 
-	 * @throws NSOException 
+	 * @throws NSOException if there is a NSO connection exception
 	 */
 	public void init(String address, String user, String password) throws NSOException {
 		createSession(address,user,password,sessionManager.setId());
