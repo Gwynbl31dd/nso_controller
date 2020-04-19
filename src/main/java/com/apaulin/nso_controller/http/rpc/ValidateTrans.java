@@ -15,7 +15,6 @@ public class ValidateTrans extends RpcData {
 	/**
 	 * Validate a transaction
 	 * @param th Transaction to validate
-	 * @param method method to validate
 	 */
 	public ValidateTrans(int th) {
 		this(th,"validate_trans");

@@ -20,6 +20,7 @@ public class ResultParser {
 	 * This validate JSON
 	 * 
 	 * @param request RPC request
+	 * @param req RPC request
 	 * @return the parsed result
 	 * @throws RPCException rpc related exception
 	 * @throws NSOException  nso related exception
