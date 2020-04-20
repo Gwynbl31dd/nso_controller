@@ -36,6 +36,8 @@ public class Commit extends ValidateTrans{
 	public Commit(int th,int timeout) {
 		super(th,"commit");
 		this.setTimeout(timeout);
+		this.setFlags(new CommitOptions());
+		this.setRequest();
 	}
 	
 	/**
@@ -82,7 +84,15 @@ public class Commit extends ValidateTrans{
 	 */
 	@Override
 	public void setRequest() {
-		String request = "{\"th\": "+getTh()+",\"timeout\": "+getTimeout()+",\"release_locks\" : "+isReleaseLock()+",\"flags\": "+getFlags()+"}";
+		
+		String request;
+		if(getFlags() == null) {
+			request = "{\"th\": "+getTh()+",\"timeout\": "+getTimeout()+",\"release_locks\" : "+isReleaseLock()+",\"flags\": []}";
+		}
+		else {
+			request = "{\"th\": "+getTh()+",\"timeout\": "+getTimeout()+",\"release_locks\" : "+isReleaseLock()+",\"flags\": "+getFlags()+"}";
+		}
+		
 		super.setRequest(request); 
 	}
 	

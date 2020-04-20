@@ -30,6 +30,7 @@ import com.apaulin.nso_controller.http.rpc.SetTransactionComment;
 import com.apaulin.nso_controller.http.rpc.SetValue;
 import com.apaulin.nso_controller.http.rpc.ShowConfig;
 import com.apaulin.nso_controller.http.rpc.ValidateCommit;
+import com.apaulin.nso_controller.http.rpc.ValidateTrans;
 import com.apaulin.nso_controller.json.JSONDisplay;
 import com.apaulin.nso_controller.json.ResultParser;
 import com.jayway.jsonpath.JsonPath;
@@ -55,7 +56,7 @@ public class NSOController {
 	private String address; // Address of the NSO instance. (http://IP:PORT)
 	private String login; // Login used by the NSO instance (PAM or aaa database)
 	private String password; // password used for the NSO instance (PAM or aaa database)
-	private static final String VERSION = "4.0.0"; // Version of the library
+	private static final String VERSION = "4.0.1"; // Version of the library
 	private int major_version;
 	private int minor_version;
 	public static final String ROBOT_LIBRARY_SCOPE = "GLOBAL"; // Scope used for Robot framework.
@@ -264,6 +265,13 @@ public class NSOController {
 		return parsedResult;
 	}
 
+	
+	public String validateTransaction() throws RPCException, NSOException {
+		testTransaction();
+		String parsedResult = ResultParser.processRawData(new ValidateTrans(sessionManager.getTransactionId()),
+				sessionManager.getCurrentReq());
+		return parsedResult;
+	}
 	/**
 	 * Commit the transaction If the commit validation has not been done before,
 	 * this will run a commit validation. Example : nso.commit(); is equivalent to
@@ -328,7 +336,7 @@ public class NSOController {
 	 *             for NSO related exception
 	 */
 	public String commit() throws RPCException, NSOException {
-		return this.commit(600);
+		return this.commit(0);
 	}
 
 	/**
@@ -420,7 +428,7 @@ public class NSOController {
 	 *             for NSO related exception
 	 */
 	public String commitDryRunNative() throws RPCException, NSOException {
-		return this.commitDryRunNative(600);
+		return this.commitDryRunNative(0);
 	}
 
 	/**
@@ -503,7 +511,7 @@ public class NSOController {
 	 *             RPC related exception
 	 */
 	public String dryRun() throws RPCException, NSOException {
-		return this.dryRun(600);
+		return this.dryRun(0);
 	}
 
 	/**
@@ -544,7 +552,7 @@ public class NSOController {
 	 *             NSO related exception
 	 */
 	public String commitNoNetworking() throws RPCException, NSOException {
-		return this.commitNoNetworking(600);
+		return this.commitNoNetworking(0);
 	}
 
 	/**
@@ -587,7 +595,7 @@ public class NSOController {
 	 *             NSO related exception
 	 */
 	public String commitDryRunReverse() throws RPCException, NSOException {
-		return this.commitDryRunReverse(600);
+		return this.commitDryRunReverse(0);
 	}
 
 	/**
@@ -1202,8 +1210,8 @@ public class NSOController {
 		int th = 0;
 		try {
 			th = JsonPath.read(requestValue, "$.result.th");
+			sessionManager.getCurrentSession().setTransactionId(th);
 			sessionManager.getCurrentSession().setTransactionInProgress(true);// Set the transaction to true
-			// this.transactionId = th;
 		} catch (PathNotFoundException e) {
 			throw new RPCException(requestValue);
 		}
@@ -1703,6 +1711,14 @@ public class NSOController {
 				new GetSystemSetting(sessionManager.getTransactionId(), "all"), sessionManager.getCurrentReq()))
 						.getJsonString();
 	}
+	
+	public String getNSOCapabilities() throws RPCException, JsonPathException, RCPparameterException, NSOException {
+		testTransaction();
+		return new JSONDisplay(ResultParser.processRawData(
+				new GetSystemSetting(sessionManager.getTransactionId(), "capabilities"), sessionManager.getCurrentReq()))
+						.getJsonString();
+	}
+	
 
 	/**
 	 * Get NSOController library library version

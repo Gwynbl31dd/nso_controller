@@ -77,6 +77,7 @@ abstract public class RpcData implements RPC {
 	
 	@Override
 	public StringEntity getRequestEntity() throws UnsupportedEncodingException {
+		//System.out.println("[->]{\"jsonrpc\":\""+RPC_VERSION+"\",\"id\":"+id+",\"method\":\""+method+"\",\"params\":"+request+"}");
 		return new StringEntity("{\"jsonrpc\":\""+RPC_VERSION+"\",\"id\":"+id+",\"method\":\""+method+"\",\"params\":"+request+"}");
 	}
 	
