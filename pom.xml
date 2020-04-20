@@ -3,7 +3,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.apaulin</groupId>
+	<groupId>org.clojars.gwynbl31dd</groupId>
 	<artifactId>nso_controller</artifactId>
 	<version>4.0.0-a</version>
 	<packaging>jar</packaging>
@@ -15,6 +15,22 @@
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 	</properties>
+	
+	<licenses>
+		<license>
+			<name>Eclipse Public License 1.0</name>
+			<url>http://opensource.org/licenses/eclipse-1.0.php</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+	
+	<distributionManagement>
+		<repository>
+			<id>clojars</id>
+			<name>Clojars repository</name>
+			<url>https://clojars.org/repo</url>
+		</repository>
+	</distributionManagement>
 
 	<dependencies>
 		<!-- https://mvnrepository.com/artifact/junit/junit -->
@@ -105,19 +121,6 @@
 						<phase>package</phase> <!-- bind to the packaging phase -->
 						<goals>
 							<goal>single</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>attach-javadocs</id>
-						<goals>
-							<goal>jar</goal>
 						</goals>
 					</execution>
 				</executions>
