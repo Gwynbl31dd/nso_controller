@@ -12,9 +12,37 @@ All the documentation can be found in the java doc in the release section
 
 nso_controller can be used as a Java API to communicate with NSO.
 
-First, you need to add nso_controller.jar to your build path.
-
 [RELEASE](https://github.com/Gwynbl31dd/nso_controller/releases)
+
+## Installation
+
+###  Leiningen/Boot
+
+```
+[org.clojars.gwynbl31dd/nso_controller "4.0.1"]
+```
+
+### Clojure CLI/deps.edn
+
+```
+org.clojars.gwynbl31dd/nso_controller {:mvn/version "4.0.1"}
+```
+
+### Gradle
+
+```
+compile 'org.clojars.gwynbl31dd:nso_controller:4.0.1'
+```
+
+### Maven
+
+```
+<dependency>
+  <groupId>org.clojars.gwynbl31dd</groupId>
+  <artifactId>nso_controller</artifactId>
+  <version>4.0.1</version>
+</dependency>
+```
 
 ## Reading data
 
