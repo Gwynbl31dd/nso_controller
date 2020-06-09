@@ -328,7 +328,7 @@ public class Main {
 
 ## Robot example
 
-XPlorer can be use as a powerful keyword library by adding to Robot framework (or red.xml if you use [CiscoRR](https://wwwin-github.cisco.com/Telstra/CiscoRR)
+nso_controller can be used as a powerful keyword library by adding it to Robot framework.
 
 Here is an example :
 
