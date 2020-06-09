@@ -21,6 +21,7 @@ import com.apaulin.nso_controller.http.rpc.GetListKeys;
 import com.apaulin.nso_controller.http.rpc.GetSchema;
 import com.apaulin.nso_controller.http.rpc.GetSystemSetting;
 import com.apaulin.nso_controller.http.rpc.Load;
+import com.apaulin.nso_controller.http.rpc.LoadString;
 import com.apaulin.nso_controller.http.rpc.Logout;
 import com.apaulin.nso_controller.http.rpc.NewTrans;
 import com.apaulin.nso_controller.http.rpc.RCPparameterException;
@@ -56,7 +57,7 @@ public class NSOController {
 	private String address; // Address of the NSO instance. (http://IP:PORT)
 	private String login; // Login used by the NSO instance (PAM or aaa database)
 	private String password; // password used for the NSO instance (PAM or aaa database)
-	private static final String VERSION = "4.0.1"; // Version of the library
+	private static final String VERSION = "4.1.0"; // Version of the library
 	private int major_version;
 	private int minor_version;
 	public static final String ROBOT_LIBRARY_SCOPE = "GLOBAL"; // Scope used for Robot framework.
@@ -371,7 +372,54 @@ public class NSOController {
 				new SetTransactionComment(sessionManager.getTransactionId(), comment), sessionManager.getCurrentReq());
 		return result;
 	}
+	
+	/**
+	 * Ping action to JRPC
+	 * 
+	 * @param device 
+	 * 			The device Name
+	 * @return The ping result as a String
+	 * @throws RPCException
+	 *             RPC related exception
+	 * @throws NSOException
+	 *             for NSO related exception
+	 */
+	public String ping(String device) throws RPCException, NSOException {
+		testTransaction();
+		return runAction("/ncs:devices/device{"+device+"}/ping");
+	}
+	
+	/**
+	 * Connect action to JRPC
+	 * 
+	 * @param device 
+	 * 			The device Name
+	 * @return The connect result as a String
+	 * @throws RPCException
+	 *             RPC related exception
+	 * @throws NSOException
+	 *             for NSO related exception
+	 */
+	public String connect(String device) throws RPCException, NSOException {
+		testTransaction();
+		return runAction("/ncs:devices/device{"+device+"}/connect");
+	}
+	
+	/**
+	 * Connect action to JRPC for all devices
+	 * 
+	 * @return The connect result as a String
+	 * @throws RPCException
+	 *             RPC related exception
+	 * @throws NSOException
+	 *             for NSO related exception
+	 */
+	public String connect() throws RPCException, NSOException {
+		testTransaction();
+		return runAction("/ncs:devices/connect");
+	}
 
+	
 	/**
 	 * Delete a leaf Example : nso.delete("/devices/device{myDevice}");
 	 * 
@@ -902,6 +950,60 @@ public class NSOController {
 		String result = new RestRequest().patch(path + "?dryrun=" + type, address, login, password, data);
 		return result;
 	}
+	
+	/**
+	 * Post with dry run via REST
+	 * 
+	 * @param path
+	 *            - Path
+	 * @param data
+	 *            - Data payload to send (In JSON format)
+	 * @param type
+	 *            - type (cli, native)
+	 * @return the patch dry run result
+	 * @throws NSOException
+	 *             NSO related exception
+	 * @throws HTTPException
+	 *             HTTP related exception
+	 */
+	public String restPostDryRun(String path,String data,String type) throws HTTPException, NSOException {
+		String result = new RestRequest().post(path + "?dryrun=" + type, address, login, password, data);
+		return result;
+	}
+	
+	/**
+	 * Post with dry run cli via REST
+	 * 
+	 * @param path
+	 *            - KeyPath String expression
+	 * @param data
+	 *            - Data payload to send (In JSON format)
+	 * @return the patch dry run result cli
+	 * @throws NSOException
+	 *             NSO related exception
+	 * @throws HTTPException
+	 *             HTTP related exception
+	 */
+	public String restPosthDryRunCli(String path, String data) throws HTTPException, NSOException {
+		return this.restPostDryRun(path, data, "cli");
+	}
+	
+	/**
+	 * Post with dry run native via REST
+	 * 
+	 * @param path
+	 *            - KeyPath String expression
+	 * @param data
+	 *            - Data payload to send (In JSON format)
+	 * @return the patch dry run result native
+	 * @throws NSOException
+	 *             NSO related exception
+	 * @throws HTTPException
+	 *             HTTP related exception
+	 */
+	public String restPostDryRunNative(String path, String data) throws HTTPException, NSOException {
+		return this.restPostDryRun(path, data, "native");
+	}
 
 	/**
 	 * Patch with dry run cli via REST
@@ -934,7 +1036,7 @@ public class NSOController {
 	 *             HTTP related exception
 	 */
 	public String restPatchDryRunNative(String path, String data) throws HTTPException, NSOException {
-		return this.restPatchDryRun(path, data, "cli");
+		return this.restPatchDryRun(path, data, "native");
 	}
 
 	/**
@@ -1365,6 +1467,35 @@ public class NSOController {
 		return ResultParser.processRawData(new Load(sessionManager.getTransactionId(), path, filePath, mode, format),
 				sessionManager.getCurrentReq());
 	}
+	
+	/**
+	 * Load a payload to NSO
+	 * 
+	 * Example :
+	 * nso.loadString("/devices/device{devicename}","{\"device"\:\"blah\"}","replace","xml");
+	 * 
+	 * @param path
+	 *            - Keypath String expression
+	 * @param data
+	 *            - Payload
+	 * @param mode
+	 *            - "create","merge","replace"
+	 * @param format
+	 *            - "json","xml"
+	 * @return the result
+	 * @throws RCPparameterException
+	 *             Parameters related exception
+	 * @throws RPCException
+	 *             RPC related exception
+	 * @throws NSOException
+	 *             NSO related exception
+	 */
+	public String loadString(String path, String data, String mode, String format)
+			throws RPCException, RCPparameterException, NSOException {
+		testTransaction();
+		return ResultParser.processRawData(new LoadString(sessionManager.getTransactionId(), path, data, mode, format),
+				sessionManager.getCurrentReq());
+	}
 
 	/**
 	 * Load a file to NSO By default, the file will be merged, and using JSON. Use
@@ -1387,6 +1518,30 @@ public class NSOController {
 	public String load(String path, String filePath) throws RPCException, RCPparameterException, NSOException {
 		testTransaction();
 		return ResultParser.processRawData(new Load(sessionManager.getTransactionId(), path, filePath, "merge", "json"),
+				sessionManager.getCurrentReq());
+	}
+	
+	/**
+	 * Load a payload to NSO By default, the file will be merged, and using JSON. Use
+	 * load(String path,String filePath,String mode,String format) for more options
+	 * 
+	 * Example : nso.load("/devices/device{devicename}","{\"device"\:\"blah\"}");
+	 * 
+	 * @param path
+	 *            - KeyPath String expression
+	 * @param data
+	 *            - Payload
+	 * @return the result
+	 * @throws RPCException
+	 *             RPC related exception
+	 * @throws RCPparameterException
+	 *             Parameters exception
+	 * @throws NSOException
+	 *             NSO related exception
+	 */
+	public String loadString(String path, String data) throws RPCException, RCPparameterException, NSOException {
+		testTransaction();
+		return ResultParser.processRawData(new LoadString(sessionManager.getTransactionId(), path, data, "merge", "json"),
 				sessionManager.getCurrentReq());
 	}
 

@@ -17,15 +17,18 @@ import java.io.IOException;
  * 
  * @author Anthony Paulin
  * @since 19/07/2018
- * @version 0.1 		
+ * @version 0.2		
  */
 public class Load extends GetSchema {
-	private String data;
+	protected String data;
 	private String format = "xml";
 	private String mode = "merge";
 	private final static String[] FORMAT_VALUES = { "json", "xml" };
 	private final static String[] MODE_VALUES = { "create", "merge", "replace" };
 
+	public Load(String mode) {
+		super(mode);
+	}
 	/**
 	 * Load the file
 	 * 
@@ -89,7 +92,7 @@ public class Load extends GetSchema {
 	 * 
 	 * @param data data to use
 	 */
-	private void setData(String data) {
+	protected void setData(String data) {
 		this.data = data;
 	}
 
@@ -98,7 +101,7 @@ public class Load extends GetSchema {
 	 * 
 	 * @return file format
 	 */
-	private String getFormat() {
+	protected String getFormat() {
 		return format;
 	}
 
@@ -108,7 +111,7 @@ public class Load extends GetSchema {
 	 * @param format file format
 	 * @throws RCPparameterException rpc related exception
 	 */
-	private void setFormat(String format) throws RCPparameterException {
+	protected void setFormat(String format) throws RCPparameterException {
 		valueListExist(format, FORMAT_VALUES);
 		this.format = format;
 	}
@@ -118,7 +121,7 @@ public class Load extends GetSchema {
 	 * 
 	 * @return
 	 */
-	private String getMode() {
+	protected String getMode() {
 		return mode;
 	}
 
@@ -128,7 +131,7 @@ public class Load extends GetSchema {
 	 * @param mode mode to use
 	 * @throws RCPparameterException RPC related exception
 	 */
-	private void setMode(String mode) throws RCPparameterException {
+	protected void setMode(String mode) throws RCPparameterException {
 		valueListExist(mode, MODE_VALUES);
 		this.mode = mode;
 	}

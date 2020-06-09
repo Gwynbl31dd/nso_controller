@@ -14,7 +14,6 @@ import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
@@ -112,20 +111,28 @@ public class RestRequest {
 		return response.getEntity().getContentType().toString();//Return the content Type
 	}
 	
-	public String delete(String path,String url,String user,String password) throws HTTPException, NSOException {		
+	public String delete(String path,String url,String user,String password,String header) throws HTTPException, NSOException {		
 		try {
-			return getResult(path,url,user,password,"application/vnd.yang.data+json",new HttpDelete(url+"/api"+path));
+			return getResult(path,url,user,password,header,new HttpDelete(url+"/api"+path));
 		} catch (IOException e) {
 			throw new NSOException(e);
 		}
 	}
 	
+	public String delete(String path,String url,String user,String password) throws HTTPException, NSOException {		
+		return delete(path,url,user,password,"application/vnd.yang.data+json");
+	}
+	
 	public String post(String path,String url,String user,String password,String data) throws  NSOException, HTTPException {
+		return post(path,url,user,password,data,"application/vnd.yang.data+json");
+	}
+	
+	public String post(String path,String url,String user,String password,String data,String header) throws NSOException, HTTPException {
 		try {
 			HttpPost httpPost = new HttpPost(url+"/api"+path);
 			StringEntity params = new StringEntity(data);
 			httpPost.setEntity(params);
-			String result = getResult(path,url,user,password,"application/vnd.yang.data+json",httpPost);
+			String result = getResult(path,url,user,password,header,httpPost);
 			try {
 				return new JSONDisplay(result).getJsonString();
 			}
@@ -137,26 +144,34 @@ public class RestRequest {
 		}
 	}
 	
-	public String patch(String path,String url,String user,String password,String data) throws HTTPException, NSOException  {		
+	public String patch(String path,String url,String user,String password,String data,String header) throws HTTPException, NSOException  {		
 		try {
 			HttpPatch httpPatch = new HttpPatch(url+"/api"+path);
 			StringEntity params = new StringEntity(data);
 			httpPatch.setEntity(params);
-			return new JSONDisplay(getResult(path,url,user,password,"application/vnd.yang.data+json",httpPatch)).getJsonString();
+			return new JSONDisplay(getResult(path,url,user,password,header,httpPatch)).getJsonString();
+		} catch (Exception e) {
+			throw new NSOException(e);
+		}
+	}
+	
+	public String patch(String path,String url,String user,String password,String data) throws HTTPException, NSOException  {		
+		return patch(path,url,user,password,data,"application/vnd.yang.data+json");
+	}
+	
+	public String put(String path,String url,String user,String password,String data, String header) throws HTTPException, NSOException  {
+		try {
+			HttpPut httpPut = new HttpPut(url+"/api"+path);
+			StringEntity params = new StringEntity(data);
+			httpPut.setEntity(params);
+			return new JSONDisplay(getResult(path,url,user,password,header,httpPut)).getJsonString();
 		} catch (Exception e) {
 			throw new NSOException(e);
 		}
 	}
 	
 	public String put(String path,String url,String user,String password,String data) throws HTTPException, NSOException  {
-		try {
-			HttpPut httpPut = new HttpPut(url+"/api"+path);
-			StringEntity params = new StringEntity(data);
-			httpPut.setEntity(params);
-			return new JSONDisplay(getResult(path,url,user,password,"application/vnd.yang.data+json",httpPut)).getJsonString();
-		} catch (Exception e) {
-			throw new NSOException(e);
-		}
+		return put(path,url,user,password,data,"application/vnd.yang.data+json");
 	}
 	
 	private CloseableHttpClient buildCustomHttpClient(String user,String password) throws KeyStoreException, KeyManagementException {
