@@ -37,6 +37,16 @@ compile 'org.clojars.gwynbl31dd:nso_controller:4.0.1'
 ### Maven
 
 ```
+<repositories>
+  <repository>
+    <id>clojars</id>
+      <name>Clojars repository</name>
+      <url>https://clojars.org/repo</url>
+  </repository>
+</repositories>
+```
+
+```
 <dependency>
   <groupId>org.clojars.gwynbl31dd</groupId>
   <artifactId>nso_controller</artifactId>
