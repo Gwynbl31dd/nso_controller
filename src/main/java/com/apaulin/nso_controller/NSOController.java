@@ -1525,7 +1525,7 @@ public class NSOController {
 	 * Load a payload to NSO By default, the file will be merged, and using JSON. Use
 	 * load(String path,String filePath,String mode,String format) for more options
 	 * 
-	 * Example : nso.load("/devices/device{devicename}","{\"device"\:\"blah\"}");
+	 * Example : nso.loadString("/devices/device{devicename}","{\"device"\:\"blah\"}");
 	 * 
 	 * @param path
 	 *            - KeyPath String expression
