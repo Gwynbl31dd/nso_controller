@@ -90,7 +90,7 @@ public class RestRequest {
 		try {
 			client = buildCustomHttpClient(user,password);
 			String urlFinal = url+"/api"+path;
-			HttpGet request = new HttpGet(url+"/api"+path);
+			HttpGet request = new HttpGet(urlFinal);
 			request.addHeader(HttpHeaders.ACCEPT,header);
 			response = client.execute(request);
 			int statusCode = response.getStatusLine().getStatusCode();

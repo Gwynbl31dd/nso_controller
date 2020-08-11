@@ -5,7 +5,6 @@ package com.apaulin.nso_controller.examples;
 
 import com.apaulin.nso_controller.NSOController;
 import com.apaulin.nso_controller.exception.NSOException;
-import com.apaulin.nso_controller.http.rpc.RCPparameterException;
 import com.apaulin.nso_controller.http.rpc.RPCException;
 
 /**

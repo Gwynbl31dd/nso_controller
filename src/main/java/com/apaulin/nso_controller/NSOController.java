@@ -1052,7 +1052,7 @@ public class NSOController {
 	 */
 	public void restDelete(String path) throws HTTPException, NSOException {
 		try {
-			new RestRequest().delete("/api/config" + path, address, login, password);
+			new RestRequest().delete("/config" + path, address, login, password);
 		} catch (NullPointerException e) {
 			// Null pointer Exception is expected, no answer from a simple delete
 		}
@@ -1089,7 +1089,7 @@ public class NSOController {
 	 *             HTTP related exception
 	 */
 	public String restDeleteDryRun(String path, String type) throws HTTPException, NSOException {
-		return new RestRequest().delete("/api/config" + path + "?dryrun=" + type, address, login, password);
+		return new RestRequest().delete("/config" + path + "?dryrun=" + type, address, login, password);
 	}
 
 	/**
