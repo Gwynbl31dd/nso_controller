@@ -27,14 +27,15 @@ public class CreateExample {
 			nso = new NSOController(url,username,password);
 			nso.startTransaction("running", "read_write", "private", "test", "reuse");
 			//Create the user
-			System.out.println(nso.create("/aaa/authentication/users/user{test}"));
+			System.out.println(nso.create("/aaa/authentication/users/user{test2}"));
 			//Add a value
-			nso.setValue("/aaa/authentication/users/user{test}/uid", 5);
-			nso.setValue("/aaa/authentication/users/user{test}/gid", 5);
-			nso.setValue("/aaa/authentication/users/user{test}/password", "cisco");
-			nso.setValue("/aaa/authentication/users/user{test}/ssh_keydir", "/home/test/.ssh");
-			nso.setValue("/aaa/authentication/users/user{test}/homedir", "/home/test");
-			nso.commit();
+			nso.setValue("/aaa/authentication/users/user{test2}/uid", 5);
+			nso.setValue("/aaa/authentication/users/user{test2}/gid", 5);
+			nso.setValue("/aaa/authentication/users/user{test2}/password", "cisco");
+			nso.setValue("/aaa/authentication/users/user{test2}/ssh_keydir", "/home/test2/.ssh");
+			nso.setValue("/aaa/authentication/users/user{test2}/homedir", "/home/test2");
+			System.out.println(nso.dryRun());
+			//nso.commit();
 		} catch (NSOException | RPCException e) {
 			e.printStackTrace();
 		} catch (RCPparameterException e) {

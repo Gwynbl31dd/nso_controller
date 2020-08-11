@@ -12,12 +12,12 @@ public class Application {
 
     public static void main(String[] args) {
     	System.out.println("Hello nso_controller");
-    	new ShowRunExample();
-    	new ShowRunMultiSessionExample();
+    	//new ShowRunExample();
+    	//new ShowRunMultiSessionExample();
     	new CreateExample();
-    	new GettingListKeys();
-    	new DeleteExample();
-    	new ActionExample();
-    	new GetSchemaExample();
+    	//new GettingListKeys();
+    	//new DeleteExample();
+    	//new ActionExample();
+    	//new GetSchemaExample();
     }
 }

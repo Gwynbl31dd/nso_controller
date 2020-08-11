@@ -530,13 +530,18 @@ public class NSOController {
 		String rawData = ResultParser.processRawData(new Commit(sessionManager.getTransactionId(), options, timeout),
 				sessionManager.getCurrentReq());
 		String parsedResult = new String();
+		//System.out.println(rawData);
 		try {
 			// This is most probably a LSA output.
 			if (rawData.contains("local_node") && rawData.contains("lsa_node")) {
 				parsedResult = ResultParser.parseStringResult(rawData, "$.dry_run_result.cli.local_node.data");
 				parsedResult += ResultParser.parseStringResult(rawData, "$.dry_run_result.cli.lsa_node.*.data");
-			} else {
-				parsedResult = ResultParser.parseStringResult(rawData, "$.dryrun.cli");
+			} 
+			else if(rawData.contains("local_node")){
+				parsedResult = ResultParser.parseStringResult(rawData, "$.dry_run_result.cli.local_node.data");
+			}
+			else {
+				parsedResult = rawData;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1723,7 +1728,13 @@ public class NSOController {
 		String back = new String();
 		try {
 			for (int i = 0; i < sessionManager.getSessionList().size(); i++) {
-				back += ResultParser.processRawData(new Logout(), sessionManager.getSessionList().get(i).getReq());
+				//This will remove the sessions list, but will bypass with the catch if the don't exists
+				try {
+					back += ResultParser.processRawData(new Logout(), sessionManager.getSessionList().get(i).getReq());
+				}
+				catch(RPCException e) {
+					e.printStackTrace();
+				}
 			}
 			return back;
 		} catch (Exception e) {
