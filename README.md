@@ -1,3 +1,5 @@
+[![Clojars Project](https://img.shields.io/clojars/v/org.clojars.gwynbl31dd/nso_controller.svg)](https://clojars.org/org.clojars.gwynbl31dd/nso_controller)
+
 # NSO_Controller
 
 nso_controller is a NSO java API.
