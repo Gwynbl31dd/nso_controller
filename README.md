@@ -151,9 +151,9 @@ You can also you nso.delete() to remove them.
 Since the version 1.3.2 you do not need to valide the commit before running it. 
 BUT if you create your own commit object, nso.validateCommit() must be called.
 Since the version 1.3.3 you do not need to start a transaction. The transaction will be automatically started on the
-running database, with the option read_right. Using startTransaction() is only required if you want to modify the options.
+running database, with the option read_write. Using startTransaction() is only required if you want to modify the options.
 
-This is due to JRPC, JRPC expecte a validation. But NSOController will take care of it if you 
+This is due to JRPC, JRPC expects a validation. But NSOController will take care of it if you 
 did not.
 
 NOTE : after a successful commit, you need to create a new transaction.
@@ -382,7 +382,7 @@ nso_controller provides a lot of functions to validate, create, delete, test NSO
 For example, lifeStatus can allow you to directly talk to the device through NSO.
 
 if the class NSOController does not provide a functionality, take a look at 
-the advanced function provided in com.apaulin.nso_controller.http.rpc
+the advanced functions provided in com.apaulin.nso_controller.http.rpc
 
 If you still do not find a function, extends the object in com.apaulin.http.rpc
 
