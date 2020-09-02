@@ -21,6 +21,7 @@ jobs:
         with:
           java-version: 1.8
       - run: mvn -B package --file pom.xml
+      - run: mvn javadoc:javadoc
       - run: mkdir staging && cp target/*.jar staging
       - uses: actions/upload-artifact@v1
         with:
