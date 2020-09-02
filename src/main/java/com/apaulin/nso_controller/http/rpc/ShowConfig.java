@@ -17,7 +17,7 @@ public class ShowConfig extends GetSchema {
 	private final static String[] RESULT_AS_VALUES = {"string","json"};
 	private String resultAs;
 	private boolean withOper;
-	private int maxSize;
+	private int maxSize = 0;
 	
 	/**
 	 * Craft a config request
@@ -35,8 +35,25 @@ public class ShowConfig extends GetSchema {
 	 * Craft a config request
 	 * @param th transaction id
 	 * @param path keypath
+	 * @param withOper with operation
 	 * @param resultAs result format
-	 * @param withOper with oepration
+	 * @throws RCPparameterException 
+	 */
+	public ShowConfig(int th,String path,boolean withOper,String resultAs) throws RCPparameterException {
+		super("show_config");
+		this.setWithOper(withOper);
+		super.setTh(th);
+		this.setResultAs(resultAs);
+		super.setPath(path); 
+		this.setRequest(false);
+	}
+	
+	/**
+	 * Craft a config request
+	 * @param th transaction id
+	 * @param path keypath
+	 * @param resultAs result format
+	 * @param withOper with operation
 	 * @param maxSize size max
 	 * @throws RCPparameterException  RPC related exception
 	 */

@@ -6,6 +6,7 @@ import com.apaulin.nso_controller.exception.NSOException;
 import com.apaulin.nso_controller.http.RpcRequest;
 import com.apaulin.nso_controller.http.RpcSession;
 import com.apaulin.nso_controller.http.SessionManager;
+import com.apaulin.nso_controller.http.StringArray;
 import com.apaulin.nso_controller.http.rest.HTTPException;
 import com.apaulin.nso_controller.http.rest.RestRequest;
 import com.apaulin.nso_controller.http.rpc.Abort;
@@ -20,6 +21,8 @@ import com.apaulin.nso_controller.http.rpc.GetLeafRefValues;
 import com.apaulin.nso_controller.http.rpc.GetListKeys;
 import com.apaulin.nso_controller.http.rpc.GetSchema;
 import com.apaulin.nso_controller.http.rpc.GetSystemSetting;
+import com.apaulin.nso_controller.http.rpc.GetValue;
+import com.apaulin.nso_controller.http.rpc.GetValues;
 import com.apaulin.nso_controller.http.rpc.Load;
 import com.apaulin.nso_controller.http.rpc.LoadString;
 import com.apaulin.nso_controller.http.rpc.Logout;
@@ -57,7 +60,7 @@ public class NSOController {
 	private String address; // Address of the NSO instance. (http://IP:PORT)
 	private String login; // Login used by the NSO instance (PAM or aaa database)
 	private String password; // password used for the NSO instance (PAM or aaa database)
-	private static final String VERSION = "4.1.0"; // Version of the library
+	private static final String VERSION = "4.2.0"; // Version of the library
 	private int major_version;
 	private int minor_version;
 	public static final String ROBOT_LIBRARY_SCOPE = "GLOBAL"; // Scope used for Robot framework.
@@ -300,7 +303,7 @@ public class NSOController {
 	}
 
 	/**
-	 * Same as commit, but provide a Force LSA Option
+	 * Same as commit, but provides a Force LSA Option
 	 * 
 	 * @return The commit's result
 	 * @throws RPCException
@@ -660,6 +663,8 @@ public class NSOController {
 	 *             NSO related exception
 	 * @throws HTTPException
 	 *             HTTP related exception
+	 *             
+	 * TODO : Fix this
 	 */
 	public String getPackagesVersion() throws HTTPException, NSOException {
 		String result = new RestRequest().get("/operational/packages/package/", address, login, password);
@@ -1256,6 +1261,38 @@ public class NSOController {
 		return ResultParser.processRawData(new SetValue(sessionManager.getTransactionId(), path, data),
 				sessionManager.getCurrentReq());
 	}
+	
+	/**
+	 * TODO test this
+	 */
+	public String getValue(String path, boolean checkDefault) throws RPCException,NSOException {
+		testTransaction();
+		return ResultParser.processRawData(new GetValue(sessionManager.getTransactionId(), path, checkDefault),
+				sessionManager.getCurrentReq());
+	}
+	
+	/**
+	 * TODO test this
+	 */
+	public String getValue(String path) throws RPCException,NSOException {
+		return getValue(path, false);
+	}
+	
+	/**
+	 * TODO test this
+	 */
+	public String getValues(String path, StringArray leafs) throws RPCException,NSOException {
+		testTransaction();
+		return ResultParser.processRawData(new GetValues(sessionManager.getTransactionId(), path, leafs),
+				sessionManager.getCurrentReq());
+	}
+	
+	/**
+	 * TODO test this
+	 */
+	public String getValues(String path) throws RPCException,NSOException {
+		return getValues(path, new StringArray());
+	}
 
 	/**
 	 * Abort a JSON-RPC method by its associated id.
@@ -1770,6 +1807,21 @@ public class NSOController {
 				sessionManager.getCurrentReq());
 		return ResultParser.parseStringResult(result, "$.config");
 	}
+	
+	/**
+	 * TODO test this
+	 */
+	public String showConfig(String path,boolean withOper,String resultAs) throws RPCException, NSOException, RCPparameterException {
+		testTransaction();
+		String result = ResultParser.processRawData(new ShowConfig(sessionManager.getTransactionId(), path,withOper,resultAs),
+				sessionManager.getCurrentReq());
+		if (resultAs.compareTo("string") == 0) {
+			return ResultParser.parseStringResult(result, "$.config");
+		} else {
+			JSONObject jO = JsonPath.parse(result).read("$.data", JSONObject.class);
+			return jO.toJSONString();
+		}
+	}
 
 	/**
 	 * Show a specific device config as JSON string Example : String result =
@@ -1884,7 +1936,6 @@ public class NSOController {
 				new GetSystemSetting(sessionManager.getTransactionId(), "capabilities"), sessionManager.getCurrentReq()))
 						.getJsonString();
 	}
-	
 
 	/**
 	 * Get NSOController library library version

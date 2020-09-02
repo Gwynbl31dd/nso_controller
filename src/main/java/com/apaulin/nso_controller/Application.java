@@ -7,6 +7,7 @@ import com.apaulin.nso_controller.examples.GetSchemaExample;
 import com.apaulin.nso_controller.examples.GettingListKeys;
 import com.apaulin.nso_controller.examples.ShowRunExample;
 import com.apaulin.nso_controller.examples.ShowRunMultiSessionExample;
+import com.apaulin.nso_controller.examples.ShowRunWithOperExample;
 
 public class Application {
 
@@ -14,7 +15,8 @@ public class Application {
     	System.out.println("Hello nso_controller");
     	//new ShowRunExample();
     	//new ShowRunMultiSessionExample();
-    	new CreateExample();
+    	new ShowRunExample();
+    	new ShowRunWithOperExample();
     	//new GettingListKeys();
     	//new DeleteExample();
     	//new ActionExample();
