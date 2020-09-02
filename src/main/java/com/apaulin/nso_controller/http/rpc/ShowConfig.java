@@ -7,7 +7,7 @@ package com.apaulin.nso_controller.http.rpc;
  * Retrieves a compact string representation of the configuration
  * @author Anthony Paulin
  * @since 13/07/2018
- * @version 0.1
+ * @version 0.2
  * The path param is a keypath to the configuration to be returned. 
  * result_as controls the output format, string for a compact string format and json for json. 
  * max_size sets the maximum size of the data field in kb, set to 0 to disable the limit.

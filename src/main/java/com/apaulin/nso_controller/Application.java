@@ -4,11 +4,13 @@ import com.apaulin.nso_controller.examples.ActionExample;
 import com.apaulin.nso_controller.examples.CreateExample;
 import com.apaulin.nso_controller.examples.DeleteExample;
 import com.apaulin.nso_controller.examples.GetSchemaExample;
+import com.apaulin.nso_controller.examples.GetValueExample;
 import com.apaulin.nso_controller.examples.GettingListKeys;
 import com.apaulin.nso_controller.examples.ShowRunExample;
 import com.apaulin.nso_controller.examples.ShowRunMultiSessionExample;
 import com.apaulin.nso_controller.examples.ShowRunWithOperExample;
 
+@SuppressWarnings("unused")
 public class Application {
 
     public static void main(String[] args) {
@@ -17,6 +19,7 @@ public class Application {
     	//new ShowRunMultiSessionExample();
     	new ShowRunExample();
     	new ShowRunWithOperExample();
+    	//new GetValueExample();
     	//new GettingListKeys();
     	//new DeleteExample();
     	//new ActionExample();

@@ -8,7 +8,7 @@ import com.apaulin.nso_controller.exception.NSOException;
 /**
  * Example of how to do a show run with operational data on all devices on NSO using this API
  * @author Anthony Paulin
- * @version 0.1
+ * @version 0.2
  * @since 02/09/2020
  *
  */
@@ -25,6 +25,8 @@ public class ShowRunWithOperExample {
 			nso = new NSOController(url,username,password);
 			nso.startTransaction("running", "read_write", "private", "test", "reuse");
 			System.out.println(nso.showConfig("/devices",true,"json"));
+			System.out.println("Show run without operational data");
+			System.out.println(nso.showConfig("/devices",false,"json"));
 		} catch (NSOException | RPCException e) {
 			e.printStackTrace();
 		} catch (RCPparameterException e) {
