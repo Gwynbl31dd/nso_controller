@@ -1809,6 +1809,8 @@ public class NSOController {
 					e.printStackTrace();
 				}
 			}
+			//Remove each session and rebuild the session manager
+			sessionManager = new SessionManager();
 			return back;
 		} catch (Exception e) {
 			e.printStackTrace();
