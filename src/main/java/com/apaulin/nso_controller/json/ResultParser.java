@@ -18,6 +18,7 @@ import net.minidev.json.JSONObject;
  * @version 0.1
  * @since   24/08/2018
  */
+@SuppressWarnings("unused")
 public class ResultParser {
 	/**
 	 * Process the raw data to extract the result

@@ -6,6 +6,7 @@ import com.apaulin.nso_controller.exception.NSOException;
 import com.apaulin.nso_controller.http.RpcRequest;
 import com.apaulin.nso_controller.http.RpcSession;
 import com.apaulin.nso_controller.http.SessionManager;
+import com.apaulin.nso_controller.http.StringArray;
 import com.apaulin.nso_controller.http.rest.HTTPException;
 import com.apaulin.nso_controller.http.rest.RestRequest;
 import com.apaulin.nso_controller.http.rpc.Abort;
@@ -20,6 +21,8 @@ import com.apaulin.nso_controller.http.rpc.GetLeafRefValues;
 import com.apaulin.nso_controller.http.rpc.GetListKeys;
 import com.apaulin.nso_controller.http.rpc.GetSchema;
 import com.apaulin.nso_controller.http.rpc.GetSystemSetting;
+import com.apaulin.nso_controller.http.rpc.GetValue;
+import com.apaulin.nso_controller.http.rpc.GetValues;
 import com.apaulin.nso_controller.http.rpc.Load;
 import com.apaulin.nso_controller.http.rpc.LoadString;
 import com.apaulin.nso_controller.http.rpc.Logout;
@@ -57,7 +60,7 @@ public class NSOController {
 	private String address; // Address of the NSO instance. (http://IP:PORT)
 	private String login; // Login used by the NSO instance (PAM or aaa database)
 	private String password; // password used for the NSO instance (PAM or aaa database)
-	private static final String VERSION = "4.1.0"; // Version of the library
+	private static final String VERSION = "4.2.0"; // Version of the library
 	private int major_version;
 	private int minor_version;
 	public static final String ROBOT_LIBRARY_SCOPE = "GLOBAL"; // Scope used for Robot framework.
@@ -266,13 +269,13 @@ public class NSOController {
 		return parsedResult;
 	}
 
-	
 	public String validateTransaction() throws RPCException, NSOException {
 		testTransaction();
 		String parsedResult = ResultParser.processRawData(new ValidateTrans(sessionManager.getTransactionId()),
 				sessionManager.getCurrentReq());
 		return parsedResult;
 	}
+
 	/**
 	 * Commit the transaction If the commit validation has not been done before,
 	 * this will run a commit validation. Example : nso.commit(); is equivalent to
@@ -300,7 +303,7 @@ public class NSOController {
 	}
 
 	/**
-	 * Same as commit, but provide a Force LSA Option
+	 * Same as commit, but provides a Force LSA Option
 	 * 
 	 * @return The commit's result
 	 * @throws RPCException
@@ -372,12 +375,12 @@ public class NSOController {
 				new SetTransactionComment(sessionManager.getTransactionId(), comment), sessionManager.getCurrentReq());
 		return result;
 	}
-	
+
 	/**
 	 * Ping action to JRPC
 	 * 
-	 * @param device 
-	 * 			The device Name
+	 * @param device
+	 *            The device Name
 	 * @return The ping result as a String
 	 * @throws RPCException
 	 *             RPC related exception
@@ -386,14 +389,14 @@ public class NSOController {
 	 */
 	public String ping(String device) throws RPCException, NSOException {
 		testTransaction();
-		return runAction("/ncs:devices/device{"+device+"}/ping");
+		return runAction("/ncs:devices/device{" + device + "}/ping");
 	}
-	
+
 	/**
 	 * Connect action to JRPC
 	 * 
-	 * @param device 
-	 * 			The device Name
+	 * @param device
+	 *            The device Name
 	 * @return The connect result as a String
 	 * @throws RPCException
 	 *             RPC related exception
@@ -402,9 +405,9 @@ public class NSOController {
 	 */
 	public String connect(String device) throws RPCException, NSOException {
 		testTransaction();
-		return runAction("/ncs:devices/device{"+device+"}/connect");
+		return runAction("/ncs:devices/device{" + device + "}/connect");
 	}
-	
+
 	/**
 	 * Connect action to JRPC for all devices
 	 * 
@@ -419,7 +422,6 @@ public class NSOController {
 		return runAction("/ncs:devices/connect");
 	}
 
-	
 	/**
 	 * Delete a leaf Example : nso.delete("/devices/device{myDevice}");
 	 * 
@@ -530,17 +532,14 @@ public class NSOController {
 		String rawData = ResultParser.processRawData(new Commit(sessionManager.getTransactionId(), options, timeout),
 				sessionManager.getCurrentReq());
 		String parsedResult = new String();
-		//System.out.println(rawData);
 		try {
 			// This is most probably a LSA output.
 			if (rawData.contains("local_node") && rawData.contains("lsa_node")) {
 				parsedResult = ResultParser.parseStringResult(rawData, "$.dry_run_result.cli.local_node.data");
 				parsedResult += ResultParser.parseStringResult(rawData, "$.dry_run_result.cli.lsa_node.*.data");
-			} 
-			else if(rawData.contains("local_node")){
+			} else if (rawData.contains("local_node")) {
 				parsedResult = ResultParser.parseStringResult(rawData, "$.dry_run_result.cli.local_node.data");
-			}
-			else {
+			} else {
 				parsedResult = rawData;
 			}
 		} catch (Exception e) {
@@ -660,6 +659,8 @@ public class NSOController {
 	 *             NSO related exception
 	 * @throws HTTPException
 	 *             HTTP related exception
+	 * 
+	 *             TODO : Fix this
 	 */
 	public String getPackagesVersion() throws HTTPException, NSOException {
 		String result = new RestRequest().get("/operational/packages/package/", address, login, password);
@@ -955,7 +956,7 @@ public class NSOController {
 		String result = new RestRequest().patch(path + "?dryrun=" + type, address, login, password, data);
 		return result;
 	}
-	
+
 	/**
 	 * Post with dry run via REST
 	 * 
@@ -971,11 +972,11 @@ public class NSOController {
 	 * @throws HTTPException
 	 *             HTTP related exception
 	 */
-	public String restPostDryRun(String path,String data,String type) throws HTTPException, NSOException {
+	public String restPostDryRun(String path, String data, String type) throws HTTPException, NSOException {
 		String result = new RestRequest().post(path + "?dryrun=" + type, address, login, password, data);
 		return result;
 	}
-	
+
 	/**
 	 * Post with dry run cli via REST
 	 * 
@@ -992,7 +993,7 @@ public class NSOController {
 	public String restPosthDryRunCli(String path, String data) throws HTTPException, NSOException {
 		return this.restPostDryRun(path, data, "cli");
 	}
-	
+
 	/**
 	 * Post with dry run native via REST
 	 * 
@@ -1258,6 +1259,75 @@ public class NSOController {
 	}
 
 	/**
+	 * Get a leaf value
+	 * 
+	 * @param path
+	 *            - KeyPath String expression
+	 * @param checkDefault
+	 *            - Check default value
+	 * @return the result
+	 * @throws RPCException
+	 *             RPC related exception
+	 * @throws NSOException
+	 *             NSO related exception
+	 */
+	public String getValue(String path, boolean checkDefault) throws RPCException, NSOException {
+		testTransaction();
+		return ResultParser.processRawData(new GetValue(sessionManager.getTransactionId(), path, checkDefault),
+				sessionManager.getCurrentReq());
+	}
+
+	/**
+	 * Get a leaf value
+	 * 
+	 * @param path
+	 *            - KeyPath String expression
+	 * @return the result
+	 * @throws RPCException
+	 *             RPC related exception
+	 * @throws NSOException
+	 *             NSO related exception
+	 */
+	public String getValue(String path) throws RPCException, NSOException {
+		return getValue(path, true);
+	}
+
+	/**
+	 * Get leaf values
+	 * 
+	 * @param path
+	 *            - KeyPath String expression
+	 * @param leafs
+	 *            - the leafs param is an array of children names residing under the
+	 *            parent container in the YANG module
+	 * @return result
+	 * @throws RPCException
+	 *             RPC related exception
+	 * @throws NSOException
+	 *             NSO related exception
+	 */
+	public String getValues(String path, StringArray leafs) throws RPCException, NSOException {
+		testTransaction();
+		return ResultParser.processRawData(new GetValues(sessionManager.getTransactionId(), path, leafs),
+				sessionManager.getCurrentReq());
+	}
+
+	/**
+	 * Get leaf values
+	 * 
+	 * @param path
+	 *            - KeyPath String expression
+	 * @return result
+	 * @throws RPCException
+	 *             RPC related exception
+	 * @throws NSOException
+	 *             NSO related exception
+	 */
+	public String getValues(String path) throws RPCException, NSOException {
+		return getValues(path, new StringArray());
+	}
+
+	/**
 	 * Abort a JSON-RPC method by its associated id.
 	 * 
 	 * @return the result
@@ -1472,7 +1542,7 @@ public class NSOController {
 		return ResultParser.processRawData(new Load(sessionManager.getTransactionId(), path, filePath, mode, format),
 				sessionManager.getCurrentReq());
 	}
-	
+
 	/**
 	 * Load a payload to NSO
 	 * 
@@ -1525,12 +1595,14 @@ public class NSOController {
 		return ResultParser.processRawData(new Load(sessionManager.getTransactionId(), path, filePath, "merge", "json"),
 				sessionManager.getCurrentReq());
 	}
-	
+
 	/**
-	 * Load a payload to NSO By default, the file will be merged, and using JSON. Use
-	 * load(String path,String filePath,String mode,String format) for more options
+	 * Load a payload to NSO By default, the file will be merged, and using JSON.
+	 * Use load(String path,String filePath,String mode,String format) for more
+	 * options
 	 * 
-	 * Example : nso.loadString("/devices/device{devicename}","{\"device"\:\"blah\"}");
+	 * Example :
+	 * nso.loadString("/devices/device{devicename}","{\"device"\:\"blah\"}");
 	 * 
 	 * @param path
 	 *            - KeyPath String expression
@@ -1546,7 +1618,8 @@ public class NSOController {
 	 */
 	public String loadString(String path, String data) throws RPCException, RCPparameterException, NSOException {
 		testTransaction();
-		return ResultParser.processRawData(new LoadString(sessionManager.getTransactionId(), path, data, "merge", "json"),
+		return ResultParser.processRawData(
+				new LoadString(sessionManager.getTransactionId(), path, data, "merge", "json"),
 				sessionManager.getCurrentReq());
 	}
 
@@ -1728,14 +1801,16 @@ public class NSOController {
 		String back = new String();
 		try {
 			for (int i = 0; i < sessionManager.getSessionList().size(); i++) {
-				//This will remove the sessions list, but will bypass with the catch if the don't exists
+				// This will remove the sessions list, but will bypass with the catch if the
+				// don't exists
 				try {
 					back += ResultParser.processRawData(new Logout(), sessionManager.getSessionList().get(i).getReq());
-				}
-				catch(RPCException e) {
+				} catch (RPCException e) {
 					e.printStackTrace();
 				}
 			}
+			//Remove each session and rebuild the session manager
+			sessionManager = new SessionManager();
 			return back;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1769,6 +1844,37 @@ public class NSOController {
 		String result = ResultParser.processRawData(new ShowConfig(sessionManager.getTransactionId(), path),
 				sessionManager.getCurrentReq());
 		return ResultParser.parseStringResult(result, "$.config");
+	}
+
+	/**
+	 * Show the config with operational option
+	 * 
+	 * @param path
+	 *            - KeyPath String expression to the leaf
+	 * @param withOper
+	 *            - display operational data
+	 * @param resultAs
+	 *            - "string","json"
+	 * @return
+	 * @throws RPCException
+	 *             RPC related exception
+	 * @throws NSOException
+	 *             NSO related exception
+	 * @throws RCPparameterException
+	 *             Wrong RPC parameter
+	 */
+	public String showConfig(String path, boolean withOper, String resultAs)
+			throws RPCException, NSOException, RCPparameterException {
+		testTransaction();
+		String result = ResultParser.processRawData(
+				new ShowConfig(sessionManager.getTransactionId(), path, withOper, resultAs),
+				sessionManager.getCurrentReq());
+		if (resultAs.compareTo("string") == 0) {
+			return ResultParser.parseStringResult(result, "$.config");
+		} else {
+			JSONObject jO = JsonPath.parse(result).read("$.data", JSONObject.class);
+			return jO.toJSONString();
+		}
 	}
 
 	/**
@@ -1866,8 +1972,8 @@ public class NSOController {
 	 *             RPC related exception
 	 * @throws RCPparameterException
 	 *             parameters exception
-	 * @throws JsonPathException 
-	 * 			Json path exception
+	 * @throws JsonPathException
+	 *             Json path exception
 	 * @throws NSOException
 	 *             NSO related exception
 	 */
@@ -1877,14 +1983,13 @@ public class NSOController {
 				new GetSystemSetting(sessionManager.getTransactionId(), "all"), sessionManager.getCurrentReq()))
 						.getJsonString();
 	}
-	
+
 	public String getNSOCapabilities() throws RPCException, JsonPathException, RCPparameterException, NSOException {
 		testTransaction();
-		return new JSONDisplay(ResultParser.processRawData(
-				new GetSystemSetting(sessionManager.getTransactionId(), "capabilities"), sessionManager.getCurrentReq()))
-						.getJsonString();
+		return new JSONDisplay(
+				ResultParser.processRawData(new GetSystemSetting(sessionManager.getTransactionId(), "capabilities"),
+						sessionManager.getCurrentReq())).getJsonString();
 	}
-	
 
 	/**
 	 * Get NSOController library library version

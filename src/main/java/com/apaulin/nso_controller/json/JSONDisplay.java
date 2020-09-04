@@ -16,6 +16,7 @@ public class JSONDisplay {
 	private String jsonString = new String();//String representation of the JSON file
 	private int spaceNumber = 0;// Number of spaces to pass.
 	private int spaceInc = 4;//Number of spaces to add.
+	@SuppressWarnings("unused")
 	private int lineNumber = 0;//line numbers
 	
 	/**

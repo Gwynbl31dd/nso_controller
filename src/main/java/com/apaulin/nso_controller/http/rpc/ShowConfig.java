@@ -7,7 +7,7 @@ package com.apaulin.nso_controller.http.rpc;
  * Retrieves a compact string representation of the configuration
  * @author Anthony Paulin
  * @since 13/07/2018
- * @version 0.1
+ * @version 0.2
  * The path param is a keypath to the configuration to be returned. 
  * result_as controls the output format, string for a compact string format and json for json. 
  * max_size sets the maximum size of the data field in kb, set to 0 to disable the limit.
@@ -17,7 +17,7 @@ public class ShowConfig extends GetSchema {
 	private final static String[] RESULT_AS_VALUES = {"string","json"};
 	private String resultAs;
 	private boolean withOper;
-	private int maxSize;
+	private int maxSize = 0;
 	
 	/**
 	 * Craft a config request
@@ -35,8 +35,25 @@ public class ShowConfig extends GetSchema {
 	 * Craft a config request
 	 * @param th transaction id
 	 * @param path keypath
+	 * @param withOper with operation
 	 * @param resultAs result format
-	 * @param withOper with oepration
+	 * @throws RCPparameterException 
+	 */
+	public ShowConfig(int th,String path,boolean withOper,String resultAs) throws RCPparameterException {
+		super("show_config");
+		this.setWithOper(withOper);
+		super.setTh(th);
+		this.setResultAs(resultAs);
+		super.setPath(path); 
+		this.setRequest(false);
+	}
+	
+	/**
+	 * Craft a config request
+	 * @param th transaction id
+	 * @param path keypath
+	 * @param resultAs result format
+	 * @param withOper with operation
 	 * @param maxSize size max
 	 * @throws RCPparameterException  RPC related exception
 	 */
