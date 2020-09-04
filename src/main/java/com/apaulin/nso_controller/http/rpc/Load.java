@@ -119,7 +119,7 @@ public class Load extends GetSchema {
 	/**
 	 * Get the mode
 	 * 
-	 * @return
+	 * @return the mode
 	 */
 	protected String getMode() {
 		return mode;

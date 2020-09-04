@@ -60,7 +60,7 @@ public class NSOController {
 	private String address; // Address of the NSO instance. (http://IP:PORT)
 	private String login; // Login used by the NSO instance (PAM or aaa database)
 	private String password; // password used for the NSO instance (PAM or aaa database)
-	private static final String VERSION = "4.2.0"; // Version of the library
+	private static final String VERSION = "4.2.1"; // Version of the library
 	private int major_version;
 	private int minor_version;
 	public static final String ROBOT_LIBRARY_SCOPE = "GLOBAL"; // Scope used for Robot framework.
@@ -1855,7 +1855,7 @@ public class NSOController {
 	 *            - display operational data
 	 * @param resultAs
 	 *            - "string","json"
-	 * @return
+	 * @return the config
 	 * @throws RPCException
 	 *             RPC related exception
 	 * @throws NSOException
