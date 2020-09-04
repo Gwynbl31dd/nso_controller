@@ -34,7 +34,7 @@ public class GetTemplateVariables extends GetSchema{
 	}
 
 	/**
-	 * @param names the names to set
+	 * @param name the names to set
 	 */
 	private void setName(String name) {
 		this.name = name;

@@ -46,7 +46,7 @@ public class GetCase extends GetSchema {
 	
 	/**
 	 * Set the choice
-	 * @param choice <String>
+	 * @param choice  the choice param
 	 */
 	private void setChoice(String choice) {
 		this.choice = choice;

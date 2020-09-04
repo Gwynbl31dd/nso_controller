@@ -43,7 +43,7 @@ public class GetSystemSetting extends GetSchema {
 
 	/**
 	 * @param operation the operation to set
-	 * @throws RCPparameterException 
+	 * @throws RCPparameterException  RPC related Exception
 	 */
 	private void setOperation(String operation) throws RCPparameterException {
 		valueListExist(operation, OPERATION_VALUES);
