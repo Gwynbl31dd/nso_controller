@@ -1513,6 +1513,23 @@ public class NSOController {
 		}
 		return processed;
 	}
+	
+	/**
+	 * Run an action from NSO but return raw output for custom processing
+	 * 
+	 * @param action
+	 *            - KeyPath String expression to the action
+	 * @return the action result
+	 * @throws RPCException
+	 *             RPC related exception
+	 * @throws NSOException
+	 *             NSO related exception
+	 */
+	public String runActionRaw(String action) throws RPCException, NSOException {
+        testTransaction();
+        String result = sessionManager.getCurrentReq().send(new RunAction(sessionManager.getTransactionId(), action));
+        return result;
+	}
 
 	/**
 	 * Load a file to NSO
