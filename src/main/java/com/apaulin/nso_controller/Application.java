@@ -1,6 +1,7 @@
 package com.apaulin.nso_controller;
 
 import com.apaulin.nso_controller.examples.ActionExample;
+import com.apaulin.nso_controller.examples.ActionWithFormatExample;
 import com.apaulin.nso_controller.examples.CreateExample;
 import com.apaulin.nso_controller.examples.DeleteExample;
 import com.apaulin.nso_controller.examples.GetSchemaExample;
@@ -18,13 +19,15 @@ public class Application {
     	System.out.println("Hello nso_controller");
     	//new ShowRunExample();
     	//new ShowRunMultiSessionExample();
-    	new InitExample();
+    	//new InitExample();
     	//new ShowRunExample();
     	//new ShowRunWithOperExample();
     	//new GetValueExample();
     	//new GettingListKeys();
     	//new DeleteExample();
     	//new ActionExample();
+    	new ActionWithFormatExample();
     	//new GetSchemaExample();
+    	System.exit(0);
     }
 }
