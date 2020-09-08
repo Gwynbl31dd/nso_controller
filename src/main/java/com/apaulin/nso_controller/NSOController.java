@@ -1513,7 +1513,37 @@ public class NSOController {
 		}
 		return processed;
 	}
-	
+
+	/**
+	 * Run an action from NSO with format Example :
+	 * nso.runAction("/devices/sync-from","json");
+	 * 
+	 * @param action
+	 *            - KeyPath String expression to the action
+	 * @param format
+	 *            - format "normal", "bracket", "json"
+	 * @return the action result
+	 * @throws RPCException
+	 *             RPC related exception
+	 * @throws NSOException
+	 *             NSO related exception
+	 */
+	public String runAction(String action, String format) throws RPCException, NSOException, RCPparameterException {
+		testTransaction();
+		String result = sessionManager.getCurrentReq()
+				.send(new RunAction(sessionManager.getTransactionId(), action, format));
+		if (format.compareTo("json") == 0) {
+			try {
+				JSONObject processed = ResultParser.parseResult(result, "$.result");
+				return processed.toJSONString();
+			} catch (PathNotFoundException e) {// No path found
+				throw new RPCException(result);
+			}
+		} else {
+			return result;
+		}
+	}
+
 	/**
 	 * Run an action from NSO but return raw output for custom processing
 	 * 
@@ -1526,9 +1556,9 @@ public class NSOController {
 	 *             NSO related exception
 	 */
 	public String runActionRaw(String action) throws RPCException, NSOException {
-        testTransaction();
-        String result = sessionManager.getCurrentReq().send(new RunAction(sessionManager.getTransactionId(), action));
-        return result;
+		testTransaction();
+		String result = sessionManager.getCurrentReq().send(new RunAction(sessionManager.getTransactionId(), action));
+		return result;
 	}
 
 	/**
@@ -1754,8 +1784,10 @@ public class NSOController {
 	 *             RPC related exception
 	 * @throws NSOException
 	 *             NSO related exception
+	 * @throws RCPparameterException
+	 *             Wrong parameters
 	 */
-	public String liveStatus(String device, String cmd) throws NSOException, RPCException {
+	public String liveStatus(String device, String cmd) throws NSOException, RPCException, RCPparameterException {
 		return this.liveStatus(device, cmd, "exec");
 	}
 
@@ -1773,11 +1805,14 @@ public class NSOController {
 	 *             NSO related exception
 	 * @throws RPCException
 	 *             RPC related exception
+	 * @throws RCPparameterException
+	 *             Wrong parameters
 	 */
-	public String liveStatus(String device, String cmd, String action) throws NSOException, RPCException {
+	public String liveStatus(String device, String cmd, String action)
+			throws NSOException, RPCException, RCPparameterException {
 		testTransaction();
 		String result = sessionManager.getCurrentReq().send(new RunAction(sessionManager.getTransactionId(),
-				"/devices/device{" + device + "}/live-status/" + action + "/any/", cmd));
+				"/devices/device{" + device + "}/live-status/" + action + "/any/", cmd, "normal"));
 		JSONArray syncs = JsonPath.read(result, "$.result[*]");
 		String processed = new String();
 		for (int i = 0; i < syncs.size(); i++) {
@@ -1826,7 +1861,7 @@ public class NSOController {
 					e.printStackTrace();
 				}
 			}
-			//Remove each session and rebuild the session manager
+			// Remove each session and rebuild the session manager
 			sessionManager = new SessionManager();
 			return back;
 		} catch (Exception e) {

@@ -21,19 +21,19 @@ nso_controller can be used as a Java API to communicate with NSO.
 ###  Leiningen/Boot
 
 ```
-[org.clojars.gwynbl31dd/nso_controller "4.2.2"]
+[org.clojars.gwynbl31dd/nso_controller "4.3.0"]
 ```
 
 ### Clojure CLI/deps.edn
 
 ```
-org.clojars.gwynbl31dd/nso_controller {:mvn/version "4.2.2"}
+org.clojars.gwynbl31dd/nso_controller {:mvn/version "4.3.0"}
 ```
 
 ### Gradle
 
 ```
-compile 'org.clojars.gwynbl31dd:nso_controller:4.2.2'
+compile 'org.clojars.gwynbl31dd:nso_controller:4.3.0'
 ```
 
 ### Maven
@@ -52,7 +52,7 @@ compile 'org.clojars.gwynbl31dd:nso_controller:4.2.2'
 <dependency>
   <groupId>org.clojars.gwynbl31dd</groupId>
   <artifactId>nso_controller</artifactId>
-  <version>4.2.2</version>
+  <version>4.3.0</version>
 </dependency>
 ```
 
