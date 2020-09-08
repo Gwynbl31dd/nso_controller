@@ -21,19 +21,19 @@ nso_controller can be used as a Java API to communicate with NSO.
 ###  Leiningen/Boot
 
 ```
-[org.clojars.gwynbl31dd/nso_controller "4.1.1"]
+[org.clojars.gwynbl31dd/nso_controller "4.2.2"]
 ```
 
 ### Clojure CLI/deps.edn
 
 ```
-org.clojars.gwynbl31dd/nso_controller {:mvn/version "4.1.1"}
+org.clojars.gwynbl31dd/nso_controller {:mvn/version "4.2.2"}
 ```
 
 ### Gradle
 
 ```
-compile 'org.clojars.gwynbl31dd:nso_controller:4.1.1'
+compile 'org.clojars.gwynbl31dd:nso_controller:4.2.2'
 ```
 
 ### Maven
@@ -52,15 +52,15 @@ compile 'org.clojars.gwynbl31dd:nso_controller:4.1.1'
 <dependency>
   <groupId>org.clojars.gwynbl31dd</groupId>
   <artifactId>nso_controller</artifactId>
-  <version>4.0.1</version>
+  <version>4.2.2</version>
 </dependency>
 ```
 
 ## Reading data
 
-nso_controller provides two main functionality to write a on NSO,
+nso_controller provides two main functionalities to read NSO,
 
-you can pass a file (xml or json) or directly write in the leaf.
+you can pass a file (xml or json) or directly read from a leaf.
 
 
 ### Reading data from NSO default method
@@ -104,6 +104,10 @@ public class Main {
 
 ### Reading data from NSO using REST
 
+```
+WARNING : REST is deprecated for NSO 5.X.X, therefore we will also deprecate the REST functionality for the next versions.
+```
+
 In some special case, you could be forced to use the REST API (For example, if you test a system using REST)
 
 In that case, you will use 3 steps.
@@ -146,11 +150,9 @@ public class Main {
 ### Create a leaf
 
 nso.create() does not only create a leaf, but also the data in it
-You can also you nso.delete() to remove them.
+You can also use nso.delete() to remove them.
 
-Since the version 1.3.2 you do not need to valide the commit before running it. 
-BUT if you create your own commit object, nso.validateCommit() must be called.
-Since the version 1.3.3 you do not need to start a transaction. The transaction will be automatically started on the
+The transaction will be automatically started on the
 running database, with the option read_write. Using startTransaction() is only required if you want to modify the options.
 
 This is due to JRPC, JRPC expects a validation. But NSOController will take care of it if you 
@@ -290,9 +292,11 @@ This is the equivalent of  using nso.showConfig("/aaa");
 
 NSO controller can pass any options to your commit.
 
-By default, there are a few method available like
-commitDryRunCli(...); 
-commitDryRunNative(...);
+By default, there are a few methods available like
+
+* commitDryRunCli(...); 
+* commitDryRunNative(...);
+* ...
 
 If you need specific call, you can use the option (E.g : Force LSA, commit queue, etc)
 
@@ -375,15 +379,20 @@ Rest API Requests
     Log to Console  ${config}
 ```
 
+You can find more examples [here](https://github.com/Gwynbl31dd/project_testsuite)
+
 ## Extra
 
 nso_controller provides a lot of functions to validate, create, delete, test NSO and the device.
 
-For example, lifeStatus can allow you to directly talk to the device through NSO.
+For example, liveStatus can allow you to directly talk to the device through NSO.
 
 if the class NSOController does not provide a functionality, take a look at 
 the advanced functions provided in com.apaulin.nso_controller.http.rpc
 
-If you still do not find a function, extends the object in com.apaulin.http.rpc
+If you still do not find a function, extend the object in com.apaulin.http.rpc
 
-and if you still need help, contact me : paulin.anthony@gmail.com
+## Maintainers
+
+* [Gwynbl31dd](https://github.com/Gwynbl31dd)
+* [smansor84](https://github.com/smansor84)
