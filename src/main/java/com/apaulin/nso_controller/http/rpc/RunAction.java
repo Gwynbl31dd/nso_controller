@@ -127,7 +127,6 @@ public class RunAction extends GetSchema {
 		}
 		else {
 			request = "{\"th\": " + getTh() + ",\"path\":\"" + getPath() + "\",\"params\": "+param+",\"format\":\"" + getFormat() + "\"}";
-			System.out.println(request);
 		}
 		super.setRequest(request);
 	}

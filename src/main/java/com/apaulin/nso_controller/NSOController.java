@@ -1569,8 +1569,15 @@ public class NSOController {
 				.send(new RunAction(sessionManager.getTransactionId(), action, format, params));
 		if (format.compareTo("json") == 0) {
 			try {
-				JSONObject processed = ResultParser.parseResult(result, "$.result");
-				return processed.toJSONString();
+				//TODO check with type of for the result
+				try {
+					JSONObject processed = ResultParser.parseResult(result, "$.result");
+					return processed.toJSONString();
+				}
+				catch(ClassCastException e) {
+					JSONObject processed = ResultParser.parseResult(result, "$.result[*]");
+					return processed.toJSONString();
+				}
 			} catch (PathNotFoundException e) {// No path found
 				throw new RPCException(result);
 			}
@@ -1850,8 +1857,8 @@ public class NSOController {
 		testTransaction();
 		String result = sessionManager.getCurrentReq().send(new RunAction(sessionManager.getTransactionId(),
 				"/devices/device{" + device + "}/live-status/" + action + "/any/", 
-				"{\"args\": \"" +cmd+ "\"}",
-				"normal"));
+				"normal",
+				"{\"args\": \"" +cmd+ "\"}"));
 		JSONArray syncs = JsonPath.read(result, "$.result[*]");
 		String processed = new String();
 		for (int i = 0; i < syncs.size(); i++) {
