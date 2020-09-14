@@ -1571,7 +1571,7 @@ public class NSOController {
 			try {
 				//TODO check with type of for the result
 				try {
-					JSONObject processed = ResultParser.parseResult(result, "$.result[*]");
+					JSONArray processed = JsonPath.read(result, "$.result[*]");
 					return processed.toJSONString();
 				}
 				catch(Exception e) {
