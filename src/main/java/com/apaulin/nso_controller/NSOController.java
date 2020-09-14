@@ -60,7 +60,7 @@ public class NSOController {
 	private String address; // Address of the NSO instance. (http://IP:PORT)
 	private String login; // Login used by the NSO instance (PAM or aaa database)
 	private String password; // password used for the NSO instance (PAM or aaa database)
-	private static final String VERSION = "4.2.1"; // Version of the library
+	private static final String VERSION = "4.3.1"; // Version of the library
 	private int major_version;
 	private int minor_version;
 	public static final String ROBOT_LIBRARY_SCOPE = "GLOBAL"; // Scope used for Robot framework.
@@ -1543,6 +1543,41 @@ public class NSOController {
 			return result;
 		}
 	}
+	
+	/**
+	 * Run an action from NSO with format and params :
+	 * nso.runAction("/services/test/deploy","json","{\"clockSettings\": \"2014-02-11T14:20:53.460%2B01:00\"}");
+	 * 
+	 * @param action
+	 *            - KeyPath String expression to the action
+	 * @param format
+	 *            - format "normal", "bracket", "json"
+	 * @param params
+	 *            The format params defines if the result should be an array of key
+	 *            values or a pre-formatted string on bracket format as seen in the
+	 *            CLI. Eg : {"clockSettings": "2014-02-11T14:20:53.460%2B01:00"}
+	 * @return the action result
+	 * @throws RPCException
+	 *             RPC related exception
+	 * @throws NSOException
+	 *             NSO related exception
+	 * @throws RCPparameterException 
+	 */
+	public String runAction(String action,String format,String params) throws RPCException, NSOException, RCPparameterException {
+		testTransaction();
+		String result = sessionManager.getCurrentReq()
+				.send(new RunAction(sessionManager.getTransactionId(), action, format,params));
+		if (format.compareTo("json") == 0) {
+			try {
+				JSONObject processed = ResultParser.parseResult(result, "$.result");
+				return processed.toJSONString();
+			} catch (PathNotFoundException e) {// No path found
+				throw new RPCException(result);
+			}
+		} else {
+			return result;
+		}
+	}
 
 	/**
 	 * Run an action from NSO but return raw output for custom processing
@@ -1554,7 +1589,9 @@ public class NSOController {
 	 *             RPC related exception
 	 * @throws NSOException
 	 *             NSO related exception
+	 * @deprecated
 	 */
+	
 	public String runActionRaw(String action) throws RPCException, NSOException {
 		testTransaction();
 		String result = sessionManager.getCurrentReq().send(new RunAction(sessionManager.getTransactionId(), action));
@@ -1812,7 +1849,9 @@ public class NSOController {
 			throws NSOException, RPCException, RCPparameterException {
 		testTransaction();
 		String result = sessionManager.getCurrentReq().send(new RunAction(sessionManager.getTransactionId(),
-				"/devices/device{" + device + "}/live-status/" + action + "/any/", cmd, "normal"));
+				"/devices/device{" + device + "}/live-status/" + action + "/any/", 
+				"{\"args\": \"" +cmd+ "\"}",
+				"normal"));
 		JSONArray syncs = JsonPath.read(result, "$.result[*]");
 		String processed = new String();
 		for (int i = 0; i < syncs.size(); i++) {
@@ -1824,6 +1863,8 @@ public class NSOController {
 		}
 		return processed;
 	}
+	
+
 
 	/**
 	 * Check if a leaf exists
