@@ -1571,11 +1571,11 @@ public class NSOController {
 			try {
 				//TODO check with type of for the result
 				try {
-					JSONArray processed = JsonPath.read(result, "$.result[*]");
+					JSONObject processed = ResultParser.parseResult(result, "$.result");
 					return processed.toJSONString();
 				}
 				catch(Exception e) {
-					JSONObject processed = ResultParser.parseResult(result, "$.result");
+					JSONArray processed = JsonPath.read(result, "$.result[*]");
 					return processed.toJSONString();
 				}
 			} catch (PathNotFoundException e) {// No path found
