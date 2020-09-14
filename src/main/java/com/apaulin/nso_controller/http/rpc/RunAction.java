@@ -86,7 +86,7 @@ public class RunAction extends GetSchema {
 	 *            format used for the output "normal", "bracket", "json" (default
 	 *            normal)
 	 */
-	public RunAction(int th, String path, String param, String format) {
+	public RunAction(int th, String path, String format,String param) {
 		super("run_action");
 		super.setTh(th);
 		super.setPath(path);
@@ -127,6 +127,7 @@ public class RunAction extends GetSchema {
 		}
 		else {
 			request = "{\"th\": " + getTh() + ",\"path\":\"" + getPath() + "\",\"params\": "+param+",\"format\":\"" + getFormat() + "\"}";
+			System.out.println(request);
 		}
 		super.setRequest(request);
 	}

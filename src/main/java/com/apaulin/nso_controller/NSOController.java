@@ -1566,7 +1566,7 @@ public class NSOController {
 	public String runAction(String action,String format,String params) throws RPCException, NSOException, RCPparameterException {
 		testTransaction();
 		String result = sessionManager.getCurrentReq()
-				.send(new RunAction(sessionManager.getTransactionId(), action, format,params));
+				.send(new RunAction(sessionManager.getTransactionId(), action, format, params));
 		if (format.compareTo("json") == 0) {
 			try {
 				JSONObject processed = ResultParser.parseResult(result, "$.result");

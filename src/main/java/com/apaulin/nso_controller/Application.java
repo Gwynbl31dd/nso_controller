@@ -2,6 +2,7 @@ package com.apaulin.nso_controller;
 
 import com.apaulin.nso_controller.examples.ActionExample;
 import com.apaulin.nso_controller.examples.ActionWithFormatExample;
+import com.apaulin.nso_controller.examples.ActionWithParamsExample;
 import com.apaulin.nso_controller.examples.CreateExample;
 import com.apaulin.nso_controller.examples.DeleteExample;
 import com.apaulin.nso_controller.examples.GetSchemaExample;
@@ -26,7 +27,8 @@ public class Application {
     	//new GettingListKeys();
     	//new DeleteExample();
     	//new ActionExample();
-    	new ActionWithFormatExample();
+    	//new ActionWithFormatExample();
+    	new ActionWithParamsExample();
     	//new GetSchemaExample();
     	System.exit(0);
     }
