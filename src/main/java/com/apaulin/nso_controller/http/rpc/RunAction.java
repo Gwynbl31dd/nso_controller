@@ -85,11 +85,13 @@ public class RunAction extends GetSchema {
 	 * @param format
 	 *            format used for the output "normal", "bracket", "json" (default
 	 *            normal)
+	 * @throws RCPparameterException 
 	 */
-	public RunAction(int th, String path, String format,String param) {
+	public RunAction(int th, String path, String format,String param) throws RCPparameterException {
 		super("run_action");
 		super.setTh(th);
 		super.setPath(path);
+		setFormat(format);
 		this.param = param;
 		this.setRequest();
 	}
