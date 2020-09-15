@@ -17,7 +17,6 @@ import com.apaulin.nso_controller.examples.ShowRunWithOperExample;
 public class Application {
 
     public static void main(String[] args) {
-    	System.out.println("Hello nso_controller");
     	//new ShowRunExample();
     	//new ShowRunMultiSessionExample();
     	//new InitExample();
