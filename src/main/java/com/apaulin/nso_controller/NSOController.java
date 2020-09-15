@@ -1,9 +1,14 @@
 package com.apaulin.nso_controller;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.apache.maven.model.Model;
+import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
+import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 
 import com.apaulin.nso_controller.exception.NSOException;
 import com.apaulin.nso_controller.http.RpcRequest;
@@ -63,7 +68,7 @@ public class NSOController {
 	private String address; // Address of the NSO instance. (http://IP:PORT)
 	private String login; // Login used by the NSO instance (PAM or aaa database)
 	private String password; // password used for the NSO instance (PAM or aaa database)
-	private static final String VERSION = "4.3.1"; // Version of the library
+	private static String VERSION = "4.3.1"; // Version of the library
 	private int major_version;
 	private int minor_version;
 	public static final String ROBOT_LIBRARY_SCOPE = "GLOBAL"; // Scope used for Robot framework.
@@ -2231,6 +2236,18 @@ public class NSOController {
 	 */
 	@Override
 	public String toString() {
+		MavenXpp3Reader reader = new MavenXpp3Reader();
+        Model model;
+		try {
+			model = reader.read(new FileReader("pom.xml"));
+			VERSION = model.getVersion();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (XmlPullParserException e) {
+			e.printStackTrace();
+		}
 		return "NSO (Network service orchestrator) version " + this.major_version + "." + this.minor_version
 				+ ".X, NSO Controller API v" + VERSION;
 	}

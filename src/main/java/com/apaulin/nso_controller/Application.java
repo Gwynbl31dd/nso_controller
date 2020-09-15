@@ -28,6 +28,7 @@ public class Application {
     	//new ActionExample();
     	//new ActionWithFormatExample();
     	new ActionWithParamsExample();
+    	
     	//new GetSchemaExample();
     	System.exit(0);
     }

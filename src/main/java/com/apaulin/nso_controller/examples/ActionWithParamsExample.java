@@ -23,6 +23,7 @@ public class ActionWithParamsExample {
 		NSOController nso = null;
 		try {
 			nso = new NSOController(url,username,password);
+			System.out.println(nso.toString());
 			nso.startTransaction("running", "read_write", "private", "test", "reuse");
 			System.out.println(nso.runAction("/devices/sync-from", "json","{\"args\": \"test\"}"));
 		} catch (NSOException | RPCException e) {
