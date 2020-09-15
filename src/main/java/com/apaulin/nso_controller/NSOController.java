@@ -47,7 +47,6 @@ import com.jayway.jsonpath.PathNotFoundException;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 
-
 /**
  * Controller of the NSO request. This is basically an abstraction layer for the
  * requests object with an extra control.
@@ -69,7 +68,7 @@ public class NSOController {
 	private int minor_version;
 	public static final String ROBOT_LIBRARY_SCOPE = "GLOBAL"; // Scope used for Robot framework.
 	private static final Logger logger = LogManager.getLogger(NSOController.class);
-	
+
 	/**
 	 * Default constructor - Should be used only by robot framework when called as a
 	 * test library. If you call it as a Java library, you should call
@@ -137,12 +136,14 @@ public class NSOController {
 	public void init(String address, String user, String password) throws NSOException {
 		logger.info("Start init process");
 		createSession(address, user, password, sessionManager.setId());
-		/*logger.trace("We've just greeted the user!");
-        logger.debug("We've just greeted the user!");
-        logger.info("We've just greeted the user!");
-        logger.warn("We've just greeted the user!");
-        logger.error("We've just greeted the user!");
-        logger.fatal("We've just greeted the user!");*/
+		/*
+		 * logger.trace("We've just greeted the user!");
+		 * logger.debug("We've just greeted the user!");
+		 * logger.info("We've just greeted the user!");
+		 * logger.warn("We've just greeted the user!");
+		 * logger.error("We've just greeted the user!");
+		 * logger.fatal("We've just greeted the user!");
+		 */
 	}
 
 	/**
@@ -154,6 +155,8 @@ public class NSOController {
 	 *            - username for the NSO connection
 	 * @param password
 	 *            - password for the NSO connection
+	 * @param id
+	 *            - id for the nso connection
 	 * @throws NSOException
 	 *             NSO related exception
 	 */
@@ -1577,6 +1580,8 @@ public class NSOController {
 	 *             RPC related exception
 	 * @throws NSOException
 	 *             NSO related exception
+	 * @throws RCPparameterException
+	 *             Wrong RPC parameter
 	 */
 	public String runAction(String action, String format) throws RPCException, NSOException, RCPparameterException {
 		testTransaction();
@@ -1593,10 +1598,11 @@ public class NSOController {
 			return result;
 		}
 	}
-	
+
 	/**
 	 * Run an action from NSO with format and params :
-	 * nso.runAction("/services/test/deploy","json","{\"clockSettings\": \"2014-02-11T14:20:53.460%2B01:00\"}");
+	 * nso.runAction("/services/test/deploy","json","{\"clockSettings\":
+	 * \"2014-02-11T14:20:53.460%2B01:00\"}");
 	 * 
 	 * @param action
 	 *            - KeyPath String expression to the action
@@ -1611,20 +1617,22 @@ public class NSOController {
 	 *             RPC related exception
 	 * @throws NSOException
 	 *             NSO related exception
-	 * @throws RCPparameterException 
+	 * @throws RCPparameterException
+	 *             Wrong RPC parameter
 	 */
-	public String runAction(String action,String format,String params) throws RPCException, NSOException, RCPparameterException {
+	public String runAction(String action, String format, String params)
+			throws RPCException, NSOException, RCPparameterException {
 		testTransaction();
 		String result = sessionManager.getCurrentReq()
 				.send(new RunAction(sessionManager.getTransactionId(), action, format, params));
 		if (format.compareTo("json") == 0) {
 			try {
-				//TODO check with type of for the result, could be due to the format normal = list, json = object
+				// TODO check with type of for the result, could be due to the format normal =
+				// list, json = object
 				try {
 					JSONObject processed = ResultParser.parseResult(result, "$.result");
 					return processed.toJSONString();
-				}
-				catch(Exception e) {
+				} catch (Exception e) {
 					JSONArray processed = JsonPath.read(result, "$.result[*]");
 					return processed.toJSONString();
 				}
@@ -1904,10 +1912,10 @@ public class NSOController {
 	public String liveStatus(String device, String cmd, String action)
 			throws NSOException, RPCException, RCPparameterException {
 		testTransaction();
-		String result = sessionManager.getCurrentReq().send(new RunAction(sessionManager.getTransactionId(),
-				"/devices/device{" + device + "}/live-status/" + action + "/any/", 
-				"normal",
-				"{\"args\": \"" +cmd+ "\"}"));
+		String result = sessionManager.getCurrentReq()
+				.send(new RunAction(sessionManager.getTransactionId(),
+						"/devices/device{" + device + "}/live-status/" + action + "/any/", "normal",
+						"{\"args\": \"" + cmd + "\"}"));
 		JSONArray syncs = JsonPath.read(result, "$.result[*]");
 		String processed = new String();
 		for (int i = 0; i < syncs.size(); i++) {
@@ -1919,11 +1927,11 @@ public class NSOController {
 		}
 		return processed;
 	}
-	
+
 	/**
 	 * Check if a leaf exists
 	 * 
-	 * @deprecated  Use exists() instead
+	 * @deprecated Use exists() instead
 	 * @param path
 	 *            - KeyPath String expression to the leaf
 	 * @return a boolean representing the leaf
@@ -1938,7 +1946,7 @@ public class NSOController {
 		boolean result = ResultParser.parseBool(data, "$.exists");
 		return result;
 	}
-	
+
 	/**
 	 * Check if a leaf exists
 	 * 
@@ -1988,7 +1996,7 @@ public class NSOController {
 	 *            The index of the session
 	 */
 	public void useSession(int index) throws IndexOutOfBoundsException {
-		logger.info("User session index: "+index);
+		logger.info("User session index: " + index);
 		sessionManager.setIndex(index);
 	}
 
@@ -2040,7 +2048,7 @@ public class NSOController {
 			return jO.toJSONString();
 		}
 	}
-	
+
 	/**
 	 * Equivalent to showConfig with operational flag set to true
 	 * 
@@ -2056,10 +2064,10 @@ public class NSOController {
 	 * @throws RCPparameterException
 	 *             Wrong RPC parameter
 	 */
-	public String showRun(String path,String resultAs) throws RPCException, NSOException, RCPparameterException {
-		return showConfig(path,true,resultAs);
+	public String showRun(String path, String resultAs) throws RPCException, NSOException, RCPparameterException {
+		return showConfig(path, true, resultAs);
 	}
-	
+
 	/**
 	 * Equivalent to showRun with default output as string
 	 * 
@@ -2074,7 +2082,7 @@ public class NSOController {
 	 *             Wrong RPC parameter
 	 */
 	public String showRun(String path) throws RPCException, NSOException, RCPparameterException {
-		return showRun(path,"string");
+		return showRun(path, "string");
 	}
 
 	/**

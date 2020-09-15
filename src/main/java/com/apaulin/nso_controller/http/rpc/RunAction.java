@@ -61,7 +61,7 @@ public class RunAction extends GetSchema {
 	 * @param format
 	 *            format used for the output "normal", "bracket", "json" (default
 	 *            normal)
-	 * @throws RCPparameterException
+	 * @throws RCPparameterException RPC related exception
 	 */
 	public RunAction(int th, String path, String format) throws RCPparameterException {
 		super("run_action");
@@ -85,7 +85,7 @@ public class RunAction extends GetSchema {
 	 * @param format
 	 *            format used for the output "normal", "bracket", "json" (default
 	 *            normal)
-	 * @throws RCPparameterException 
+	 * @throws RCPparameterException RPC related exception
 	 */
 	public RunAction(int th, String path, String format,String param) throws RCPparameterException {
 		super("run_action");
