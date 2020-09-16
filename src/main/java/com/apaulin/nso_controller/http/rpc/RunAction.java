@@ -30,7 +30,6 @@ package com.apaulin.nso_controller.http.rpc;
  *
  */
 public class RunAction extends GetSchema {
-	// FIXME the params must be modified, eg : {"clockSettings": "2014-02-11T14:20:53.460%2B01:00"}
 	
 	private String param = "";
 	private String format = "normal";
