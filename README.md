@@ -52,7 +52,7 @@ compile 'org.clojars.gwynbl31dd:nso_controller:4.3.0'
 <dependency>
   <groupId>org.clojars.gwynbl31dd</groupId>
   <artifactId>nso_controller</artifactId>
-  <version>4.3.0</version>
+  <version>LATEST</version>
 </dependency>
 ```
 
@@ -222,71 +222,77 @@ public class Main {
 
 ## Advance usage (Custom RPC call)
 
-In some case, you will need to call the HTTPRequest object provides by NSOController.
+In some case, you could need a custom call. For example if the call is not exposed from nso_controller or if your version of NSO does not support what nso_controller sends.
 
-This object can take another object as a function to expose the advanced NSO functionality.
-This can be useful if you need a specific method not directly exposed.
+In any case, nso_controller allows you to use its session manager. 
+In order to create a custom call, you will need to follow these 4 steps.
 
-This object can be called by getReq(),and will return a HTTPRequest.
-
-This HTTPRequest has a method called postRequest(RPCRequest rpcRequest).
-
-Therefore, you can create a object inherited from RPCRequest, and passing it to 
-to your "http request" to create your own request.
-
-```
-WARNING : postRequest() does not mean it is a request REST POST. it is simply "posting" a RPC request.
-```
-
-Xplorer's library already provide a suite of Object usable in com.apaulin.http.rpc
-
-For example, the object ShowConfig. ShowConfig takes two arguments.
-
-The transaction number (th) (Provided by NSOController)  and the xpath to NSO.
+* Step 1 : Create a class that extends RPCData
+* Step 2 : Build the NSO controller object and start the authentication
+* Step 3 : Generate the id and the transaction (th) by calling startTransaction
+* Step 4 : Post your custom call to the session manager
 
 ```java
-import com.apaulin.nso_controller.http.HttpRequest;
-import com.apaulin.nso_controller.http.rpc.ShowConfig;
+import com.apaulin.nso_controller.http.rpc.RCPparameterException;
+import com.apaulin.nso_controller.http.rpc.RPCException;
+import com.apaulin.nso_controller.http.rpc.RpcData;
 import com.apaulin.nso_controller.NSOController;
+import com.apaulin.nso_controller.exception.NSOException;
 
-public class Main {
-	final static String USER = "anthony";
-	final static String PASSWORD = "password123";
-	final static String ADDRESS = "http://127.0.0.1:9701";
-	public static void main(String[] args) {
+public class CustomCallExample {
+	private static String url = "http://127.0.0.1:8080";
+	private static String username = "admin";
+	private static String password = "cisco123";
+	
+	public CustomCallExample() {
 		NSOController nso = null;
 		try {
-			//Create a NSOController object
-			nso = new NSOController(ADDRESS,USER,PASSWORD);
-			//Start the transation (This is done by default if missing)
-			//nso.startTransaction();
 			
-			//You get the transaction id previously created.
-			//You could keep them open and using multiple transaction
-			int th = nso.getTransactionId();
+			// Step 2 : Build the NSO controller object and start the authentication
+			nso = new NSOController(url,username,password);
 			
-			/* Take the http object from nso controller
-			 * This object is used to send the data
-			 * Then you create an object extends RPCRequest.
-			 * You can find a list of object in the package
-			 * com.apaulin.http.rpc
-			 */
-			HttpRequest req = nso.getReq();
-			String myResult = req.postRequest(new ShowConfig(th,"/aaa"));
-			System.out.println(myResult);
-		}
-		catch(Exception e) {
+			// Step 3 : Generate the id and the transaction (th) by calling startTransaction
+			//Create a transaction
+			int th = nso.startTransaction("running", "read", "private", "test", "reuse");
+			// Get the generated ID
+			int id = nso.getSessionManager().getCurrentId();
+			
+			// Step 4 : Post your custom call to the session manager
+			// We will create a show config with oper state to true
+			MyRPCCustomCall call = new MyRPCCustomCall("show_config");
+			// Set the generate ID
+			call.setId(id);		
+			// Build the request string, do not forget the transaction
+			call.setRequest("{\"th\": " + th + ",\"path\":\"/devices\",\"result_as\": \"json\",\"with_oper\": true}");
+			// Just push that object to the session manager and send it.
+			String result = nso.getSessionManager().getCurrentReq().send(call);
+			// And that's it.
+			System.out.println(result);
+			
+		} catch (NSOException | RPCException | RCPparameterException e) {
 			e.printStackTrace();
-		}
+		} 
 		finally {
-			//Logout if nothing else need to be done
 			nso.logout();
 		}
 	}
+	
 }
+
+// Step 1 : Create a class that will extend the abstract class RPCData.
+class MyRPCCustomCall extends RpcData {
+	/* 
+	 * Just specify the method. Example "show_config"
+	 * This is defined from the web_ui documentation in NSO
+	 */
+	public MyRPCCustomCall(String method) {
+		super(method);
+	}
+}
+
 ```
 
-This is the equivalent of  using nso.showConfig("/aaa");
+This is the equivalent of  using nso.showRun("/devices");
 
 ## Commit Options usage 
 
@@ -380,17 +386,6 @@ Rest API Requests
 ```
 
 You can find more examples [here](https://github.com/Gwynbl31dd/project_testsuite)
-
-## Extra
-
-nso_controller provides a lot of functions to validate, create, delete, test NSO and the device.
-
-For example, liveStatus can allow you to directly talk to the device through NSO.
-
-if the class NSOController does not provide a functionality, take a look at 
-the advanced functions provided in com.apaulin.nso_controller.http.rpc
-
-If you still do not find a function, extend the object in com.apaulin.http.rpc
 
 ## Maintainers
 

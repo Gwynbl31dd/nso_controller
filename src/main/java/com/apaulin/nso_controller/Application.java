@@ -4,6 +4,7 @@ import com.apaulin.nso_controller.examples.ActionExample;
 import com.apaulin.nso_controller.examples.ActionWithFormatExample;
 import com.apaulin.nso_controller.examples.ActionWithParamsExample;
 import com.apaulin.nso_controller.examples.CreateExample;
+import com.apaulin.nso_controller.examples.CustomCallExample;
 import com.apaulin.nso_controller.examples.DeleteExample;
 import com.apaulin.nso_controller.examples.GetSchemaExample;
 import com.apaulin.nso_controller.examples.GetValueExample;
@@ -27,8 +28,8 @@ public class Application {
     	//new DeleteExample();
     	//new ActionExample();
     	//new ActionWithFormatExample();
-    	new ActionWithParamsExample();
-    	
+    	//new ActionWithParamsExample();
+    	new CustomCallExample();
     	//new GetSchemaExample();
     	System.exit(0);
     }

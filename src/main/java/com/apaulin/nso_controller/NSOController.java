@@ -2230,6 +2230,10 @@ public class NSOController {
 	public int getTotalSessions() {
 		return sessionManager.getSessionList().size();
 	}
+	
+	public SessionManager getSessionManager() {
+		return sessionManager;
+	}
 
 	/**
 	 * Expose the NSO representation
