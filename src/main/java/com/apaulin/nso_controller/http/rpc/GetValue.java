@@ -15,6 +15,7 @@ package com.apaulin.nso_controller.http.rpc;
  */
 public class GetValue extends GetSchema {
 	private boolean checkDefault = false;
+	
 	public GetValue(int th, String path,boolean checkDefault) {
 		super("get_value");
 		super.setTh(th);

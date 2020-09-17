@@ -22,8 +22,21 @@ public class KickUser extends GetSchema {
 		super("kick_user");
 		super.setTh(th);
 		setUser(user);
-		super.setRequest();
+		this.setRequest();
 	}
+	
+	/**
+	 * Craft a config request
+	 * @param th transaction id
+	 * @param user username
+	 */
+	public KickUser(int th,int user) {
+		super("kick_user");
+		super.setTh(th);
+		setUser(user);
+		this.setRequest();
+	}
+
 
 	/**
 	 * Build the request
@@ -32,10 +45,10 @@ public class KickUser extends GetSchema {
 	public void setRequest() {
 		String request = new String();
 		if(user instanceof Integer) {
-			request = "{\"th\": "+getTh()+",\"user\": "+getUser()+"}";
+			request = "{\"th\": "+getTh()+",\"user\":"+getUser()+"}";
 		}
 		else {
-			request = "{\"th\": "+getTh()+",\"user\": \""+getUser()+"\"}";
+			request = "{\"th\": "+getTh()+",\"user\":\""+getUser()+"\"}";
 		}
 		super.setRequest(request); 
 	}

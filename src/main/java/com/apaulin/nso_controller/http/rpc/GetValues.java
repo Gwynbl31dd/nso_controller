@@ -49,7 +49,7 @@ public class GetValues extends GetSchema {
 	 */
 	@Override
 	public void setRequest() {
-		String request = "{\"th\": "+getTh()+",\"path\":\""+getPath()+"\", \"leafs\": "+getLeafs()+"}";
+		String request = "{\"th\": "+getTh()+",\"path\":\""+getPath()+"\",\"leafs\": "+getLeafs()+"}";
 		super.setRequest(request); 
 	}
 }
