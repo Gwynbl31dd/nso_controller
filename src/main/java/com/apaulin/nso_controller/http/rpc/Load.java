@@ -112,7 +112,7 @@ public class Load extends GetSchema {
 	 * @throws RCPparameterException rpc related exception
 	 */
 	protected void setFormat(String format) throws RCPparameterException {
-		valueListExist(format, FORMAT_VALUES);
+		ValueCheck.valueListExist(format, FORMAT_VALUES);
 		this.format = format;
 	}
 
@@ -132,7 +132,7 @@ public class Load extends GetSchema {
 	 * @throws RCPparameterException RPC related exception
 	 */
 	protected void setMode(String mode) throws RCPparameterException {
-		valueListExist(mode, MODE_VALUES);
+		ValueCheck.valueListExist(mode, MODE_VALUES);
 		this.mode = mode;
 	}
 

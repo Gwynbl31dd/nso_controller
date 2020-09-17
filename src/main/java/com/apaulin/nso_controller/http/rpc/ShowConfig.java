@@ -171,7 +171,7 @@ public class ShowConfig extends GetSchema {
 	 *             rpc related exception
 	 */
 	private void setResultAs(String resultAs) throws RCPparameterException {
-		valueListExist(resultAs, RESULT_AS_VALUES);
+		ValueCheck.valueListExist(resultAs, RESULT_AS_VALUES);
 		this.resultAs = resultAs;
 	}
 

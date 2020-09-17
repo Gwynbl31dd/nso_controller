@@ -1,10 +1,5 @@
-/**
- * 
- */
 package com.apaulin.nso_controller.http.rpc;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * Schema Request
@@ -74,13 +69,6 @@ public class GetSchema extends RpcData {
 	 */
 	public void setTh(int th) {
 		this.th = th;
-	}
-	
-	protected static void valueListExist(String value,String[] list) throws RCPparameterException {
-		ArrayList<String> test = new ArrayList<String>(Arrays.asList(list));
-		if(!test.contains(value)) {
-			throw new RCPparameterException(value);
-		}
 	}
 
 }

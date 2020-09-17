@@ -11,23 +11,23 @@ import org.junit.Test;
 
 import com.apaulin.nso_controller.http.rpc.*;
 
-public class AbordCommitTest {
+public class ConfirmCommitTest {
 	
 	@Test
-	public void AbordCommit() throws UnsupportedEncodingException, IOException {
+	public void ConfirmCommit() throws UnsupportedEncodingException, IOException {
 		int transaction = 0;
 
-		String method = "abort_commit";
+		String method = "confirm_commit";
 		String expectedRequest = "{}";
 		String fullRequest = "{\"jsonrpc\":\"2.0\",\"id\":0,\"method\":\""+method+"\",\"params\":"+expectedRequest+"}";
 		
-		AbortCommit abordCommit = new AbortCommit(transaction);
+		ConfirmCommit confirmCommit = new ConfirmCommit(transaction);
 		
-		assertEquals(abordCommit.getRequest(), expectedRequest);
-		assertEquals(abordCommit.getId(), 0);
-		assertEquals(abordCommit.getMethod(), method);
+		assertEquals(confirmCommit.getRequest(), expectedRequest);
+		assertEquals(confirmCommit.getId(), 0);
+		assertEquals(confirmCommit.getMethod(), method);
 
-		assertEquals(IOUtils.toString(abordCommit.getRequestEntity().getContent(), Charset.defaultCharset()), fullRequest);
+		assertEquals(IOUtils.toString(confirmCommit.getRequestEntity().getContent(), Charset.defaultCharset()), fullRequest);
 	}
 	
 }

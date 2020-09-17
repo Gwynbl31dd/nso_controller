@@ -84,7 +84,7 @@ public class NewTrans extends RpcData {
 	 * @throws RCPparameterException RPC related exception
 	 */
 	public void setDb(String db) throws RCPparameterException {
-		valueListExist(db, DB_VALUES);
+		ValueCheck.valueListExist(db, DB_VALUES);
 		this.db = db;
 	}
 
@@ -101,7 +101,7 @@ public class NewTrans extends RpcData {
 	 * @throws RCPparameterException RPC related exception
 	 */
 	public void setMode(String mode) throws RCPparameterException {
-		valueListExist(mode, MODE_VALUES);
+		ValueCheck.valueListExist(mode, MODE_VALUES);
 		this.mode = mode;
 	}
 
@@ -118,7 +118,7 @@ public class NewTrans extends RpcData {
 	 * @throws RCPparameterException RPC related exception
 	 */
 	public void setConfMode(String conf_mode) throws RCPparameterException {
-		valueListExist(conf_mode, CONF_MODE_VALUES);
+		ValueCheck.valueListExist(conf_mode, CONF_MODE_VALUES);
 		this.conf_mode = conf_mode;
 	}
 
@@ -150,7 +150,7 @@ public class NewTrans extends RpcData {
 	 * @throws RCPparameterException RPC related exception
 	 */
 	public void setOnPendingChanges(String on_pending_changes) throws RCPparameterException {
-		valueListExist(on_pending_changes, ON_PENDING_CHANGES_VALUES);
+		ValueCheck.valueListExist(on_pending_changes, ON_PENDING_CHANGES_VALUES);
 		this.on_pending_changes = on_pending_changes;
 	}
 }

@@ -104,7 +104,7 @@ public class RunAction extends GetSchema {
 	 *             rpc related exception
 	 */
 	protected void setFormat(String format) throws RCPparameterException {
-		valueListExist(format, FORMAT_VALUES);
+		ValueCheck.valueListExist(format, FORMAT_VALUES);
 		this.format = format;
 	}
 

@@ -68,7 +68,7 @@ public class NSOController {
 	private String address; // Address of the NSO instance. (http://IP:PORT)
 	private String login; // Login used by the NSO instance (PAM or aaa database)
 	private String password; // password used for the NSO instance (PAM or aaa database)
-	private static String VERSION = "4.3.1"; // Version of the library
+	private static String VERSION = ""; // Version of the library
 	private int major_version;
 	private int minor_version;
 	public static final String ROBOT_LIBRARY_SCOPE = "GLOBAL"; // Scope used for Robot framework.
@@ -481,8 +481,10 @@ public class NSOController {
 	 *             RPC related exception
 	 * @throws NSOException
 	 *             for NSO related exception
+	 * @throws RCPparameterException
+	 *             RPC related Exception
 	 */
-	public String commitDryRunNative(int timeout) throws RPCException, NSOException {
+	public String commitDryRunNative(int timeout) throws RPCException, NSOException, RCPparameterException {
 		testTransaction();
 		CommitOptions options = new CommitOptions();
 		options.addDryRun("native");
@@ -505,8 +507,9 @@ public class NSOController {
 	 *             RPC related exception
 	 * @throws NSOException
 	 *             for NSO related exception
+	 * @throws RCPparameterException
 	 */
-	public String commitDryRunNative() throws RPCException, NSOException {
+	public String commitDryRunNative() throws RPCException, NSOException, RCPparameterException {
 		return this.commitDryRunNative(0);
 	}
 
@@ -518,8 +521,10 @@ public class NSOController {
 	 *             RPC related exception
 	 * @throws NSOException
 	 *             for NSO related exception
+	 * @throws RCPparameterException
+	 *             RPC Related Exception
 	 */
-	public String commitDryRunCli() throws RPCException, NSOException {
+	public String commitDryRunCli() throws RPCException, NSOException, RCPparameterException {
 		return this.dryRun();
 	}
 
@@ -533,8 +538,10 @@ public class NSOController {
 	 *             RPC related exception
 	 * @throws NSOException
 	 *             for NSO related exception
+	 * @throws RCPparameterException
+	 *             RPC Related Exception
 	 */
-	public String commitDryRunCli(int timeout) throws RPCException, NSOException {
+	public String commitDryRunCli(int timeout) throws RPCException, NSOException, RCPparameterException {
 		return this.dryRun(timeout);
 	}
 
@@ -549,8 +556,10 @@ public class NSOController {
 	 *             for NSO related exception
 	 * @throws RPCException
 	 *             RPC related exception
+	 * @throws RCPparameterException
+	 *             RPC Related Exception
 	 */
-	public String dryRun(int timeout) throws RPCException, NSOException {
+	public String dryRun(int timeout) throws RPCException, NSOException, RCPparameterException {
 		testTransaction();
 		CommitOptions options = new CommitOptions();
 		options.addDryRun("cli");// Add CLI flag
@@ -590,8 +599,10 @@ public class NSOController {
 	 *             for NSO related exception
 	 * @throws RPCException
 	 *             RPC related exception
+	 * @throws RCPparameterException
+	 *             RPC Related Exception
 	 */
-	public String dryRun() throws RPCException, NSOException {
+	public String dryRun() throws RPCException, NSOException, RCPparameterException {
 		return this.dryRun(0);
 	}
 
@@ -648,8 +659,10 @@ public class NSOController {
 	 *             RPC related exception
 	 * @throws NSOException
 	 *             NSO related exception
+	 * @throws RCPparameterException
+	 *             RPC Related Exception
 	 */
-	public String commitDryRunReverse(int timeout) throws RPCException, NSOException {
+	public String commitDryRunReverse(int timeout) throws RPCException, NSOException, RCPparameterException {
 		testTransaction();
 		CommitOptions options = new CommitOptions();
 		options.addDryRun("native");
@@ -674,8 +687,10 @@ public class NSOController {
 	 *             RPC related exception
 	 * @throws NSOException
 	 *             NSO related exception
+	 * @throws RCPparameterException
+	 *             RPC Related Exception
 	 */
-	public String commitDryRunReverse() throws RPCException, NSOException {
+	public String commitDryRunReverse() throws RPCException, NSOException, RCPparameterException {
 		return this.commitDryRunReverse(0);
 	}
 
@@ -2230,7 +2245,7 @@ public class NSOController {
 	public int getTotalSessions() {
 		return sessionManager.getSessionList().size();
 	}
-	
+
 	public SessionManager getSessionManager() {
 		return sessionManager;
 	}
@@ -2241,7 +2256,7 @@ public class NSOController {
 	@Override
 	public String toString() {
 		MavenXpp3Reader reader = new MavenXpp3Reader();
-        Model model;
+		Model model;
 		try {
 			model = reader.read(new FileReader("pom.xml"));
 			VERSION = model.getVersion();

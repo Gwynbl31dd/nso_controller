@@ -1,8 +1,6 @@
 package com.apaulin.nso_controller.http.rpc;
 
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 import org.apache.http.entity.StringEntity;
 import org.apache.log4j.LogManager;
@@ -82,13 +80,6 @@ abstract public class RpcData implements RPC {
 	public StringEntity getRequestEntity() throws UnsupportedEncodingException {
 		logger.debug("RPC request: {\"jsonrpc\":\""+RPC_VERSION+"\",\"id\":"+id+",\"method\":\""+method+"\",\"params\":"+request+"}");
 		return new StringEntity("{\"jsonrpc\":\""+RPC_VERSION+"\",\"id\":"+id+",\"method\":\""+method+"\",\"params\":"+request+"}");
-	}
-	
-	protected static void valueListExist(String value,String[] list) throws RCPparameterException {
-		ArrayList<String> test = new ArrayList<String>(Arrays.asList(list));
-		if(!test.contains(value)) {
-			throw new RCPparameterException(value);
-		}
 	}
 	
 }
