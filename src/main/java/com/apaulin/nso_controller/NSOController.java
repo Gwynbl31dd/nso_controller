@@ -1,6 +1,14 @@
 package com.apaulin.nso_controller;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
+
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+import org.apache.maven.model.Model;
+import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
+import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 
 import com.apaulin.nso_controller.exception.NSOException;
 import com.apaulin.nso_controller.http.RpcRequest;
@@ -50,7 +58,7 @@ import net.minidev.json.JSONObject;
  * 
  * @author Anthony Paulin
  * @since 22/07/2018
- * @version 2.0
+ * @version 3.0
  * 
  */
 
@@ -60,10 +68,11 @@ public class NSOController {
 	private String address; // Address of the NSO instance. (http://IP:PORT)
 	private String login; // Login used by the NSO instance (PAM or aaa database)
 	private String password; // password used for the NSO instance (PAM or aaa database)
-	private static final String VERSION = "4.2.1"; // Version of the library
+	private static String VERSION = ""; // Version of the library
 	private int major_version;
 	private int minor_version;
 	public static final String ROBOT_LIBRARY_SCOPE = "GLOBAL"; // Scope used for Robot framework.
+	private static final Logger logger = LogManager.getLogger(NSOController.class);
 
 	/**
 	 * Default constructor - Should be used only by robot framework when called as a
@@ -130,7 +139,16 @@ public class NSOController {
 	 *             NSO related exception if there is a NSO connection exception
 	 */
 	public void init(String address, String user, String password) throws NSOException {
+		logger.info("Start init process");
 		createSession(address, user, password, sessionManager.setId());
+		/*
+		 * logger.trace("We've just greeted the user!");
+		 * logger.debug("We've just greeted the user!");
+		 * logger.info("We've just greeted the user!");
+		 * logger.warn("We've just greeted the user!");
+		 * logger.error("We've just greeted the user!");
+		 * logger.fatal("We've just greeted the user!");
+		 */
 	}
 
 	/**
@@ -142,6 +160,8 @@ public class NSOController {
 	 *            - username for the NSO connection
 	 * @param password
 	 *            - password for the NSO connection
+	 * @param id
+	 *            - id for the nso connection
 	 * @throws NSOException
 	 *             NSO related exception
 	 */
@@ -152,6 +172,7 @@ public class NSOController {
 		RpcRequest request = new RpcRequest(address + "/jsonrpc", user, password, id);
 		RpcSession session = new RpcSession(id, request);
 		sessionManager.add(session);// Add the new session to the list of sessions
+		logger.info("Session created");
 	}
 
 	/**
@@ -165,6 +186,7 @@ public class NSOController {
 		RpcRequest request = new RpcRequest(address + "/jsonrpc", login, password, id);
 		RpcSession session = new RpcSession(id, request);
 		sessionManager.add(session);// Add the new session to the list of sessions
+		logger.info("Session added");
 	}
 
 	/**
@@ -178,6 +200,7 @@ public class NSOController {
 	 * @throws HTTPException
 	 *             HTTP related exception
 	 */
+	@Deprecated
 	public String restGet(String path) throws HTTPException, NSOException {
 		// Test if the application supports application/vnd.yang.collection+json
 		String header = restHead(path);
@@ -201,6 +224,7 @@ public class NSOController {
 	 * @throws HTTPException
 	 *             HTTP related exception
 	 */
+	@Deprecated
 	public String restHead(String path) throws HTTPException, NSOException {
 		return restHead(path, "application/vnd.yang.collection+json");
 	}
@@ -220,6 +244,7 @@ public class NSOController {
 	 * @throws HTTPException
 	 *             HTTP related exception
 	 */
+	@Deprecated
 	public String restHead(String path, String request) throws HTTPException, NSOException {
 		String req = null;
 		try {
@@ -246,12 +271,13 @@ public class NSOController {
 	 * @throws HTTPException
 	 *             HTTP related exception
 	 */
+	@Deprecated
 	public String restGet(String path, String header) throws HTTPException, NSOException {
 		return new RestRequest().get(path, address, login, password, header);
 	}
 
 	/**
-	 * Validate the commit for the current transaction This will explicitely valide
+	 * Validate the commit for the current transaction This will explicitly validate
 	 * the commit before running it. Example : nso.validateCommit();
 	 * nso.commitDryRunNative(); nso.validateCommit(); nso.commit();
 	 * 
@@ -262,6 +288,7 @@ public class NSOController {
 	 *             NSO related exception for NSO related exception
 	 */
 	public String validateCommit() throws RPCException, NSOException {
+		logger.info("validate commit");
 		testTransaction();
 		String parsedResult = ResultParser.processRawData(new ValidateCommit(sessionManager.getTransactionId()),
 				sessionManager.getCurrentReq());
@@ -270,6 +297,7 @@ public class NSOController {
 	}
 
 	public String validateTransaction() throws RPCException, NSOException {
+		logger.info("validate transaction");
 		testTransaction();
 		String parsedResult = ResultParser.processRawData(new ValidateTrans(sessionManager.getTransactionId()),
 				sessionManager.getCurrentReq());
@@ -297,8 +325,8 @@ public class NSOController {
 		sessionManager.setCommitValidated(false);
 		String commitResult = ResultParser.processRawData(new Commit(sessionManager.getTransactionId(), timeout),
 				sessionManager.getCurrentReq());
-		sessionManager.getCurrentSession().setTransactionInProgress(false);// If the commit is a success, the
-																			// transaction is killed
+		// If the commit is a success, the transaction is killed
+		sessionManager.getCurrentSession().setTransactionInProgress(false);
 		return commitResult;
 	}
 
@@ -321,8 +349,8 @@ public class NSOController {
 		sessionManager.setCommitValidated(false);
 		String commitResult = ResultParser.processRawData(new Commit(sessionManager.getTransactionId(), options, 0),
 				sessionManager.getCurrentReq());
-		sessionManager.getCurrentSession().setTransactionInProgress(false);// If the commit is a success, the
-																			// transaction is killed
+		// If the commit is a success, the transaction is killed
+		sessionManager.getCurrentSession().setTransactionInProgress(false);
 		return commitResult;
 	}
 
@@ -370,6 +398,7 @@ public class NSOController {
 	 * @throws NSOException
 	 *             for NSO related exception
 	 */
+	@Deprecated
 	public String setComment(String comment) throws RPCException, NSOException {
 		String result = ResultParser.processRawData(
 				new SetTransactionComment(sessionManager.getTransactionId(), comment), sessionManager.getCurrentReq());
@@ -452,8 +481,10 @@ public class NSOController {
 	 *             RPC related exception
 	 * @throws NSOException
 	 *             for NSO related exception
+	 * @throws RCPparameterException
+	 *             RPC related Exception
 	 */
-	public String commitDryRunNative(int timeout) throws RPCException, NSOException {
+	public String commitDryRunNative(int timeout) throws RPCException, NSOException, RCPparameterException {
 		testTransaction();
 		CommitOptions options = new CommitOptions();
 		options.addDryRun("native");
@@ -476,8 +507,9 @@ public class NSOController {
 	 *             RPC related exception
 	 * @throws NSOException
 	 *             for NSO related exception
+	 * @throws RCPparameterException
 	 */
-	public String commitDryRunNative() throws RPCException, NSOException {
+	public String commitDryRunNative() throws RPCException, NSOException, RCPparameterException {
 		return this.commitDryRunNative(0);
 	}
 
@@ -489,8 +521,10 @@ public class NSOController {
 	 *             RPC related exception
 	 * @throws NSOException
 	 *             for NSO related exception
+	 * @throws RCPparameterException
+	 *             RPC Related Exception
 	 */
-	public String commitDryRunCli() throws RPCException, NSOException {
+	public String commitDryRunCli() throws RPCException, NSOException, RCPparameterException {
 		return this.dryRun();
 	}
 
@@ -504,8 +538,10 @@ public class NSOController {
 	 *             RPC related exception
 	 * @throws NSOException
 	 *             for NSO related exception
+	 * @throws RCPparameterException
+	 *             RPC Related Exception
 	 */
-	public String commitDryRunCli(int timeout) throws RPCException, NSOException {
+	public String commitDryRunCli(int timeout) throws RPCException, NSOException, RCPparameterException {
 		return this.dryRun(timeout);
 	}
 
@@ -520,8 +556,10 @@ public class NSOController {
 	 *             for NSO related exception
 	 * @throws RPCException
 	 *             RPC related exception
+	 * @throws RCPparameterException
+	 *             RPC Related Exception
 	 */
-	public String dryRun(int timeout) throws RPCException, NSOException {
+	public String dryRun(int timeout) throws RPCException, NSOException, RCPparameterException {
 		testTransaction();
 		CommitOptions options = new CommitOptions();
 		options.addDryRun("cli");// Add CLI flag
@@ -561,13 +599,15 @@ public class NSOController {
 	 *             for NSO related exception
 	 * @throws RPCException
 	 *             RPC related exception
+	 * @throws RCPparameterException
+	 *             RPC Related Exception
 	 */
-	public String dryRun() throws RPCException, NSOException {
+	public String dryRun() throws RPCException, NSOException, RCPparameterException {
 		return this.dryRun(0);
 	}
 
 	/**
-	 * Run a commit with the no networking flag (No modification on the device(s))
+	 * Run a commit with the no-networking flag (No modification on the device(s))
 	 * 
 	 * @param timeout
 	 *            the timeout in ms
@@ -587,8 +627,8 @@ public class NSOController {
 		sessionManager.setCommitValidated(false);
 		String commitResult = ResultParser.processRawData(
 				new Commit(sessionManager.getTransactionId(), options, timeout), sessionManager.getCurrentReq());
-		sessionManager.getCurrentSession().setTransactionInProgress(false);// If the commit is a success, the
-																			// transaction is killed
+		// If the commit is a success, the transaction is killed
+		sessionManager.getCurrentSession().setTransactionInProgress(false);
 		return commitResult;
 	}
 
@@ -619,8 +659,10 @@ public class NSOController {
 	 *             RPC related exception
 	 * @throws NSOException
 	 *             NSO related exception
+	 * @throws RCPparameterException
+	 *             RPC Related Exception
 	 */
-	public String commitDryRunReverse(int timeout) throws RPCException, NSOException {
+	public String commitDryRunReverse(int timeout) throws RPCException, NSOException, RCPparameterException {
 		testTransaction();
 		CommitOptions options = new CommitOptions();
 		options.addDryRun("native");
@@ -645,8 +687,10 @@ public class NSOController {
 	 *             RPC related exception
 	 * @throws NSOException
 	 *             NSO related exception
+	 * @throws RCPparameterException
+	 *             RPC Related Exception
 	 */
-	public String commitDryRunReverse() throws RPCException, NSOException {
+	public String commitDryRunReverse() throws RPCException, NSOException, RCPparameterException {
 		return this.commitDryRunReverse(0);
 	}
 
@@ -662,6 +706,7 @@ public class NSOController {
 	 * 
 	 *             TODO : Fix this
 	 */
+	@Deprecated
 	public String getPackagesVersion() throws HTTPException, NSOException {
 		String result = new RestRequest().get("/operational/packages/package/", address, login, password);
 		JSONArray names = JsonPath.read(result, "$.collection.tailf-ncs:package[*].name");
@@ -683,6 +728,7 @@ public class NSOController {
 	 * @throws HTTPException
 	 *             HTTP related exception
 	 */
+	@Deprecated
 	public String getDevicesSummary() throws HTTPException, NSOException {
 		String result = new RestRequest().get("/config/devices", address, login, password,
 				"application/vnd.yang.data+json");
@@ -805,6 +851,7 @@ public class NSOController {
 	 * @throws RPCException
 	 *             RPC related exception
 	 */
+	@Deprecated
 	public String restPost(String path) throws NSOException, HTTPException, RPCException {
 		return this.restPost(path, "{}");
 	}
@@ -821,6 +868,7 @@ public class NSOController {
 	 * @throws HTTPException
 	 *             HTTP related exception
 	 */
+	@Deprecated
 	public void restPatch(String path, String data) throws HTTPException, NSOException {
 		try {
 			new RestRequest().patch(path, address, login, password, data);
@@ -841,6 +889,7 @@ public class NSOController {
 	 * @throws HTTPException
 	 *             HTTP related exception
 	 */
+	@Deprecated
 	public void restPut(String path, String data) throws HTTPException, NSOException {
 		try {
 			new RestRequest().put(path, address, login, password, data);
@@ -862,6 +911,7 @@ public class NSOController {
 	 * @throws HTTPException
 	 *             HTTP related exception
 	 */
+	@Deprecated
 	public String restPutDryRun(String path, String data) throws HTTPException, NSOException {
 		return this.restPutDryRun(path, data, "native");
 	}
@@ -881,6 +931,7 @@ public class NSOController {
 	 * @throws NSOException
 	 *             NSO related exception
 	 */
+	@Deprecated
 	public String restPutDryRun(String path, String data, String type) throws HTTPException, NSOException {
 		String result = new RestRequest().put(path + "?dryrun=" + type, address, login, password, data);
 		return result;
@@ -899,6 +950,7 @@ public class NSOController {
 	 * @throws HTTPException
 	 *             HTTP related exception
 	 */
+	@Deprecated
 	public String restPutDryRunNative(String path, String data) throws HTTPException, NSOException {
 		return this.restPutDryRun(path, data);
 	}
@@ -916,6 +968,7 @@ public class NSOController {
 	 * @throws HTTPException
 	 *             HTTP related exception
 	 */
+	@Deprecated
 	public String restPutDryRunCli(String path, String data) throws HTTPException, NSOException {
 		return this.restPutDryRun(path, data, "cli");
 	}
@@ -933,6 +986,7 @@ public class NSOController {
 	 * @throws HTTPException
 	 *             HTTP related exception
 	 */
+	@Deprecated
 	public String restPatchDryRun(String path, String data) throws HTTPException, NSOException {
 		return this.restPatchDryRun(path, data, "native");
 	}
@@ -952,6 +1006,7 @@ public class NSOController {
 	 * @throws HTTPException
 	 *             HTTP related exception
 	 */
+	@Deprecated
 	public String restPatchDryRun(String path, String data, String type) throws HTTPException, NSOException {
 		String result = new RestRequest().patch(path + "?dryrun=" + type, address, login, password, data);
 		return result;
@@ -972,6 +1027,7 @@ public class NSOController {
 	 * @throws HTTPException
 	 *             HTTP related exception
 	 */
+	@Deprecated
 	public String restPostDryRun(String path, String data, String type) throws HTTPException, NSOException {
 		String result = new RestRequest().post(path + "?dryrun=" + type, address, login, password, data);
 		return result;
@@ -990,6 +1046,7 @@ public class NSOController {
 	 * @throws HTTPException
 	 *             HTTP related exception
 	 */
+	@Deprecated
 	public String restPosthDryRunCli(String path, String data) throws HTTPException, NSOException {
 		return this.restPostDryRun(path, data, "cli");
 	}
@@ -1007,6 +1064,7 @@ public class NSOController {
 	 * @throws HTTPException
 	 *             HTTP related exception
 	 */
+	@Deprecated
 	public String restPostDryRunNative(String path, String data) throws HTTPException, NSOException {
 		return this.restPostDryRun(path, data, "native");
 	}
@@ -1024,6 +1082,7 @@ public class NSOController {
 	 * @throws HTTPException
 	 *             HTTP related exception
 	 */
+	@Deprecated
 	public String restPatchDryRunCli(String path, String data) throws HTTPException, NSOException {
 		return this.restPatchDryRun(path, data, "cli");
 	}
@@ -1041,6 +1100,7 @@ public class NSOController {
 	 * @throws HTTPException
 	 *             HTTP related exception
 	 */
+	@Deprecated
 	public String restPatchDryRunNative(String path, String data) throws HTTPException, NSOException {
 		return this.restPatchDryRun(path, data, "native");
 	}
@@ -1056,6 +1116,7 @@ public class NSOController {
 	 * @throws HTTPException
 	 *             HTTP related exception
 	 */
+	@Deprecated
 	public void restDelete(String path) throws HTTPException, NSOException {
 		try {
 			new RestRequest().delete("/config" + path, address, login, password);
@@ -1076,6 +1137,7 @@ public class NSOController {
 	 * @throws HTTPException
 	 *             HTTP related exception
 	 */
+	@Deprecated
 	public String restDeleteDryRun(String path) throws HTTPException, NSOException {
 		return this.restDeleteDryRun(path, "native");
 	}
@@ -1094,6 +1156,7 @@ public class NSOController {
 	 * @throws HTTPException
 	 *             HTTP related exception
 	 */
+	@Deprecated
 	public String restDeleteDryRun(String path, String type) throws HTTPException, NSOException {
 		return new RestRequest().delete("/config" + path + "?dryrun=" + type, address, login, password);
 	}
@@ -1110,6 +1173,7 @@ public class NSOController {
 	 * @throws HTTPException
 	 *             HTTP related exception
 	 */
+	@Deprecated
 	public String restDeleteDryRunNative(String path) throws HTTPException, NSOException {
 		return this.restDeleteDryRun(path);
 	}
@@ -1126,6 +1190,7 @@ public class NSOController {
 	 * @throws HTTPException
 	 *             HTTP related exception
 	 */
+	@Deprecated
 	public String restDeleteDryRunCli(String path) throws HTTPException, NSOException {
 		return this.restDeleteDryRun(path, "cli");
 	}
@@ -1143,6 +1208,7 @@ public class NSOController {
 	 * @throws NSOException
 	 *             NSO related exception
 	 */
+	@Deprecated
 	public String restDryRun(String path, String data) throws NSOException, HTTPException {
 		return this.restDryRun(path, data, "native");
 	}
@@ -1162,6 +1228,7 @@ public class NSOController {
 	 * @throws HTTPException
 	 *             HTTP related exception
 	 */
+	@Deprecated
 	public String restDryRun(String path, String data, String type) throws NSOException, HTTPException {
 		String result = new RestRequest().post(path + "?dryrun=" + type, address, login, password, data);
 		return result;
@@ -1180,6 +1247,7 @@ public class NSOController {
 	 * @throws HTTPException
 	 *             HTTP related exception
 	 */
+	@Deprecated
 	public String restDryRunNative(String path, String data) throws NSOException, HTTPException {
 		return this.restDryRun(path, data);
 	}
@@ -1197,6 +1265,7 @@ public class NSOController {
 	 * @throws HTTPException
 	 *             HTTP related exception
 	 */
+	@Deprecated
 	public String restDryRunCli(String path, String data) throws NSOException, HTTPException {
 		return this.restDryRun(path, data, "cli");
 	}
@@ -1382,6 +1451,7 @@ public class NSOController {
 	 */
 	public int startTransaction(String db, String mode, String conf_mode, String tag, String on_pending_change)
 			throws NSOException, RPCException, RCPparameterException {
+		logger.info("Start transaction");
 		String requestValue = sessionManager.getCurrentReq()
 				.send(new NewTrans(db, mode, conf_mode, tag, on_pending_change));
 		int th = 0;
@@ -1426,11 +1496,14 @@ public class NSOController {
 	 *             NSO related exception
 	 */
 	private void testTransaction() throws RPCException, NSOException {
+		logger.info("Test transaction");
 		if (sessionManager.getCurrentSession().isTransactionInProgress() == false) {
+			logger.info("No transaction in progress");
 			// throw new RPCException("No transaction initated, make sure you start a
 			// transaction before any call");
 			try {
-				// Instead of throwing anexception, start a new one
+				logger.info("Init a new transaction");
+				// Instead of throwing an exception, start a new one
 				sessionManager.getCurrentSession().setTransactionId(startTransaction());
 				sessionManager.getCurrentSession().setTransactionInProgress(true);// Set the transaction in progress
 			} catch (RCPparameterException e) {
@@ -1527,6 +1600,8 @@ public class NSOController {
 	 *             RPC related exception
 	 * @throws NSOException
 	 *             NSO related exception
+	 * @throws RCPparameterException
+	 *             Wrong RPC parameter
 	 */
 	public String runAction(String action, String format) throws RPCException, NSOException, RCPparameterException {
 		testTransaction();
@@ -1536,6 +1611,51 @@ public class NSOController {
 			try {
 				JSONObject processed = ResultParser.parseResult(result, "$.result");
 				return processed.toJSONString();
+			} catch (PathNotFoundException e) {// No path found
+				throw new RPCException(result);
+			}
+		} else {
+			return result;
+		}
+	}
+
+	/**
+	 * Run an action from NSO with format and params :
+	 * nso.runAction("/services/test/deploy","json","{\"clockSettings\":
+	 * \"2014-02-11T14:20:53.460%2B01:00\"}");
+	 * 
+	 * @param action
+	 *            - KeyPath String expression to the action
+	 * @param format
+	 *            - format "normal", "bracket", "json"
+	 * @param params
+	 *            The format params defines if the result should be an array of key
+	 *            values or a pre-formatted string on bracket format as seen in the
+	 *            CLI. Eg : {"clockSettings": "2014-02-11T14:20:53.460%2B01:00"}
+	 * @return the action result
+	 * @throws RPCException
+	 *             RPC related exception
+	 * @throws NSOException
+	 *             NSO related exception
+	 * @throws RCPparameterException
+	 *             Wrong RPC parameter
+	 */
+	public String runAction(String action, String format, String params)
+			throws RPCException, NSOException, RCPparameterException {
+		testTransaction();
+		String result = sessionManager.getCurrentReq()
+				.send(new RunAction(sessionManager.getTransactionId(), action, format, params));
+		if (format.compareTo("json") == 0) {
+			try {
+				// TODO check with type of for the result, could be due to the format normal =
+				// list, json = object
+				try {
+					JSONObject processed = ResultParser.parseResult(result, "$.result");
+					return processed.toJSONString();
+				} catch (Exception e) {
+					JSONArray processed = JsonPath.read(result, "$.result[*]");
+					return processed.toJSONString();
+				}
 			} catch (PathNotFoundException e) {// No path found
 				throw new RPCException(result);
 			}
@@ -1555,6 +1675,7 @@ public class NSOController {
 	 * @throws NSOException
 	 *             NSO related exception
 	 */
+	@Deprecated
 	public String runActionRaw(String action) throws RPCException, NSOException {
 		testTransaction();
 		String result = sessionManager.getCurrentReq().send(new RunAction(sessionManager.getTransactionId(), action));
@@ -1811,8 +1932,10 @@ public class NSOController {
 	public String liveStatus(String device, String cmd, String action)
 			throws NSOException, RPCException, RCPparameterException {
 		testTransaction();
-		String result = sessionManager.getCurrentReq().send(new RunAction(sessionManager.getTransactionId(),
-				"/devices/device{" + device + "}/live-status/" + action + "/any/", cmd, "normal"));
+		String result = sessionManager.getCurrentReq()
+				.send(new RunAction(sessionManager.getTransactionId(),
+						"/devices/device{" + device + "}/live-status/" + action + "/any/", "normal",
+						"{\"args\": \"" + cmd + "\"}"));
 		JSONArray syncs = JsonPath.read(result, "$.result[*]");
 		String processed = new String();
 		for (int i = 0; i < syncs.size(); i++) {
@@ -1828,6 +1951,7 @@ public class NSOController {
 	/**
 	 * Check if a leaf exists
 	 * 
+	 * @deprecated Use exists() instead
 	 * @param path
 	 *            - KeyPath String expression to the leaf
 	 * @return a boolean representing the leaf
@@ -1841,6 +1965,21 @@ public class NSOController {
 				sessionManager.getCurrentReq());
 		boolean result = ResultParser.parseBool(data, "$.exists");
 		return result;
+	}
+
+	/**
+	 * Check if a leaf exists
+	 * 
+	 * @param path
+	 *            - KeyPath String expression to the leaf
+	 * @return a boolean representing the leaf
+	 * @throws RPCException
+	 *             RPC related exception
+	 * @throws NSOException
+	 *             NSO related exception
+	 */
+	public boolean exists(String path) throws RPCException, NSOException {
+		return isExisting(path);
 	}
 
 	/**
@@ -1877,6 +2016,7 @@ public class NSOController {
 	 *            The index of the session
 	 */
 	public void useSession(int index) throws IndexOutOfBoundsException {
+		logger.info("User session index: " + index);
 		sessionManager.setIndex(index);
 	}
 
@@ -1930,6 +2070,42 @@ public class NSOController {
 	}
 
 	/**
+	 * Equivalent to showConfig with operational flag set to true
+	 * 
+	 * @param path
+	 *            - KeyPath String expression to the leaf
+	 * @param resultAs
+	 *            - "string","json"
+	 * @return the config
+	 * @throws RPCException
+	 *             RPC related exception
+	 * @throws NSOException
+	 *             NSO related exception
+	 * @throws RCPparameterException
+	 *             Wrong RPC parameter
+	 */
+	public String showRun(String path, String resultAs) throws RPCException, NSOException, RCPparameterException {
+		return showConfig(path, true, resultAs);
+	}
+
+	/**
+	 * Equivalent to showRun with default output as string
+	 * 
+	 * @param path
+	 *            - KeyPath String expression to the leaf
+	 * @return the config as a string
+	 * @throws RPCException
+	 *             RPC related exception
+	 * @throws NSOException
+	 *             NSO related exception
+	 * @throws RCPparameterException
+	 *             Wrong RPC parameter
+	 */
+	public String showRun(String path) throws RPCException, NSOException, RCPparameterException {
+		return showRun(path, "string");
+	}
+
+	/**
 	 * Show a specific device config as JSON string Example : String result =
 	 * nso.showDeviceConfig("mydevice");
 	 * 
@@ -1963,7 +2139,7 @@ public class NSOController {
 	public String showConfig(String path, String resultAs) throws RPCException, RCPparameterException, NSOException {
 		testTransaction();
 		String result = ResultParser.processRawData(
-				new ShowConfig(sessionManager.getTransactionId(), path, resultAs, false, 0),
+				new ShowConfig(sessionManager.getTransactionId(), path, false, resultAs),
 				sessionManager.getCurrentReq());
 		if (resultAs.compareTo("string") == 0) {
 			return ResultParser.parseStringResult(result, "$.config");
@@ -2070,11 +2246,27 @@ public class NSOController {
 		return sessionManager.getSessionList().size();
 	}
 
+	public SessionManager getSessionManager() {
+		return sessionManager;
+	}
+
 	/**
 	 * Expose the NSO representation
 	 */
 	@Override
 	public String toString() {
+		MavenXpp3Reader reader = new MavenXpp3Reader();
+		Model model;
+		try {
+			model = reader.read(new FileReader("pom.xml"));
+			VERSION = model.getVersion();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (XmlPullParserException e) {
+			e.printStackTrace();
+		}
 		return "NSO (Network service orchestrator) version " + this.major_version + "." + this.minor_version
 				+ ".X, NSO Controller API v" + VERSION;
 	}

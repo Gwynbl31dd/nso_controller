@@ -5,24 +5,43 @@ package com.apaulin.nso_controller.http.rpc;
 
 /**
  * Kills a user session, i.e. kicking out the user
+ * 
  * @author Anthony Paulin
  * @since 13/07/2018
- * @version 0.1
- * The user param is either the username of a logged in user or session id.
+ * @version 0.1 The user param is either the username of a logged in user or
+ *          session id.
  */
-public class KickUser extends GetSchema {	
+public class KickUser extends GetSchema {
 	private Object user;
-	
+
 	/**
 	 * Craft a config request
-	 * @param th transaction id
-	 * @param user username
+	 * 
+	 * @param th
+	 *            transaction id
+	 * @param user
+	 *            username
 	 */
-	public KickUser(int th,String user) {
+	public KickUser(int th, String user) {
 		super("kick_user");
 		super.setTh(th);
 		setUser(user);
-		super.setRequest();
+		this.setRequest();
+	}
+
+	/**
+	 * Craft a config request
+	 * 
+	 * @param th
+	 *            transaction id
+	 * @param user
+	 *            user id
+	 */
+	public KickUser(int th, int user) {
+		super("kick_user");
+		super.setTh(th);
+		setUser(user);
+		this.setRequest();
 	}
 
 	/**
@@ -31,13 +50,12 @@ public class KickUser extends GetSchema {
 	@Override
 	public void setRequest() {
 		String request = new String();
-		if(user instanceof Integer) {
-			request = "{\"th\": "+getTh()+",\"user\": "+getUser()+"}";
+		if (user instanceof Integer) {
+			request = "{\"th\": " + getTh() + ",\"user\":" + getUser() + "}";
+		} else {
+			request = "{\"th\": " + getTh() + ",\"user\":\"" + getUser() + "\"}";
 		}
-		else {
-			request = "{\"th\": "+getTh()+",\"user\": \""+getUser()+"\"}";
-		}
-		super.setRequest(request); 
+		super.setRequest(request);
 	}
 
 	/**
@@ -48,7 +66,8 @@ public class KickUser extends GetSchema {
 	}
 
 	/**
-	 * @param user the user to set
+	 * @param user
+	 *            the user to set
 	 */
 	public void setUser(Object user) {
 		this.user = user;

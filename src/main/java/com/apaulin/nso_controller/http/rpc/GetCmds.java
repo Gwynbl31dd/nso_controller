@@ -10,7 +10,7 @@ package com.apaulin.nso_controller.http.rpc;
  * @version 0.1
  *
  */
-public class GetCmds extends RpcData{
+public class GetCmds extends RpcData {
 
 	public GetCmds() {
 		super("get_cmds");

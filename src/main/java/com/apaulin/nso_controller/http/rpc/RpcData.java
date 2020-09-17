@@ -1,10 +1,10 @@
 package com.apaulin.nso_controller.http.rpc;
 
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 import org.apache.http.entity.StringEntity;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 /**
  * Define the main RPC request body
@@ -18,7 +18,8 @@ abstract public class RpcData implements RPC {
 	private int id = 0;//ID by default is zero
 	private String request = "{}";//Request by default empty
 	private static final String RPC_VERSION = "2.0";
-    
+	private static final Logger logger = LogManager.getLogger(RpcData.class);
+	
 	/**
 	 * Build base for NCPRequest
 	 * @param method method to use
@@ -77,15 +78,8 @@ abstract public class RpcData implements RPC {
 	
 	@Override
 	public StringEntity getRequestEntity() throws UnsupportedEncodingException {
-		//System.out.println("[->]{\"jsonrpc\":\""+RPC_VERSION+"\",\"id\":"+id+",\"method\":\""+method+"\",\"params\":"+request+"}");
+		logger.debug("RPC request: {\"jsonrpc\":\""+RPC_VERSION+"\",\"id\":"+id+",\"method\":\""+method+"\",\"params\":"+request+"}");
 		return new StringEntity("{\"jsonrpc\":\""+RPC_VERSION+"\",\"id\":"+id+",\"method\":\""+method+"\",\"params\":"+request+"}");
-	}
-	
-	protected static void valueListExist(String value,String[] list) throws RCPparameterException {
-		ArrayList<String> test = new ArrayList<String>(Arrays.asList(list));
-		if(!test.contains(value)) {
-			throw new RCPparameterException(value);
-		}
 	}
 	
 }

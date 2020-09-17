@@ -30,7 +30,6 @@ package com.apaulin.nso_controller.http.rpc;
  *
  */
 public class RunAction extends GetSchema {
-	// FIXME the params must be modified, eg : {"clockSettings": "2014-02-11T14:20:53.460%2B01:00"}
 	
 	private String param = "";
 	private String format = "normal";
@@ -61,7 +60,7 @@ public class RunAction extends GetSchema {
 	 * @param format
 	 *            format used for the output "normal", "bracket", "json" (default
 	 *            normal)
-	 * @throws RCPparameterException
+	 * @throws RCPparameterException RPC related exception
 	 */
 	public RunAction(int th, String path, String format) throws RCPparameterException {
 		super("run_action");
@@ -85,11 +84,13 @@ public class RunAction extends GetSchema {
 	 * @param format
 	 *            format used for the output "normal", "bracket", "json" (default
 	 *            normal)
+	 * @throws RCPparameterException RPC related exception
 	 */
-	public RunAction(int th, String path, String param, String format) {
+	public RunAction(int th, String path, String format,String param) throws RCPparameterException {
 		super("run_action");
 		super.setTh(th);
 		super.setPath(path);
+		setFormat(format);
 		this.param = param;
 		this.setRequest();
 	}
@@ -103,7 +104,7 @@ public class RunAction extends GetSchema {
 	 *             rpc related exception
 	 */
 	protected void setFormat(String format) throws RCPparameterException {
-		valueListExist(format, FORMAT_VALUES);
+		ValueCheck.valueListExist(format, FORMAT_VALUES);
 		this.format = format;
 	}
 
@@ -126,8 +127,7 @@ public class RunAction extends GetSchema {
 			request = "{\"th\": " + getTh() + ",\"path\":\"" + getPath() + "\",\"format\":\"" + getFormat() + "\"}";
 		}
 		else {
-			request = "{\"th\": " + getTh() + ",\"path\":\"" + getPath() + "\",\"params\": {\"args\": \"" + param
-					+ "\"},\"format\":\"" + getFormat() + "\"}";
+			request = "{\"th\": " + getTh() + ",\"path\":\"" + getPath() + "\",\"params\": "+param+",\"format\":\"" + getFormat() + "\"}";
 		}
 		super.setRequest(request);
 	}

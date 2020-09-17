@@ -30,7 +30,6 @@ public class GetListKeys extends GetSchema {
 		super.setPath(path); 
 		super.setRequest();
 	}
-
 	
 	/**
 	 * Build the request
