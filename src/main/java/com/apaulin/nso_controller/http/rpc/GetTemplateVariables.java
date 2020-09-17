@@ -45,7 +45,7 @@ public class GetTemplateVariables extends GetSchema{
 	 */
 	@Override
 	public void setRequest() {
-		String request = "{\"th\": "+getTh()+",\"name\": "+getName()+"}";
+		String request = "{\"th\": "+getTh()+",\"name\": \""+getName()+"\"}";
 		super.setRequest(request); 
 	}
 	

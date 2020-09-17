@@ -11,21 +11,21 @@ import org.junit.Test;
 
 import com.apaulin.nso_controller.http.rpc.*;
 
-public class ConfirmCommitTest {
+public class DeleteTransTest {
 	
 	@Test
-	public void ConfirmCommit() throws UnsupportedEncodingException, IOException {
+	public void DeleteTrans() throws UnsupportedEncodingException, IOException {
 		int transaction = 0;
-		String method = "confirm_commit";
+		String method = "delete_trans";
 		String expectedRequest = "{}";
 		String fullRequest = "{\"jsonrpc\":\"2.0\",\"id\":0,\"method\":\""+method+"\",\"params\":"+expectedRequest+"}";
 		
-		ConfirmCommit confirmCommit = new ConfirmCommit(transaction);
+		DeleteTrans deleteTrans = new DeleteTrans(transaction);
 		
-		assertEquals(confirmCommit.getRequest(), expectedRequest);
-		assertEquals(confirmCommit.getId(), 0);
-		assertEquals(confirmCommit.getMethod(), method);
-		assertEquals(IOUtils.toString(confirmCommit.getRequestEntity().getContent(), Charset.defaultCharset()), fullRequest);
+		assertEquals(deleteTrans.getRequest(), expectedRequest);
+		assertEquals(deleteTrans.getId(), 0);
+		assertEquals(deleteTrans.getMethod(), method);
+		assertEquals(IOUtils.toString(deleteTrans.getRequestEntity().getContent(), Charset.defaultCharset()), fullRequest);
 	}
 	
 }
