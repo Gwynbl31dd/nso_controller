@@ -11,18 +11,18 @@ import org.junit.Test;
 
 import com.apaulin.nso_controller.http.rpc.*;
 
-public class LoadTest {
+public class LoadStringTest {
 
 	@Test
-	public void Load() throws UnsupportedEncodingException, IOException {
+	public void LoadString() throws UnsupportedEncodingException, IOException, RCPparameterException {
 		int transaction = 0;
 		String method = "load";
 		String path = "/test";
 		String data = "{\"test\":\"test\"}";
 
-		Load load = new Load(transaction, path, data);
+		LoadString load = new LoadString(transaction, path, data);
 
-		String expectedRequest = "{\"th\": 0,\"data\": \"" + load.stringify(data) + "\",\"path\":\"" + path
+		String expectedRequest = "{\"th\": 0,\"data\": \"" + data + "\",\"path\":\"" + path
 				+ "\",\"format\": \"xml\",\"mode\": \"merge\"}";
 		String fullRequest = "{\"jsonrpc\":\"2.0\",\"id\":0,\"method\":\"" + method + "\",\"params\":" + expectedRequest
 				+ "}";
@@ -34,7 +34,7 @@ public class LoadTest {
 	}
 
 	@Test
-	public void LoadModeFormat() throws UnsupportedEncodingException, IOException, RCPparameterException {
+	public void LoadStringModeFormat() throws UnsupportedEncodingException, IOException, RCPparameterException {
 		int transaction = 0;
 		String method = "load";
 		String path = "/test";
@@ -42,9 +42,9 @@ public class LoadTest {
 		String mode = "merge";
 		String format = "json";
 
-		Load load = new Load(transaction, path, data,mode,format);
+		LoadString load = new LoadString(transaction, path, data,mode,format);
 
-		String expectedRequest = "{\"th\": 0,\"data\": \"" + load.stringify(data) + "\",\"path\":\"" + path
+		String expectedRequest = "{\"th\": 0,\"data\": \"" + data + "\",\"path\":\"" + path
 				+ "\",\"format\": \"" + format + "\",\"mode\": \"" + mode + "\"}";
 		String fullRequest = "{\"jsonrpc\":\"2.0\",\"id\":0,\"method\":\"" + method + "\",\"params\":" + expectedRequest
 				+ "}";
@@ -56,14 +56,14 @@ public class LoadTest {
 	}
 	
 	@Test(expected = RCPparameterException.class)
-	public void LoadModeFail() throws UnsupportedEncodingException, IOException, RCPparameterException {
+	public void LoadStringModeFail() throws UnsupportedEncodingException, IOException, RCPparameterException {
 		int transaction = 0;
 		String path = "/test";
 		String data = "{\"test\":\"test\"}";
 		String mode = "test";
 		String format = "json";
 
-		new Load(transaction, path, data,mode,format);
+		new LoadString(transaction, path, data,mode,format);
 	}
 	
 	@Test(expected = RCPparameterException.class)
@@ -74,7 +74,7 @@ public class LoadTest {
 		String mode = "merge";
 		String format = "test";
 
-		new Load(transaction, path, data,mode,format);
+		new LoadString(transaction, path, data,mode,format);
 	}
 
 

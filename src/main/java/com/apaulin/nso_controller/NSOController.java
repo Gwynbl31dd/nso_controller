@@ -2139,7 +2139,7 @@ public class NSOController {
 	public String showConfig(String path, String resultAs) throws RPCException, RCPparameterException, NSOException {
 		testTransaction();
 		String result = ResultParser.processRawData(
-				new ShowConfig(sessionManager.getTransactionId(), path, resultAs, false, 0),
+				new ShowConfig(sessionManager.getTransactionId(), path, false, resultAs),
 				sessionManager.getCurrentReq());
 		if (resultAs.compareTo("string") == 0) {
 			return ResultParser.parseStringResult(result, "$.config");

@@ -74,7 +74,7 @@ public class ShowConfig extends GetSchema {
 	 * @throws RCPparameterException
 	 *             RPC related exception
 	 */
-	public ShowConfig(int th, String path, String resultAs, boolean withOper, int maxSize)
+	public ShowConfig(int th, String path, boolean withOper, String resultAs, int maxSize)
 			throws RCPparameterException {
 		super("show_config");
 		super.setTh(th);
@@ -185,9 +185,17 @@ public class ShowConfig extends GetSchema {
 	public void setRequest(boolean noResultAs) {
 		String request = new String();
 		if (noResultAs == false) {
-			// TODO Check with version 4.6... 4.5 cannot use max size
-			request = "{\"th\": " + getTh() + ",\"path\":\"" + getPath() + "\",\"result_as\": \"" + getResultAs()
-					+ "\",\"with_oper\": " + isWithOper() + "}";
+			if(getMaxSize() != 0) {
+				// TODO Check with version 4.6... 4.5 cannot use max size
+				request = "{\"th\": " + getTh() + ",\"path\":\"" + getPath() + "\",\"result_as\": \"" + getResultAs()
+						+ "\",\"with_oper\": " + isWithOper() + ",\"max_size\": " + getMaxSize() + "}";
+			}
+			else {
+
+				request = "{\"th\": " + getTh() + ",\"path\":\"" + getPath() + "\",\"result_as\": \"" + getResultAs()
+						+ "\",\"with_oper\": " + isWithOper() + "}";
+			}
+			
 		} else {
 			request = "{\"th\": " + getTh() + ",\"path\":\"" + getPath() + "\",\"with_oper\": " + isWithOper()
 					+ ",\"max_size\": " + getMaxSize() + "}";

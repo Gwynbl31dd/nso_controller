@@ -28,6 +28,16 @@ public class NewTrans extends RpcData {
 	/**
 	 * Build a new transaction request
 	 * 
+	 * @param tag tag used for the new transaction
+	 * @throws RCPparameterException RPC related exception
+	 */
+	public NewTrans(String tag) throws RCPparameterException {
+		this("running", "read", "private", tag, "reuse");
+	}
+
+	/**
+	 * Build a new transaction request
+	 * 
 	 * @param db
 	 *    -        "startup" | "running" | "candidate", default: "running"
 	 * @param mode
@@ -59,16 +69,6 @@ public class NewTrans extends RpcData {
 				+ getConfMode() + "\"," + "\"tag\": \"" + getTag() + "\"," + "\"on_pending_changes\": \""
 				+ getOnPendingChanges() + "\"}";
 		super.setRequest(request);
-	}
-
-	/**
-	 * Build a new transaction request
-	 * 
-	 * @param tag tag used for the new transaction
-	 * @throws RCPparameterException RPC related exception
-	 */
-	public NewTrans(String tag) throws RCPparameterException {
-		this("running", "read", "private", tag, "reuse");
 	}
 
 	/**

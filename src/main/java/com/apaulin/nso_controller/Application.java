@@ -22,14 +22,14 @@ public class Application {
     	//new ShowRunMultiSessionExample();
     	//new InitExample();
     	//new ShowRunExample();
-    	//new ShowRunWithOperExample();
+    	new ShowRunWithOperExample();
     	//new GetValueExample();
     	//new GettingListKeys();
     	//new DeleteExample();
     	//new ActionExample();
     	//new ActionWithFormatExample();
     	//new ActionWithParamsExample();
-    	new CustomCallExample();
+    	//new CustomCallExample();
     	//new GetSchemaExample();
     	System.exit(0);
     }

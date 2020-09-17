@@ -97,7 +97,14 @@ public class Load extends GetSchema {
 		}
 		return stringify(sb.toString());
 	}
-	
+
+	/**
+	 * Stringify the payload to send as data
+	 * 
+	 * @param payload
+	 *            Base payload
+	 * @return Stringified payload
+	 */
 	public String stringify(String payload) {
 		String dataToReturn = payload;
 		return dataToReturn.replaceAll("\"", "\\\\\"");
@@ -166,9 +173,9 @@ public class Load extends GetSchema {
 		try {
 			request = "{\"th\": " + getTh() + ",\"data\": \"" + getData() + "\",\"path\":\"" + getPath()
 					+ "\",\"format\": \"" + getFormat() + "\"," + "\"mode\": \"" + getMode() + "\"}";
-		} catch (IOException e) {//If cannot read, load the data
+		} catch (IOException e) {// If cannot read, load the data
 			request = "{\"th\": " + getTh() + ",\"data\": \"" + stringify(data) + "\",\"path\":\"" + getPath()
-			+ "\",\"format\": \"" + getFormat() + "\"," + "\"mode\": \"" + getMode() + "\"}";
+					+ "\",\"format\": \"" + getFormat() + "\"," + "\"mode\": \"" + getMode() + "\"}";
 		}
 		super.setRequest(request);
 	}
