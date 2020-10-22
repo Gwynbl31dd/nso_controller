@@ -10,6 +10,7 @@ import com.apaulin.nso_controller.examples.GetSchemaExample;
 import com.apaulin.nso_controller.examples.GetValueExample;
 import com.apaulin.nso_controller.examples.GettingListKeys;
 import com.apaulin.nso_controller.examples.InitExample;
+import com.apaulin.nso_controller.examples.PingExample;
 import com.apaulin.nso_controller.examples.ShowRunExample;
 import com.apaulin.nso_controller.examples.ShowRunMultiSessionExample;
 import com.apaulin.nso_controller.examples.ShowRunWithOperExample;
@@ -22,7 +23,7 @@ public class Application {
     	//new ShowRunMultiSessionExample();
     	//new InitExample();
     	//new ShowRunExample();
-    	new ShowRunWithOperExample();
+    	//new ShowRunWithOperExample();
     	//new GetValueExample();
     	//new GettingListKeys();
     	//new DeleteExample();
@@ -31,6 +32,7 @@ public class Application {
     	//new ActionWithParamsExample();
     	//new CustomCallExample();
     	//new GetSchemaExample();
+    	new PingExample();
     	System.exit(0);
     }
 }
