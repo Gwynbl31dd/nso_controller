@@ -24,7 +24,9 @@ public class PingExample {
 		try {
 			nso = new NSOController(url,username,password);
 			nso.startTransaction("running", "read_write", "private", "test", "reuse");
-			System.out.println(nso.ping("mcpmodel"));
+			System.out.println("****************************************************");
+			System.out.println(nso.runAction("/ncs:devices/device{mcpmodel}/ping","json"));
+			System.out.println("****************************************************");
 		} catch (NSOException | RPCException e) {
 			e.printStackTrace();
 		} catch (RCPparameterException e) {
