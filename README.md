@@ -1,4 +1,4 @@
-[![Clojars Project](https://img.shields.io/clojars/v/org.clojars.gwynbl31dd/nso_controller.svg)](https://clojars.org/org.clojars.gwynbl31dd/nso_controller)
+[![Github Project](https://img.shields.io/clojars/v/org.clojars.gwynbl31dd/nso_controller.svg)](https://github.com/Gwynbl31dd/nso_controller/packages/873830)
 
 <a href="https://cxtools.cisco.com/cxestore/#/toolDetail/77588"><img alt="CX eStore Tool ID" src="https://img.shields.io/badge/TOOL%20ID-77588-blue"></a>
 
