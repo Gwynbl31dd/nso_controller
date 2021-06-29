@@ -1,10 +1,14 @@
 [![Clojars Project](https://img.shields.io/clojars/v/org.clojars.gwynbl31dd/nso_controller.svg)](https://clojars.org/org.clojars.gwynbl31dd/nso_controller)
 
+<a href="https://cxtools.cisco.com/cxestore/#/toolDetail/77588"><img alt="CX eStore Tool ID" src="https://img.shields.io/badge/TOOL%20ID-77588-blue"></a>
+
 # NSO_Controller
 
 nso_controller is a NSO java API.
 
 This library can be used as a java API, Katalon library, or as a Keyword library for Robot framework.
+
+You can find a Robot framework implementation [here](https://github.com/Gwynbl31dd/project_testsuite)
 
 ## Documentation
 
@@ -386,6 +390,10 @@ Rest API Requests
 ```
 
 You can find more examples [here](https://github.com/Gwynbl31dd/project_testsuite)
+
+## License
+
+This project is covered under the terms described in [LICENSE](./LICENSE)
 
 ## Maintainers
 
