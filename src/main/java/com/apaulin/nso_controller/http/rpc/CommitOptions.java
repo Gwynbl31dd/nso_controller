@@ -16,9 +16,9 @@ public class CommitOptions extends StringArray {
 
 	private static final long serialVersionUID = -8789914606834976699L;
 
-	public final static String[] MODE_VALUES = { "async", "sync", "bypass" };
+	public static final String[] MODE_VALUES = { "async", "sync", "bypass" };
 
-	public final static String[] FORMAT_VALUES = { "xml", "cli", "native" };
+	public static final String[] FORMAT_VALUES = { "xml", "cli", "native" };
 
 	/**
 	 * no-revision-drop - NSO will not run its data model revision algorithm, which

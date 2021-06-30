@@ -348,7 +348,7 @@ Library   OperatingSystem
 Initialise
     Init   http://10.120.18.99:28080  robot  robot
     Start Transaction  running  read_write  private  test  reuse
-    Is Existing  /aaa
+    Exists  /aaa
     ${config}   Show config   /aaa
     Log to Console  ${config}
 
