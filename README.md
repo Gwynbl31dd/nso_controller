@@ -80,49 +80,6 @@ public class Main {
 
 ```
 
-### Reading data from NSO using REST
-
-```
-WARNING : REST is deprecated for NSO 5.X.X, therefore we will also deprecate the REST functionality for the next versions.
-```
-
-In some special case, you could be forced to use the REST API (For example, if you test a system using REST)
-
-In that case, you will use 3 steps.
-
-* Create an instance of the NSOController.
-* Read the data.
-* Close the connection.
-
-In this case, you do not need to start a transaction because REST does not require an open 
-session.
-But you still need to close the connection, because NSOController uses JRPC for its internal mechanism.
-
-```java
-import com.apaulin.nso_controller.NSOController;
-
-public class Main {
-	final static String USER = "anthony";
-	final static String PASSWORD = "password123";
-	final static String ADDRESS = "http://127.0.0.1:9701";
-	
-	public static void main(String[] args) {
-		NSOController nso = null;
-		try {
-			nso = new NSOController(ADDRESS,USER,PASSWORD);
-			String aaa = nso.restGet("/config/aaa");
-			System.out.println(aaa);
-		}
-		catch(Exception e) {
-			e.printStackTrace();
-		}
-		finally {
-			nso.logout();
-		}
-	}
-}
-```
-
 ## Writing data
 
 ### Create a leaf
@@ -345,22 +302,13 @@ Library   OperatingSystem
 
 *** Test Cases ***
 
-Initialise
+Example
     Init   http://10.120.18.99:28080  robot  robot
     Start Transaction  running  read_write  private  test  reuse
     Exists  /aaa
     ${config}   Show config   /aaa
     Log to Console  ${config}
 
-Rest API Requests
-    # Note that the request does not take "/api/", this is already added during the call
-    # You just need to add /<database>/<path>
-    ${config}  Rest Get    /config/devices/device/s3cw-e-501
-    Log to Console  ${config}
-    ${interfaces}   OperatingSystem.Get File  resources/l3vpn_config/s3cw-e-501-interface.json
-    Rest Post  /config/network/infrastructure   ${interfaces}
-    ${config}  Rest Get    /config/network/infrastructure
-    Log to Console  ${config}
 ```
 
 You can find more examples [here](https://github.com/Gwynbl31dd/project_testsuite)
