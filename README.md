@@ -1,5 +1,3 @@
-[![Github Project](https://img.shields.io/clojars/v/org.clojars.gwynbl31dd/nso_controller.svg)](https://github.com/Gwynbl31dd/nso_controller/packages/873830)
-
 <a href="https://cxtools.cisco.com/cxestore/#/toolDetail/77588"><img alt="CX eStore Tool ID" src="https://img.shields.io/badge/TOOL%20ID-77588-blue"></a>
 
 # NSO_Controller
@@ -9,6 +7,8 @@ nso_controller is a NSO java API.
 This library can be used as a java API, Katalon library, or as a Keyword library for Robot framework.
 
 You can find a Robot framework implementation [here](https://github.com/Gwynbl31dd/project_testsuite)
+
+The Java examples are [here](https://github.com/Gwynbl31dd/nso_controller/tree/master/src/main/java/com/apaulin/nso_controller/examples)
 
 ## Documentation
 
@@ -22,50 +22,24 @@ nso_controller can be used as a Java API to communicate with NSO.
 
 ## Installation
 
-###  Leiningen/Boot
-
-```
-[org.clojars.gwynbl31dd/nso_controller "4.3.0"]
-```
-
-### Clojure CLI/deps.edn
-
-```
-org.clojars.gwynbl31dd/nso_controller {:mvn/version "4.3.0"}
-```
-
-### Gradle
-
-```
-compile 'org.clojars.gwynbl31dd:nso_controller:4.3.0'
-```
-
 ### Maven
 
 ```
-<repositories>
-  <repository>
-    <id>clojars</id>
-      <name>Clojars repository</name>
-      <url>https://clojars.org/repo</url>
-  </repository>
-</repositories>
+<dependency>
+  <groupId>org.cisco.gwynbl31dd</groupId>
+  <artifactId>nso_controller</artifactId>
+  <version>4.4.2</version>
+</dependency> 
 ```
 
 ```
-<dependency>
-  <groupId>org.clojars.gwynbl31dd</groupId>
-  <artifactId>nso_controller</artifactId>
-  <version>LATEST</version>
-</dependency>
+mvn install
 ```
 
 ## Reading data
 
 nso_controller provides two main functionalities to read NSO,
-
 you can pass a file (xml or json) or directly read from a leaf.
-
 
 ### Reading data from NSO default method
 
