@@ -8,8 +8,6 @@ import org.apache.log4j.Logger;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
-import org.robotframework.javalib.annotation.ArgumentNames;
-import org.robotframework.javalib.annotation.RobotKeyword;
 import org.robotframework.javalib.annotation.RobotKeywords;
 
 import com.apaulin.nso_controller.exception.NSOException;
@@ -85,7 +83,6 @@ public class NSOController {
 	 * Robot framework, you must call the method init(String address, String user,
 	 * String password)
 	 */
-
 	public NSOController() {
 	}
 

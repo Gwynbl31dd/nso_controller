@@ -189,4 +189,19 @@
 		</plugins>
 	</reporting>
 
+	<url>https://cxtools.cisco.com/cxestore/#/toolDetail/77588</url>
+	<description>NSO test API using gRPC</description>
+	<organization>
+		<name>cisco</name>
+		<url>https://www.cisco.com/</url>
+	</organization>
+	<issueManagement>
+		<system>github</system>
+		<url>https://github.com/Gwynbl31dd/nso_controller/issues</url>
+	</issueManagement>
+	<ciManagement>
+		<system>github</system>
+		<url>https://github.com/Gwynbl31dd/nso_controller/actions</url>
+	</ciManagement>
+
 </project>
