@@ -1158,7 +1158,6 @@ public class NSOController {
 	 * Remove the sessions list, but bypass with if doesn't exist
 	 * 
 	 * @param sessionIndex the session list index
-	 * @throws NSOException NSO related Exception
 	 * @return logout result
 	 */
 	private String removeSessionList(int sessionIndex) {
