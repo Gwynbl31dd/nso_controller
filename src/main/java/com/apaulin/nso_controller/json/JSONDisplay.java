@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.apaulin.nso_controller.json;
 
 import com.jayway.jsonpath.JsonPathException;

@@ -13,7 +13,7 @@ package com.apaulin.nso_controller.http.rpc;
 public class Abort extends RpcData {
 
 	/**
-	 * Abord a session
+	 * Abort a session
 	 * @param id The id to abord
 	 */
 	public Abort(int id) {
