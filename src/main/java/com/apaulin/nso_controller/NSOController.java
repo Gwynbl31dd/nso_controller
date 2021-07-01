@@ -788,17 +788,17 @@ public class NSOController {
 		String result = sessionManager.getCurrentReq()
 				.send(new RunAction(sessionManager.getTransactionId(), "/devices/sync-from"));
 		JSONArray syncs = JsonPath.read(result, RESULT_ARRAY);
-		String processed = "";
+		StringBuilder bld = new StringBuilder();
 		for (int i = 0; i < syncs.size(); i++) {
 			String type = JsonPath.read(syncs.get(i), NAME);
 			String value = JsonPath.read(syncs.get(i), VALUE);
 			if (type.compareTo("sync-result/device") == 0) {
-				processed += value + ":";
+				bld.append(value + ":");
 			} else if (type.compareTo("sync-result/result") == 0) {
-				processed += value + "\n";
+				bld.append(value + "\n");
 			}
 		}
-		return processed;
+		return bld.toString();
 	}
 
 	/**
@@ -834,13 +834,13 @@ public class NSOController {
 		testTransaction();
 		String result = sessionManager.getCurrentReq().send(new RunAction(sessionManager.getTransactionId(), action));
 		JSONArray syncs = JsonPath.read(result, RESULT_ARRAY);
-		String processed = "";
+		StringBuilder bld = new StringBuilder();
 		for (int i = 0; i < syncs.size(); i++) {
 			String type = JsonPath.read(syncs.get(i), NAME);
 			String value = JsonPath.read(syncs.get(i), VALUE);
-			processed += type + ":" + value;
+			bld.append(type + ":" + value);
 		}
-		return processed;
+		return bld.toString();
 	}
 
 	/**
