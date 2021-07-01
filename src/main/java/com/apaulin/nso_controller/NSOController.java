@@ -1159,14 +1159,14 @@ public class NSOController {
 	 * @return returns the sessions or null if it does not exist
 	 */
 	public String logout() {
-		String back = "";
+		StringBuilder bld = new StringBuilder();
 		try {
 			for (int i = 0; i < sessionManager.getSessionList().size(); i++) {
-				back += removeSessionList(i);
+				bld.append(removeSessionList(i));
 			}
 			// Remove each session and rebuild the session manager
 			sessionManager = new SessionManager();
-			return back;
+			return bld.toString();
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
