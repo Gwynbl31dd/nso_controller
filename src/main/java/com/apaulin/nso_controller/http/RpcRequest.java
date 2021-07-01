@@ -99,8 +99,7 @@ public class RpcRequest {
 	 * @throws NSOException  NSO related exception
 	 */
 	public List<Integer> getTransaction() throws NSOException {
-		List<Integer> th = JsonPath.read(this.send(new GetTrans()), "$.result.trans[*].th");
-		return th;
+		return JsonPath.read(this.send(new GetTrans()), "$.result.trans[*].th");
 	}
 
 	/**
@@ -223,6 +222,7 @@ public class RpcRequest {
 	 * @return the new http client
 	 * @throws NSOException NSO related exception
 	 */
+	@SuppressWarnings("deprecation")
 	private CloseableHttpClient buildCustomHttpClient() throws NSOException {
 		SSLConnectionSocketFactory sslsf = null;
 		try {

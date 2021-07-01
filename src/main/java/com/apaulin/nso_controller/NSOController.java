@@ -14,8 +14,6 @@ import com.apaulin.nso_controller.http.RpcRequest;
 import com.apaulin.nso_controller.http.RpcSession;
 import com.apaulin.nso_controller.http.SessionManager;
 import com.apaulin.nso_controller.http.StringArray;
-import com.apaulin.nso_controller.http.rest.HTTPException;
-import com.apaulin.nso_controller.http.rest.RestRequest;
 import com.apaulin.nso_controller.http.rpc.Abort;
 import com.apaulin.nso_controller.http.rpc.AppendListEntry;
 import com.apaulin.nso_controller.http.rpc.Commit;
@@ -559,25 +557,6 @@ public class NSOController {
 	public String confirmCommit() throws NSOException, RPCException {
 		testTransaction();
 		return sessionManager.getCurrentReq().send(new ConfirmCommit(sessionManager.getTransactionId()));
-	}
-
-	/**
-	 * Return the post request from the rest API
-	 * 
-	 * @param path - KeyPath String expression
-	 * @param data - Data payload to send (In JSON format)
-	 * @return the POST result
-	 * @throws HTTPException HTTP related exception
-	 * @throws NSOException  NSO related exception
-	 * @throws RPCException  RPC related exception
-	 */
-	public String restPost(String path, String data) throws NSOException, HTTPException, RPCException {
-		String result = new RestRequest().post(path, address, login, password, data);
-		// If error
-		if (result.contains("error-message")) {
-			throw new RPCException(result);
-		}
-		return result;
 	}
 
 	/**
