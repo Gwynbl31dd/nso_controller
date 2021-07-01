@@ -8,6 +8,9 @@ import org.apache.log4j.Logger;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
+import org.robotframework.javalib.annotation.ArgumentNames;
+import org.robotframework.javalib.annotation.RobotKeyword;
+import org.robotframework.javalib.annotation.RobotKeywords;
 
 import com.apaulin.nso_controller.exception.NSOException;
 import com.apaulin.nso_controller.http.RpcRequest;
@@ -57,7 +60,7 @@ import net.minidev.json.JSONObject;
  * @version 3.0
  * 
  */
-
+@RobotKeywords
 public class NSOController {
 
 	private SessionManager sessionManager = new SessionManager();
@@ -74,6 +77,7 @@ public class NSOController {
 	private static final String NAME = "$.name";
 	private static final String VALUE = "$.value";
 	private static final String RESULT = "$.result";
+
 	/**
 	 * Default constructor - Should be used only by robot framework when called as a
 	 * test library. If you call it as a Java library, you should call
@@ -81,6 +85,7 @@ public class NSOController {
 	 * Robot framework, you must call the method init(String address, String user,
 	 * String password)
 	 */
+
 	public NSOController() {
 	}
 
@@ -1155,14 +1160,15 @@ public class NSOController {
 	/**
 	 * Remove the sessions list, but bypass with if doesn't exist
 	 * 
-	 * @param back the session list
-	 * @throws NSOException 
+	 * @param sessionIndex the session list index
+	 * @throws NSOException
 	 */
 	private String removeSessionList(int sessionIndex) {
 		String toReturn = "";
 		try {
-			toReturn = ResultParser.processRawData(new Logout(), sessionManager.getSessionList().get(sessionIndex).getReq());
-		} catch (RPCException|NSOException e) {
+			toReturn = ResultParser.processRawData(new Logout(),
+					sessionManager.getSessionList().get(sessionIndex).getReq());
+		} catch (RPCException | NSOException e) {
 			e.printStackTrace();
 		}
 		return toReturn;
@@ -1339,6 +1345,7 @@ public class NSOController {
 
 	/**
 	 * Get the NSO capabilities
+	 * 
 	 * @return The NSO capabilities
 	 * @throws RPCException          RPC related exception
 	 * @throws RCPparameterException parameters exception
@@ -1400,7 +1407,7 @@ public class NSOController {
 	 * Expose the NSO representation
 	 */
 	@Override
-	public String toString() {	
+	public String toString() {
 		return "NSO (Network service orchestrator) version " + this.majorVersion + "." + this.minorVersion
 				+ ".X, NSO Controller API v" + NSOController.getVersion();
 	}
