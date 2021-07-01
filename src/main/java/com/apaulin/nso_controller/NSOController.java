@@ -1016,13 +1016,13 @@ public class NSOController {
 		String result = sessionManager.getCurrentReq()
 				.send(new RunAction(sessionManager.getTransactionId(), path + "/check-sync"));
 		JSONArray syncs = JsonPath.read(result, RESULT_ARRAY);
-		String processed = "";
+		StringBuilder bld = new StringBuilder();
 		for (int i = 0; i < syncs.size(); i++) {
 			String type = JsonPath.read(syncs.get(i), NAME);
 			String value = JsonPath.read(syncs.get(i), VALUE);
-			processed += type + ":" + value + " ";
+			bld.append(type + ":" + value + " ");
 		}
-		return processed;
+		return bld.toString();
 	}
 
 	/**
@@ -1081,13 +1081,13 @@ public class NSOController {
 			throw new RPCException(error.toString());
 		}
 		JSONArray syncs = JsonPath.read(result, RESULT_ARRAY);
-		String processed = "";
+		StringBuilder bld = new StringBuilder();
 		for (int i = 0; i < syncs.size(); i++) {
 			String type = JsonPath.read(syncs.get(i), NAME);
 			String value = JsonPath.read(syncs.get(i), VALUE);
-			processed += type + ":" + value;
+			bld.append(type + ":" + value);
 		}
-		return processed;
+		return bld.toString();
 	}
 
 	/**
@@ -1127,15 +1127,15 @@ public class NSOController {
 						"/devices/device{" + device + "}/live-status/" + action + "/any/", "normal",
 						"{\"args\": \"" + cmd + "\"}"));
 		JSONArray syncs = JsonPath.read(result, RESULT_ARRAY);
-		String processed = "";
+		StringBuilder bld = new StringBuilder();
 		for (int i = 0; i < syncs.size(); i++) {
 			String type = JsonPath.read(syncs.get(i), NAME);
 			String value = JsonPath.read(syncs.get(i), VALUE);
 			if (type.compareTo("result") == 0) {
-				processed += value;
+				bld.append(value);
 			}
 		}
-		return processed;
+		return bld.toString();
 	}
 
 	/**
