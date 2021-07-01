@@ -13,9 +13,19 @@ import java.util.Arrays;
  *
  */
 public class ValueCheck {
-
+	
+	private ValueCheck() {
+		super();
+	}
+	
+	/**
+	 * Check if a value exists
+	 * @param value Value to check
+	 * @param list List to check
+	 * @throws RCPparameterException RPC related exception
+	 */
 	public static void valueListExist(String value,String[] list) throws RCPparameterException {
-		ArrayList<String> test = new ArrayList<String>(Arrays.asList(list));
+		ArrayList<String> test = new ArrayList<>(Arrays.asList(list));
 		if(!test.contains(value)) {
 			throw new RCPparameterException(value);
 		}
