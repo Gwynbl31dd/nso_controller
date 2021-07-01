@@ -66,12 +66,16 @@ public class NSOController {
 	private String address; // Address of the NSO instance. (http://IP:PORT)
 	private String login; // Login used by the NSO instance (PAM or aaa database)
 	private String password; // password used for the NSO instance (PAM or aaa database)
-	private static String version = ""; // Version of the library
 	private int majorVersion;
 	private int minorVersion;
 	public static final String ROBOT_LIBRARY_SCOPE = "GLOBAL"; // Scope used for Robot framework.
 	private static final Logger logger = LogManager.getLogger(NSOController.class);
 
+	// JSON expressions
+	private static final String RESULT_ARRAY = "$.result[*]";
+	private static final String NAME = "$.name";
+	private static final String VALUE = "$.value";
+	private static final String RESULT = "$.result";
 	/**
 	 * Default constructor - Should be used only by robot framework when called as a
 	 * test library. If you call it as a Java library, you should call
@@ -500,7 +504,7 @@ public class NSOController {
 	}
 
 	/**
-	 * TODO In progress
+	 * Get a list of keys
 	 * 
 	 * @param path KeyPath String expression
 	 * @return the list keys
@@ -542,8 +546,7 @@ public class NSOController {
 	 */
 	public String getLeafRefValues(String path) throws NSOException, RPCException {
 		testTransaction();
-		return sessionManager.getCurrentReq()
-				.send(new GetLeafRefValues(sessionManager.getTransactionId(), path));
+		return sessionManager.getCurrentReq().send(new GetLeafRefValues(sessionManager.getTransactionId(), path));
 	}
 
 	/**
@@ -707,10 +710,10 @@ public class NSOController {
 	/**
 	 * Start a new transaction
 	 * 
-	 * @param db                - "startup", "running", "candidate"
-	 * @param mode              - "read", "read_write"
-	 * @param confMode         - "private", "shared", "exclusive"
-	 * @param tag               - Tag use for the rollback system
+	 * @param db              - "startup", "running", "candidate"
+	 * @param mode            - "read", "read_write"
+	 * @param confMode        - "private", "shared", "exclusive"
+	 * @param tag             - Tag use for the rollback system
 	 * @param onPendingChange - "reuse", "reject", "discard"
 	 * @return the transaction id
 	 * @throws RPCException          RPC related exception
@@ -784,11 +787,11 @@ public class NSOController {
 		testTransaction();
 		String result = sessionManager.getCurrentReq()
 				.send(new RunAction(sessionManager.getTransactionId(), "/devices/sync-from"));
-		JSONArray syncs = JsonPath.read(result, "$.result[*]");
+		JSONArray syncs = JsonPath.read(result, RESULT_ARRAY);
 		String processed = "";
 		for (int i = 0; i < syncs.size(); i++) {
-			String type = JsonPath.read(syncs.get(i), "$.name");
-			String value = JsonPath.read(syncs.get(i), "$.value");
+			String type = JsonPath.read(syncs.get(i), NAME);
+			String value = JsonPath.read(syncs.get(i), VALUE);
 			if (type.compareTo("sync-result/device") == 0) {
 				processed += value + ":";
 			} else if (type.compareTo("sync-result/result") == 0) {
@@ -810,10 +813,10 @@ public class NSOController {
 		testTransaction();
 		String result = sessionManager.getCurrentReq().send(
 				new RunAction(sessionManager.getTransactionId(), "/devices/device{" + deviceName + "}/sync-from"));
-		JSONArray syncs = JsonPath.read(result, "$.result[*]");
+		JSONArray syncs = JsonPath.read(result, RESULT_ARRAY);
 		String processed = syncs.toJSONString();
 		for (int i = 0; i < syncs.size(); i++) {
-			String value = JsonPath.read(syncs.get(i), "$.value");
+			String value = JsonPath.read(syncs.get(i), VALUE);
 			processed = value;
 		}
 		return Boolean.valueOf(processed);
@@ -830,11 +833,11 @@ public class NSOController {
 	public String runAction(String action) throws RPCException, NSOException {
 		testTransaction();
 		String result = sessionManager.getCurrentReq().send(new RunAction(sessionManager.getTransactionId(), action));
-		JSONArray syncs = JsonPath.read(result, "$.result[*]");
+		JSONArray syncs = JsonPath.read(result, RESULT_ARRAY);
 		String processed = "";
 		for (int i = 0; i < syncs.size(); i++) {
-			String type = JsonPath.read(syncs.get(i), "$.name");
-			String value = JsonPath.read(syncs.get(i), "$.value");
+			String type = JsonPath.read(syncs.get(i), NAME);
+			String value = JsonPath.read(syncs.get(i), VALUE);
 			processed += type + ":" + value;
 		}
 		return processed;
@@ -857,7 +860,7 @@ public class NSOController {
 				.send(new RunAction(sessionManager.getTransactionId(), action, format));
 		if (format.compareTo("json") == 0) {
 			try {
-				JSONObject processed = ResultParser.parseResult(result, "$.result");
+				JSONObject processed = ResultParser.parseResult(result, RESULT);
 				return processed.toJSONString();
 			} catch (PathNotFoundException e) {// No path found
 				throw new RPCException(result);
@@ -890,15 +893,7 @@ public class NSOController {
 				.send(new RunAction(sessionManager.getTransactionId(), action, format, params));
 		if (format.compareTo("json") == 0) {
 			try {
-				// TODO check with type of for the result, could be due to the format normal =
-				// list, json = object
-				try {
-					JSONObject processed = ResultParser.parseResult(result, "$.result");
-					return processed.toJSONString();
-				} catch (Exception e) {
-					JSONArray processed = JsonPath.read(result, "$.result[*]");
-					return processed.toJSONString();
-				}
+				return tryParseResult(result);
 			} catch (PathNotFoundException e) {// No path found
 				throw new RPCException(result);
 			}
@@ -908,17 +903,19 @@ public class NSOController {
 	}
 
 	/**
-	 * Run an action from NSO but return raw output for custom processing
+	 * Try to parse the result (object or array)
 	 * 
-	 * @param action - KeyPath String expression to the action
-	 * @return the action result
-	 * @throws RPCException RPC related exception
-	 * @throws NSOException NSO related exception
+	 * @param result The result from the action
+	 * @return the parsed result
 	 */
-	@Deprecated
-	public String runActionRaw(String action) throws RPCException, NSOException {
-		testTransaction();
-		return sessionManager.getCurrentReq().send(new RunAction(sessionManager.getTransactionId(), action));
+	private String tryParseResult(String result) {
+		try {
+			JSONObject processed = ResultParser.parseResult(result, RESULT);
+			return processed.toJSONString();
+		} catch (Exception e) {
+			JSONArray processed = JsonPath.read(result, RESULT_ARRAY);
+			return processed.toJSONString();
+		}
 	}
 
 	/**
@@ -1018,11 +1015,11 @@ public class NSOController {
 		testTransaction();
 		String result = sessionManager.getCurrentReq()
 				.send(new RunAction(sessionManager.getTransactionId(), path + "/check-sync"));
-		JSONArray syncs = JsonPath.read(result, "$.result[*]");
-		String processed = new String();
+		JSONArray syncs = JsonPath.read(result, RESULT_ARRAY);
+		String processed = "";
 		for (int i = 0; i < syncs.size(); i++) {
-			String type = JsonPath.read(syncs.get(i), "$.name");
-			String value = JsonPath.read(syncs.get(i), "$.value");
+			String type = JsonPath.read(syncs.get(i), NAME);
+			String value = JsonPath.read(syncs.get(i), VALUE);
 			processed += type + ":" + value + " ";
 		}
 		return processed;
@@ -1083,11 +1080,11 @@ public class NSOController {
 		if (error != null) {
 			throw new RPCException(error.toString());
 		}
-		JSONArray syncs = JsonPath.read(result, "$.result[*]");
+		JSONArray syncs = JsonPath.read(result, RESULT_ARRAY);
 		String processed = "";
 		for (int i = 0; i < syncs.size(); i++) {
-			String type = JsonPath.read(syncs.get(i), "$.name");
-			String value = JsonPath.read(syncs.get(i), "$.value");
+			String type = JsonPath.read(syncs.get(i), NAME);
+			String value = JsonPath.read(syncs.get(i), VALUE);
 			processed += type + ":" + value;
 		}
 		return processed;
@@ -1129,11 +1126,11 @@ public class NSOController {
 				.send(new RunAction(sessionManager.getTransactionId(),
 						"/devices/device{" + device + "}/live-status/" + action + "/any/", "normal",
 						"{\"args\": \"" + cmd + "\"}"));
-		JSONArray syncs = JsonPath.read(result, "$.result[*]");
+		JSONArray syncs = JsonPath.read(result, RESULT_ARRAY);
 		String processed = "";
 		for (int i = 0; i < syncs.size(); i++) {
-			String type = JsonPath.read(syncs.get(i), "$.name");
-			String value = JsonPath.read(syncs.get(i), "$.value");
+			String type = JsonPath.read(syncs.get(i), NAME);
+			String value = JsonPath.read(syncs.get(i), VALUE);
 			if (type.compareTo("result") == 0) {
 				processed += value;
 			}
@@ -1165,13 +1162,7 @@ public class NSOController {
 		String back = "";
 		try {
 			for (int i = 0; i < sessionManager.getSessionList().size(); i++) {
-				// This will remove the sessions list, but will bypass with the catch if the
-				// don't exists
-				try {
-					back += ResultParser.processRawData(new Logout(), sessionManager.getSessionList().get(i).getReq());
-				} catch (RPCException e) {
-					e.printStackTrace();
-				}
+				back += removeSessionList(i);
 			}
 			// Remove each session and rebuild the session manager
 			sessionManager = new SessionManager();
@@ -1180,6 +1171,22 @@ public class NSOController {
 			e.printStackTrace();
 			return null;
 		}
+	}
+
+	/**
+	 * Remove the sessions list, but bypass with if doesn't exist
+	 * 
+	 * @param back the session list
+	 * @throws NSOException 
+	 */
+	private String removeSessionList(int sessionIndex) {
+		String toReturn = "";
+		try {
+			toReturn = ResultParser.processRawData(new Logout(), sessionManager.getSessionList().get(sessionIndex).getReq());
+		} catch (RPCException|NSOException e) {
+			e.printStackTrace();
+		}
+		return toReturn;
 	}
 
 	/**
@@ -1307,14 +1314,14 @@ public class NSOController {
 		testTransaction();
 		String parsedResult = ResultParser.parseStringResult(
 				sessionManager.getCurrentReq().send(new GetSystemSetting(sessionManager.getTransactionId(), "version")),
-				"$.result");
-		// Version major and minor can be use to manage the capabilities from the NSO
+				RESULT);
+		// Version major and minor can be use to manage the capabilities from the
 		// version used.
 		this.majorVersion = Integer.parseInt(parsedResult.split("\\.")[0]);
 		this.minorVersion = Integer.parseInt(parsedResult.split("\\.")[1]);
 		return ResultParser.parseStringResult(
 				sessionManager.getCurrentReq().send(new GetSystemSetting(sessionManager.getTransactionId(), "version")),
-				"$.result");
+				RESULT);
 	}
 
 	/**
@@ -1351,6 +1358,14 @@ public class NSOController {
 						.getJsonString();
 	}
 
+	/**
+	 * Get the NSO capabilities
+	 * @return The NSO capabilities
+	 * @throws RPCException          RPC related exception
+	 * @throws RCPparameterException parameters exception
+	 * @throws JsonPathException     Json path exception
+	 * @throws NSOException          NSO related exception
+	 */
 	public String getNSOCapabilities() throws RPCException, JsonPathException, RCPparameterException, NSOException {
 		testTransaction();
 		return new JSONDisplay(
@@ -1364,6 +1379,14 @@ public class NSOController {
 	 * @return the version
 	 */
 	public static String getVersion() {
+		MavenXpp3Reader reader = new MavenXpp3Reader();
+		String version = "0.0.0";
+		try {
+			Model model = reader.read(new FileReader("pom.xml"));
+			version = model.getVersion();
+		} catch (IOException | XmlPullParserException e) {
+			e.printStackTrace();
+		}
 		return version;
 	}
 
@@ -1385,6 +1408,11 @@ public class NSOController {
 		return sessionManager.getSessionList().size();
 	}
 
+	/**
+	 * Get the session manager
+	 * 
+	 * @return A Session manager
+	 */
 	public SessionManager getSessionManager() {
 		return sessionManager;
 	}
@@ -1393,16 +1421,8 @@ public class NSOController {
 	 * Expose the NSO representation
 	 */
 	@Override
-	public String toString() {
-		MavenXpp3Reader reader = new MavenXpp3Reader();
-		Model model;
-		try {
-			model = reader.read(new FileReader("pom.xml"));
-			version = model.getVersion();
-		} catch (IOException|XmlPullParserException e) {
-			e.printStackTrace();
-		} 
+	public String toString() {	
 		return "NSO (Network service orchestrator) version " + this.majorVersion + "." + this.minorVersion
-				+ ".X, NSO Controller API v" + version;
+				+ ".X, NSO Controller API v" + NSOController.getVersion();
 	}
 }
