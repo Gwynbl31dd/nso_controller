@@ -47,10 +47,8 @@ public class CommitOptions extends StringArray {
 	 * this transaction will bypass the commit queue. The data will be written
 	 * directly to the devices.
 	 * 
-	 * @param mode
-	 *            commit queue mode
-	 * @throws RCPparameterException
-	 *             RPC Related Exception
+	 * @param mode commit queue mode
+	 * @throws RCPparameterException RPC Related Exception
 	 */
 	public void addCommitQueue(String mode) throws RCPparameterException {
 		ValueCheck.valueListExist(mode, MODE_VALUES);
@@ -64,8 +62,7 @@ public class CommitOptions extends StringArray {
 	 * in other non-atomic queue items ahead of it in the queue are completed. If
 	 * set to true, the atomic integrity of the queue item is preserved.
 	 * 
-	 * @param atomic
-	 *            value
+	 * @param atomic value
 	 */
 	public void addCommitQueueAtomic(boolean atomic) {
 		this.add("commit-queue-atomic=" + atomic);
@@ -95,8 +92,7 @@ public class CommitOptions extends StringArray {
 	 * present in all notifications and events sent referencing the specific queue
 	 * item.
 	 * 
-	 * @param tag
-	 *            commit tag
+	 * @param tag commit tag
 	 */
 	public void addCommitQueueTag(String tag) {
 		this.add("commit-queue-tag=" + tag);
@@ -109,8 +105,7 @@ public class CommitOptions extends StringArray {
 	 * commit-queue, and the operation returns successfully. If the timeout is not
 	 * set, the operation waits until the transaction is committed.
 	 * 
-	 * @param timeout
-	 *            timeout in ms
+	 * @param timeout timeout in ms
 	 */
 	public void addCommitQueueTimeout(int timeout) {
 		this.add("commit-queue-timeout=" + timeout);
@@ -130,9 +125,8 @@ public class CommitOptions extends StringArray {
 	 * actual commit. Neither CDB nor the devices are affected. Instead the effects
 	 * that would have taken place is showed in the returned output.
 	 * 
-	 * @param format
-	 *            string format
-	 * @throws RCPparameterException 
+	 * @param format string format
+	 * @throws RCPparameterException RPC related exception
 	 */
 	public void addDryRun(String format) throws RCPparameterException {
 		ValueCheck.valueListExist(format, FORMAT_VALUES);
