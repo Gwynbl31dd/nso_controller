@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.apaulin.nso_controller.http.rpc;
 
 import java.io.UnsupportedEncodingException;

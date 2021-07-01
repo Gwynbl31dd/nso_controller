@@ -26,9 +26,7 @@ public class ActionExample {
 			nso.startTransaction("running", "read_write", "private", "test", "reuse");
 			System.out.println(nso.syncFrom());//Sync from all device
 			System.out.println(nso.commit());
-		} catch (NSOException | RPCException e) {
-			e.printStackTrace();
-		} catch (RCPparameterException e) {
+		} catch (NSOException | RPCException | RCPparameterException e) {
 			e.printStackTrace();
 		}
 		finally{

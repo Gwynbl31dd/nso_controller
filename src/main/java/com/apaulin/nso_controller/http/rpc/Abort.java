@@ -11,11 +11,14 @@ package com.apaulin.nso_controller.http.rpc;
  *
  */
 public class Abort extends RpcData {
-	private int id;
 
+	/**
+	 * Abort a session
+	 * @param id The id to abord
+	 */
 	public Abort(int id) {
 		super("abort");
-		this.id = id;
+		setId(id);
 		setRequest();
 	}
 	
@@ -23,16 +26,8 @@ public class Abort extends RpcData {
 	 * Build the request
 	 */
 	public void setRequest() {
-		String request = "{\"id\": "+getID()+"}";
+		String request = "{\"id\": "+getId()+"}";
 		super.setRequest(request); 
-	}
-	
-	public int getID() {
-		return id;
-	}
-	
-	public void setID(int th) {
-		this.id = th;
 	}
 
 }

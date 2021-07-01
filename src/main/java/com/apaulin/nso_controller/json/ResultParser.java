@@ -20,6 +20,11 @@ import net.minidev.json.JSONObject;
  */
 @SuppressWarnings("unused")
 public class ResultParser {
+	
+	private ResultParser() {
+		super();
+	}
+	
 	/**
 	 * Process the raw data to extract the result
 	 * This validate JSON
