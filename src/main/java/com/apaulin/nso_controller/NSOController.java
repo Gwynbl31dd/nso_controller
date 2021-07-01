@@ -342,7 +342,7 @@ public class NSOController {
 	 * @return Commit dry run result
 	 * @throws RPCException          RPC related exception
 	 * @throws NSOException          for NSO related exception
-	 * @throws RCPparameterException
+	 * @throws RCPparameterException RPC related Exception
 	 */
 	public String commitDryRunNative() throws RPCException, NSOException, RCPparameterException {
 		return this.commitDryRunNative(0);
@@ -1158,7 +1158,8 @@ public class NSOController {
 	 * Remove the sessions list, but bypass with if doesn't exist
 	 * 
 	 * @param sessionIndex the session list index
-	 * @throws NSOException
+	 * @throws NSOException NSO related Exception
+	 * @return logout result
 	 */
 	private String removeSessionList(int sessionIndex) {
 		String toReturn = "";
