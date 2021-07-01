@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.apaulin.nso_controller.nso_utility;
 
 import java.io.BufferedReader;
